@@ -22,6 +22,12 @@ case "$choice" in
 esac
 
 echo
+read -p "Setup jobs? (y/N) " choice
+case "$choice" in
+ y|Y ) bash "$setupDir/jobs.sh";;
+esac
+
+echo
 read -p "Setup dynamic motd? (y/N) " choice
 case "$choice" in
  y|Y ) bash "$setupDir/motd.sh";;
