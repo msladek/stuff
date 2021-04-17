@@ -1,0 +1,18 @@
+# this is the a portmap unit config. it maps a port permenantly from a remote host
+# 1. replace everything in <...>
+# 2. copy this file to /etc/systemd/system/portmap-<myapp>.service
+# 3. create a local portmap user: adduser --disabled-login portmap
+# 4. drop ssh key(s) into /home/portmap/.ssh
+# 5. sudo systemctl enable portmap-<myapp> && sudo systemctl start portmap-<myapp>
+
+[Unit]
+Description=Portmap for <My Application>
+
+[Service]
+User=portmap
+ExecStart=/usr/bin/ssh -N -L <map_port_local>:127.0.0.1:<map_port_remote> -o ServerAliveInterval=60 -p <ssh_port> -i ~/.ssh/<keyfile> <host>
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
