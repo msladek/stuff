@@ -18,28 +18,28 @@ sudo aptitude install \
     mc zip unzip unrar-free zip unzip unrar-free software-properties-common build-essential \
   | egrep -v "is already installed|Reading |Writing |Building |Initializing "
 
-[ ! -d ~/config ] && echo "config dir not found" && exit 1
-sudo chown -R $USER:$USER ~/config
+[ ! -d ~/stuff ] && echo "stuff not found" && exit 1
+sudo chown -R $USER:$USER ~/stuff
 echo -e "\nLink bash goodies ..."
-ln -s ~/config/user/bash_aliases ~/.bash_aliases
+ln -s ~/stuff/config/user/bash_aliases ~/.bash_aliases
 grep -qF -- ".bash_aliases" ~/.bashrc \
     || echo "source ~/.bash_aliases" >> ~/.bashrc
 grep -qF -- ".bashrc" ~/.bash_profile \
     || echo "source ~/.bashrc" >> ~/.bash_profile
-ln -s ~/config/user/vimrc ~/.vimrc
-ln -s ~/config/user/tmux.conf ~/.tmux.conf
+ln -s ~/stuff/config/user/vimrc ~/.vimrc
+ln -s ~/stuff/config/user/tmux.conf ~/.tmux.conf
     
 echo -e "\nSetup private repo..."
-git clone https://github.com/msladek/configp.git ~/config/private
-[ -d ~/config/private ] \
-  && chown -R $USER:$USER ~/config/private \
-  && chmod -R go-rwx ~/config/private
+git clone https://github.com/msladek/stuffp.git ~/stuff/private
+[ -d ~/stuff/private ] \
+  && chown -R $USER:$USER ~/stuff/private \
+  && chmod -R go-rwx ~/stuff/private
 
 echo -e "\nSetup SSH ..."
 mkdir -p ~/.ssh
-if [ -d ~/config/private ]; then
-  ln -s ~/config/private/ssh/config ~/.ssh/config
-  ln -s ~/config/private/ssh/keys/github ~/.ssh/github
+if [ -d ~/stuff/private ]; then
+  ln -s ~/stuff/private/ssh/config ~/.ssh/config
+  ln -s ~/stuff/private/ssh/keys/github ~/.ssh/github
 else
   echo "skipped, private repo missing"
 fi
@@ -53,10 +53,10 @@ git config --global core.editor "vim"
 git config --global pull.rebase false
 if [ -f ~/.ssh/github ]; then
   git config --global core.sshCommand "ssh -i ~/.ssh/github -F /dev/null"
-  cd ~/config/private \
-    && git remote set-url origin git@github.com:msladek/configp.git  
-  cd ~/config \
-    && git remote set-url origin git@github.com:msladek/config.git
+  cd ~/stuff/private \
+    && git remote set-url origin git@github.com:msladek/stuffp.git  
+  cd ~/stuff \
+    && git remote set-url origin git@github.com:msladek/stuff.git
 fi
 
 echo -e "\nEnable sudo insults ..."

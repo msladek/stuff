@@ -5,7 +5,7 @@ command -v msmtp &> /dev/null \
   || (echo "failed install" && exit 1)
 read -sp "Mailing password: " password; echo
 [[ ! -z "$password" ]] \
-  && sudo cp ~/config/user/msmtprc /root/.msmtprc \
+  && sudo cp ~/stuff/config/user/msmtprc /root/.msmtprc \
   && sudo sed -i -e "s/<hostname>/$(hostname)/g" /root/.msmtprc \
   && sudo sed -i -e "s/<password>/${password}/g" /root/.msmtprc \
   && sudo chmod 600 /root/.msmtprc \
