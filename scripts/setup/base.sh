@@ -21,16 +21,21 @@ sudo aptitude install \
 [ ! -d ~/stuff ] && echo "stuff not found" && exit 1
 sudo chown -R $USER:$USER ~/stuff
 echo -e "\nLink bash goodies ..."
-ln -s ~/stuff/config/user/bash_aliases ~/.bash_aliases
+ln -sf ~/stuff/config/user/bash_aliases ~/.bash_aliases
 grep -qF -- ".bash_aliases" ~/.bashrc \
     || echo "source ~/.bash_aliases" >> ~/.bashrc
 grep -qF -- ".bashrc" ~/.bash_profile \
     || echo "source ~/.bashrc" >> ~/.bash_profile
-ln -s ~/stuff/config/user/vimrc ~/.vimrc
-ln -s ~/stuff/config/user/tmux.conf ~/.tmux.conf
-    
-echo -e "\nSetup private repo..."
-git clone https://github.com/msladek/stuffp.git ~/stuff/private
+ln -sf ~/stuff/config/user/vimrc ~/.vimrc
+ln -sf ~/stuff/config/user/tmux.conf ~/.tmux.conf
+
+if [ ! -d ~/stuff/private ]; then
+  echo
+  read -p "Setup private repo? (y/N) " choice
+  case "$choice" in
+   y|Y ) git clone https://github.com/msladek/stuffp.git ~/stuff/private;;
+  esac
+fi
 [ -d ~/stuff/private ] \
   && chown -R $USER:$USER ~/stuff/private \
   && chmod -R go-rwx ~/stuff/private
