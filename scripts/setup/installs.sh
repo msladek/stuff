@@ -7,10 +7,10 @@ if (($? != 0)); then
 fi
 
 echo -e "\nUpgrade system ..."
-sudo aptitude update > /dev/null && sudo aptitude upgrade
+sudo aptitude update > /dev/null && sudo aptitude -y upgrade
 
 echo -e "Install essentials packages ..."
-sudo aptitude install \
+sudo aptitude -y install \
     sudo bash-completion apt-listbugs apt-listchanges apt-transport-https \
     net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
