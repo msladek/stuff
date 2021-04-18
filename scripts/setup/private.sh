@@ -8,5 +8,5 @@ if [ ! -d ~/stuff/private ]; then
   esac
 fi
 [ -d ~/stuff/private ] \
-  && chown -R $USER:$USER ~/stuff/private \
+  && chown -R $USER:$(id -gn) ~/stuff/private \
   && chmod -R go-rwx ~/stuff/private

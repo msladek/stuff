@@ -8,7 +8,7 @@ if [ -d ~/stuff/private ]; then
 else
   echo "skipped, private repo missing"
 fi
-chown $USER:$USER ~/.ssh
+chown $USER:$(id -gn) ~/.ssh
 chmod -f 700 ~/.ssh
 chmod -f 600 ~/.ssh/*
 chmod -f 644 ~/.ssh/*.pub
