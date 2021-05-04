@@ -4,6 +4,8 @@ HISTFILESIZE=
 HISTSIZE=
 # avoid duplicates
 HISTCONTROL=ignoredups:erasedups
+# enable timestamps
+HISTTIMEFORMAT="%F %T  "
 # when the shell exits, append to the history file instead of overwriting it
 shopt -s histappend
 # after each command, append to the history file
