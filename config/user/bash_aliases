@@ -41,6 +41,7 @@ alias ln='ln -i'
 # sudo stuff
 alias sudo='sudo '
 alias please='sudo "$BASH" -c "$(history -p !!)"'
+alias plz='please'
 
 # some more ls aliases
 alias l='ls -Flh --color=auto'
