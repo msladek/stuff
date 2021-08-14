@@ -2,6 +2,11 @@
 
 zfs="/sbin/zfs"
 
+
+########################################################################
+# Functions                                                            #
+########################################################################
+
 die() {
   echo >&2 "ERROR - $@"
   exit 1
@@ -12,22 +17,32 @@ sshx() {
   return $?
 }
 
-## parse arguments
+snapList() {
+  local host=$1
+  local dataset=$2
+  local nameParts=$3
+  sshx "$host" $zfs list -H -t snapshot -o name -s creation \
+    | grep "$dataset" \
+    | egrep "$nameParts" \
+    | cut -d '@' -f2;
+  return ${PIPESTATUS[0]}
+}
+
+
+########################################################################
+# Parse arguments                                                      #
+########################################################################
+
 doRun=true
 snapshotNameParts=""
 snap1=""
 while getopts "dg:s:" option; do
-   case $option in
-      d) ## enable dry run
-         echo "dry run enabled"
-         doRun=false;;
-      g) ## parse -g as snapshot name parts, e.g. "zfs-auto-snap_daily|zfs-auto-snap_weekly|zfs-auto-snap_monthly"
-         snapshotNameParts=$OPTARG;;
-      s) ## parse -s as start snapshot
-         snap1=$OPTARG;;
-     \?) # Invalid option
-         die "invalid option";;
-   esac
+  case $option in
+    d) echo "dry run enabled"; doRun=false;;
+    g) snapshotNameParts=$OPTARG;; ## e.g. "zfs-auto-snap_daily|zfs-auto-snap_weekly|zfs-auto-snap_monthly"
+    s) snap1=$OPTARG;; ## start snapshot
+    \?) die "invalid option";;
+  esac
 done
 ARG1=${@:$OPTIND:1}
 ARG2=${@:$OPTIND+1:1}
@@ -55,24 +70,15 @@ datasetRecv="$ARG2"
 [[ "${hostSend}:${datasetSend}" != "${hostRecv}:${datasetRecv}" ]] \
   || die "cannot send within same dataset"
 
-## get send-side snapshot list
-snapListSend=$(
-  sshx "$hostSend" $zfs list -H -t snapshot -o name -s creation \
-    | grep "$datasetSend" \
-    | egrep "$snapshotNameParts" \
-    | cut -d '@' -f2;
-  exit ${PIPESTATUS[0]}
-)
-[[ $? == 0 ]] || die "unable to connect to ${hostSend}"
 
-## get recv-side snapshot list
-snapListRecv=$(
-  sshx "$hostRecv" $zfs list -H -t snapshot -o name -s creation \
-    | grep "$datasetRecv" \
-    | egrep "$snapshotNameParts" \
-    | cut -d '@' -f2;
-  exit ${PIPESTATUS[0]}
-)
+########################################################################
+# Main                                                                 #
+########################################################################
+
+## get snapshot lists
+snapListSend=$(snapList "$hostSend" "$datasetSend" "$snapshotNameParts")
+[[ $? == 0 ]] || die "unable to connect to ${hostSend}"
+snapListRecv=$(snapList "$hostRecv" "$datasetRecv" "$snapshotNameParts")
 [[ $? == 0 ]] || die "unable to connect to ${hostRecv}"
 
 ## determine start snapshot
@@ -87,7 +93,7 @@ snapListRecv=$(
 [[ $(echo "$snapListSend" | grep "$snap1" | wc -l) > 0 ]] \
   || die "missing snapshot ${hostSend}:${datasetSend}@${snap1}"
 
-## send start snapshot if needed
+## send initial snapshot if needed
 if [[ $(echo "$snapListRecv" | grep "$snap1" | wc -l) == 0 ]]; then
   echo "send init ${hostSend}:${datasetSend}@${snap1} -> ${hostRecv}:${datasetRecv}"
   if [[ "$doRun" == true ]]; then
@@ -97,12 +103,12 @@ if [[ $(echo "$snapListRecv" | grep "$snap1" | wc -l) == 0 ]]; then
     [[ ${PIPESTATUS[0]} != 0 || ${PIPESTATUS[2]} != 0 ]] \
       || die "init send required but failed"
   fi
-## check head
+## check first snapshot
 elif [[ "$(echo "$snapListSend" | head -n1)" != $(echo "$snapListRecv" | head -n1) ]]; then
   echo "WARN first snapshot mismatch: ${hostSend}:${datasetSend} != ${hostRecv}:${datasetRecv}"
 fi
 
-## send end snaps
+## send all snapshots incrementally
 snap2=$(echo "$snapListSend" | tail -n1)
 if [[ "$snap1" != "$snap2" ]]; then
   echo "send incr ${hostSend}:${datasetSend}@[${snap1} TO ${snap2}] -> ${hostRecv}:${datasetRecv}"
