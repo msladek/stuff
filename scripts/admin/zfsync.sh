@@ -20,10 +20,10 @@ sshx() {
 snapList() {
   local host=$1
   local dataset=$2
-  local nameParts=$3
+  local filter=$3
   sshx "$host" $zfs list -H -t snapshot -o name -s creation \
     | grep "$dataset" \
-    | egrep "$nameParts" \
+    | egrep "$filter" \
     | cut -d '@' -f2;
   return ${PIPESTATUS[0]}
 }
@@ -34,12 +34,12 @@ snapList() {
 ########################################################################
 
 doRun=true
-snapshotNameParts=""
+snapFilter=""
 snap1=""
-while getopts "dg:s:" option; do
+while getopts "df:s:" option; do
   case $option in
     d) echo "dry run enabled"; doRun=false;;
-    g) snapshotNameParts=$OPTARG;; ## e.g. "zfs-auto-snap_daily|zfs-auto-snap_weekly|zfs-auto-snap_monthly"
+    f) snapFilter=$OPTARG;; ## e.g. "daily|weekly|monthly"
     s) snap1=$OPTARG;; ## start snapshot
     \?) die "invalid option";;
   esac
@@ -52,15 +52,15 @@ ARG3=${@:$OPTIND+2:1}
 hostSend=""
 datasetSend="$ARG1"
 [[ $ARG1 =~ ":" ]] \
-  && hostSend=$(echo $ARG1 | cut -d ':' -f1) \
-  && datasetSend=$(echo $ARG1 | cut -d ':' -f2)
+  && hostSend=$(echo $ARG1 | cut -d ':' -f 1) \
+  && datasetSend=$(echo $ARG1 | cut -d ':' -f 2)
 
 ## parse ARG2 as receive host/dataset
 hostRecv=""
 datasetRecv="$ARG2"
 [[ $ARG2 =~ ":" ]] \
-  && hostRecv=$(echo $ARG2 | cut -d ':' -f1) \
-  && datasetRecv=$(echo $ARG2 | cut -d ':' -f2)
+  && hostRecv=$(echo $ARG2 | cut -d ':' -f 1) \
+  && datasetRecv=$(echo $ARG2 | cut -d ':' -f 2)
 
 ## test datasets
 [[ -n "$datasetSend" ]] \
@@ -76,9 +76,9 @@ datasetRecv="$ARG2"
 ########################################################################
 
 ## get snapshot lists
-snapListSend=$(snapList "$hostSend" "$datasetSend" "$snapshotNameParts")
+snapListSend=$(snapList "$hostSend" "$datasetSend" "$snapFilter")
 [[ $? == 0 ]] || die "unable to connect to ${hostSend}"
-snapListRecv=$(snapList "$hostRecv" "$datasetRecv" "$snapshotNameParts")
+snapListRecv=$(snapList "$hostRecv" "$datasetRecv" "$snapFilter")
 [[ $? == 0 ]] || die "unable to connect to ${hostRecv}"
 
 ## determine start snapshot
