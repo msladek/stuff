@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# zfs-auto-snapshot command must be available available
+# zfs-auto-snapshot command must be available
 command -v zfs-auto-snapshot &> /dev/null || exit 1
 
 # config directory must exists
 cfgdir=/etc/zfs-auto
 [[ -d "$cfgdir" ]] || exit 1 
 
-## verify label
+# expecting script to be linked below /etc/cron.${label}
 label=$(basename $(dirname $0) | cut -d '.' -f2)
+## verify label as hourly, daily, weekly or monthly
 validLabel=false
 for l in hourly daily weekly monthly; do
   [[ "$l" == "$label" ]] && validLabel=true && break
