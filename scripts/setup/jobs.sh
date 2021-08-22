@@ -15,6 +15,11 @@ fi
 echo "... hourly zfs-health"
 if $hasZFS; then
   sudo ln -s ~/stuff/scripts/jobs/zfs-health.sh /etc/cron.hourly/zfs-health
+  for label in hourly daily weekly monthly; do
+    sudo rm /etc/cron.${label}/zfs-auto-snapshot
+    sudo ln -s ~/stuff/scripts/jobs/zfs-snap.sh /etc/cron.${label}/zfs-snap
+  done
+  sudo ln -s ~/stuff/private/config/$(hostname)/zfs-auto /etc/zfs-auto
 else
   echo "skipped, zfs unavailable"
 fi
