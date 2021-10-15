@@ -4,6 +4,13 @@
 cfgdir=/etc/zfs-auto
 [[ -d "$cfgdir" ]] || exit 1
 
+# zfsync must be available
+command -v zfsync >/dev/null || exit 1
+
+# prepare log
+log="/var/log/zfs-auto-sync.log"
+touch $log
+
 
 ########################################################################
 # Parse arguments                                                      #
@@ -26,15 +33,17 @@ done
 # Main                                                                 #
 ########################################################################
 
-## TODO locking
-
-for path in ${cfgdir}/*; do
-  dataset=''
-  sync_target=''
-  sync_filter=''
-  source $path
-  [[ -z "$dataset" ]] && continue
-  [[ -z "$sync_target" ]] && continue
-  zfsync $debug -f "$sync_filter" "$dataset" "$sync_target"
-done
-exit 0
+(
+  flock --exclusive --nonblock 99 || exit 1
+  for path in ${cfgdir}/*; do
+    dataset=''
+    sync_target=''
+    sync_filter=''
+    source $path
+    [[ -z "$dataset" ]] && continue
+    [[ -z "$sync_target" ]] && continue
+    zfsync $debug -f "$sync_filter" "$dataset" "$sync_target" &>> $log
+  done
+  exit 0
+) 99>/var/lock/zfs-auto-sync
+exit $?

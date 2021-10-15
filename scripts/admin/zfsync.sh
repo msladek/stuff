@@ -77,7 +77,7 @@ datasetRecv="$ARG2"
 
 [[ "$doRun" != true ]] \
   && echo -n "DRY RUN - "
-echo "${hostSend}:${datasetSend} -> ${hostRecv}:${datasetRecv}"
+echo "$(date +"%Y-%m-%d %H:%M") ${hostSend}:${datasetSend} -> ${hostRecv}:${datasetRecv}"
 
 ## get snapshot lists
 snapListSend=$(snapList "$hostSend" "$datasetSend" "$snapFilter")
@@ -122,6 +122,6 @@ if [[ "$snap1" != "$snap2" ]]; then
   fi
 fi
 
-echo "synced up to: ${snap2}"
+echo "$(date +"%Y-%m-%d %H:%M") synced up to: ${snap2}"
 
 exit 0
