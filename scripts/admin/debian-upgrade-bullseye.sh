@@ -8,7 +8,7 @@ updateAptList () {
 }
 
 [[ "${TERM:0:6}" != 'screen' ]] \
- && echo 'run within screen/tmux' \
+ && echo 'exit: run within screen/tmux' \
  && exit 1
 
 apt update && \
@@ -16,24 +16,26 @@ apt upgrade \
  || exit 1
 
 echo
-read -p 'Upgrade buster -> bullseye now? (y/N) ' && [[ $REPLY =~ ^[Yy]$ ]] \ 
+read -p 'Upgrade buster -> bullseye now? (y/N) ' && [[ $REPLY =~ ^[Yy]$ ]] \
  || exit 1
 
+echo
 updateAptList /etc/apt/sources.list
 updateAptList /etc/apt/sources.list.d/hetzner-mirror.list
 updateAptList /etc/apt/sources.list.d/hetzner-security-updates.list
 updateAptList /etc/apt/sources.list.d/google-cloud.list
 updateAptList /etc/apt/sources.list.d/gce_sdk.list
 
+echo
 apt update && \
 apt upgrade && \
 apt full-upgrade && \
 apt autoremove && \
-apt autoclean && \
+apt autoclean \
  || exit 1
 
 echo
-read -p 'Reboot now? (y/N) ' && [[ $REPLY =~ ^[Yy]$ ]] \ 
+read -p 'Reboot now? (y/N) ' && [[ $REPLY =~ ^[Yy]$ ]] \
  && reboot
  
 exit 0
