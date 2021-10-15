@@ -1,5 +1,4 @@
-#!/bin/sh
-## run within screen/tmux session as root
+#!/bin/bash
 
 updateAptList () {
   [ -f "$1" ] && \
@@ -8,22 +7,35 @@ updateAptList () {
   echo "updated to bullseye in $1"
 }
 
-aptitude update && \
-aptitude upgrade \
+[[ "${TERM:0:6}" != 'screen' ]] \
+ && echo 'exit: run within screen/tmux' \
+ && exit 1
+
+apt update && \
+apt upgrade \
  || exit 1
 
+echo
+read -p 'Upgrade buster -> bullseye now? (y/N) ' && [[ $REPLY =~ ^[Yy]$ ]] \
+ || exit 1
+
+echo
 updateAptList /etc/apt/sources.list
 updateAptList /etc/apt/sources.list.d/hetzner-mirror.list
 updateAptList /etc/apt/sources.list.d/hetzner-security-updates.list
 updateAptList /etc/apt/sources.list.d/google-cloud.list
 updateAptList /etc/apt/sources.list.d/gce_sdk.list
 
-aptitude update && \
-aptitude upgrade && \
-aptitude dist-upgrade && \
-aptitude autoclean && \
-reboot \
+echo
+apt update && \
+apt upgrade && \
+apt full-upgrade && \
+apt autoremove && \
+apt autoclean \
  || exit 1
+
+echo
+read -p 'Reboot now? (y/N) ' && [[ $REPLY =~ ^[Yy]$ ]] \
+ && reboot
  
 exit 0
-

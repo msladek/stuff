@@ -53,18 +53,22 @@ alias ....='cd ../../../ && ll'
 alias .....='cd ../../../../ && ll'
 
 # other aliases
-alias cat=batcat
+command -v batcat >/dev/null \
+  && alias bat=batcat \
+  && alias cat=batcat
 alias lsports='sudo netstat -tulpn'
 alias untar='tar -zxvf'
 alias mkdir='mkdir -pv'
 alias rmdir='rmdir -pv'
 alias ducks='du -cks * | sort -rn | head -11'
-alias screenr='screen -RR'
-alias t='tmux attach || tmux new-session'
-alias ta='tmux attach -t'
-alias tn='tmux new-session'
-alias tc='tmux new-session'
-alias tl='tmux list-sessions'
+command -v screen >/dev/null \
+  && alias screenr='screen -RR'
+command -v batcat >/dev/null \
+  && alias t='tmux attach || tmux new-session' \
+  && alias ta='tmux attach -t' \
+  && alias tn='tmux new-session' \
+  && alias tc='tmux new-session' \
+  && alias tl='tmux list-sessions'
 
 function mkcd() {
   [ -w "./" ] && mkdir "$@" || (sudo mkdir "$@" && sudo chown $USER:$USER "${@: -1}") && cd "${@: -1}"
@@ -83,6 +87,7 @@ function lessf() {
   return $?
 }
 
+if command -v aptitude >/dev/null; then
 function update() {
   hold=$(sudo apt-mark showhold)
   [ $hold ] && echo -e "\e[0;91mpackages held back:\e[0m ${hold}" && echo
@@ -91,6 +96,7 @@ function update() {
     && sudo aptitude autoclean && echo \
     && echo "check restarts:" && sudo checkrestart
 }
+fi
 
 function ssh-add() {
   command ssh-add -l | grep -q $(ssh-keygen -lf $1 | awk '{print $2}') && echo "already added: $1" || command ssh-add $1
@@ -108,8 +114,11 @@ function ssh() {
   return $?
 }
 
+if command -v enpasscli >/dev/null; then
 function enp() {
   [   -z $(printenv MASTERPW) ] && read -s -p "Enter master password: " MASTERPW && export MASTERPW && echo
   [ ! -z $(printenv MASTERPW) ] && enpasscli -vault=$HOME/.enpass-vault -keyfile=$HOME/.enpass-keyfile -sort "$@"
   return $?
 }
+fi
+
