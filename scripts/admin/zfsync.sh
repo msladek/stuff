@@ -38,7 +38,7 @@ snapFilter=""
 snap1=""
 while getopts "df:s:" option; do
   case $option in
-    d) echo "dry run enabled"; doRun=false;;
+    d) doRun=false;; ## dry run enabled
     f) snapFilter=$OPTARG;; ## e.g. "daily|weekly|monthly"
     s) snap1=$OPTARG;; ## start snapshot
     \?) die "invalid option";;
@@ -75,6 +75,10 @@ datasetRecv="$ARG2"
 # Main                                                                 #
 ########################################################################
 
+[[ "$doRun" != true ]] \
+  && echo -n "DRY RUN - "
+echo "${hostSend}:${datasetSend} -> ${hostRecv}:${datasetRecv}"
+
 ## get snapshot lists
 snapListSend=$(snapList "$hostSend" "$datasetSend" "$snapFilter")
 [[ $? == 0 ]] || die "unable to connect to ${hostSend}"
@@ -95,33 +99,29 @@ snapListRecv=$(snapList "$hostRecv" "$datasetRecv" "$snapFilter")
 
 ## send initial snapshot if needed
 if [[ $(echo "$snapListRecv" | grep "$snap1" | wc -l) == 0 ]]; then
-  echo "send init ${hostSend}:${datasetSend}@${snap1} -> ${hostRecv}:${datasetRecv}"
+  echo "send init: ${snap1}"
   if [[ "$doRun" == true ]]; then
     sshx "$hostSend" $zfs send ${datasetSend}@${snap1} \
   | pv \
   | sshx "$hostRecv" $zfs recv -us $datasetRecv
-    [[ ${PIPESTATUS[0]} != 0 || ${PIPESTATUS[2]} != 0 ]] \
+    [[ ${PIPESTATUS[0]} != 0 ]] \
       || die "init send required but failed"
   fi
-## check first snapshot
-elif [[ "$(echo "$snapListSend" | head -n1)" != $(echo "$snapListRecv" | head -n1) ]]; then
-  echo "WARN first snapshot mismatch: ${hostSend}:${datasetSend} != ${hostRecv}:${datasetRecv}"
 fi
 
 ## send all snapshots incrementally
 snap2=$(echo "$snapListSend" | tail -n1)
 if [[ "$snap1" != "$snap2" ]]; then
-  echo "send incr ${hostSend}:${datasetSend}@[${snap1} TO ${snap2}] -> ${hostRecv}:${datasetRecv}"
+  echo "send incr: ${snap1} - ${snap2}"
   if [[ "$doRun" == true ]]; then
     sshx "$hostSend" $zfs send -I ${datasetSend}@${snap1} ${datasetSend}@${snap2} \
   | pv \
   | sshx "$hostRecv" $zfs recv -us $datasetRecv
-    [[ ${PIPESTATUS[0]} != 0 || ${PIPESTATUS[2]} != 0 ]] \
+    [[ ${PIPESTATUS[0]} != 0 ]] \
       || die "ERROR incremental send failed"
   fi
-else
-  echo "nothing to do, latest snapshot: ${snap1}"
 fi
 
-echo "done"
+echo "synced up to: ${snap2}"
+
 exit 0

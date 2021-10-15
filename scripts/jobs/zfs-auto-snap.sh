@@ -1,16 +1,42 @@
 #!/bin/bash
 
+# config directory must exists
+cfgdir=/etc/zfs-auto
+[[ -d "$cfgdir" ]] || exit 1
+
+
+########################################################################
+# Functions                                                            #
+########################################################################
+
 sshx() {
   [[ -z "$1" ]] && eval "${@:2}" || ssh -t -q -o "BatchMode=yes" "$1" "${@:2}"
   return $?
 }
 
-# config directory must exists
-cfgdir=/etc/zfs-auto
-[[ -d "$cfgdir" ]] || exit 1
 
-# expecting script to be linked below /etc/cron.${label}
-label=$(basename $(dirname $0) | cut -d '.' -f2)
+########################################################################
+# Parse arguments                                                      #
+########################################################################
+
+label=''
+debug=false
+while getopts "dl:" option; do
+  case $option in
+    d) debug=true;;
+    l) label=$OPTARG;; ## e.g. "hourly|daily|weekly|monthly"
+  esac
+done
+
+# legacy: enable debug if set as individual parameter
+for param in "$@"; do
+  [[ "$param" == "debug" ]] && debug=true
+done
+
+# script may be linked below /etc/cron.${label}
+[[ -z "$label" ]] \
+  && label=$(basename $(dirname $0) | cut -d '.' -f2)
+
 ## verify label as hourly, daily, weekly or monthly
 validLabel=false
 for l in hourly daily weekly monthly; do
@@ -18,10 +44,10 @@ for l in hourly daily weekly monthly; do
 done
 $validLabel || exit 1
 
-# enable debug if set as parameter
-for param in "$@"; do
-  [[ "$param" == "debug" ]] && debug=true
-done
+
+########################################################################
+# Main                                                                 #
+########################################################################
 
 for path in ${cfgdir}/*; do
   host=''
