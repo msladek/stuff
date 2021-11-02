@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# config directory must exists
 cfgdir=/etc/zfs-auto
-[[ -d "$cfgdir" ]] || exit 1
+[[ ! -d "$cfgdir" ]] && "[ERROR] /etc/zfs-auto must exist" && exit 1
 
+## TODO logging?
 
 ########################################################################
 # Functions                                                            #

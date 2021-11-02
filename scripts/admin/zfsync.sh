@@ -35,11 +35,13 @@ snapList() {
 
 doRun=true
 snapFilter=""
+recvOpts="us"
 snap1=""
-while getopts "df:s:" option; do
+while getopts "df:r:s:" option; do
   case $option in
     d) doRun=false;; ## dry run enabled
     f) snapFilter=$OPTARG;; ## e.g. "daily|weekly|monthly"
+    r) recvOpts=$OPTARG;; ## receive options, e.g. Fus
     s) snap1=$OPTARG;; ## start snapshot
     \?) die "invalid option";;
   esac
@@ -77,7 +79,7 @@ datasetRecv="$ARG2"
 
 [[ "$doRun" != true ]] \
   && echo -n "DRY RUN - "
-echo "$(date +"%Y-%m-%d %H:%M") ${hostSend}:${datasetSend} -> ${hostRecv}:${datasetRecv}"
+echo "${hostSend}:${datasetSend} -> ${hostRecv}:${datasetRecv}"
 
 ## get snapshot lists
 snapListSend=$(snapList "$hostSend" "$datasetSend" "$snapFilter")
@@ -116,12 +118,12 @@ if [[ "$snap1" != "$snap2" ]]; then
   if [[ "$doRun" == true ]]; then
     sshx "$hostSend" $zfs send -I ${datasetSend}@${snap1} ${datasetSend}@${snap2} \
   | pv \
-  | sshx "$hostRecv" $zfs recv -us $datasetRecv
+  | sshx "$hostRecv" $zfs recv -${recvOpts} $datasetRecv
     [[ ${PIPESTATUS[0]} != 0 ]] \
       || die "ERROR incremental send failed"
   fi
 fi
 
-echo "$(date +"%Y-%m-%d %H:%M") synced up to: ${snap2}"
+echo "synced up to: ${snap2}"
 
 exit 0

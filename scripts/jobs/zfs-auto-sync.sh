@@ -1,15 +1,19 @@
 #!/bin/bash
 
-# config directory must exists
 cfgdir=/etc/zfs-auto
-[[ -d "$cfgdir" ]] || exit 1
+[[ ! -d "$cfgdir" ]] && "[ERROR] /etc/zfs-auto must exist" && exit 1
 
 # zfsync must be available
 command -v zfsync >/dev/null || exit 1
 
 # prepare log
-log="/var/log/zfs-auto-sync.log"
-touch $log
+logger="/var/log/zfs-auto-sync.log"
+touch $logger
+log() {
+  while read line; do
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] ${line}" | tee -a $logger
+  done
+}
 
 
 ########################################################################
@@ -42,7 +46,7 @@ done
     source $path
     [[ -z "$dataset" ]] && continue
     [[ -z "$sync_target" ]] && continue
-    zfsync $debug -f "$sync_filter" "$dataset" "$sync_target" &>> $log
+    zfsync $debug -f "$sync_filter" "$dataset" "$sync_target" | log
   done
   exit 0
 ) 99>/var/lock/zfs-auto-sync
