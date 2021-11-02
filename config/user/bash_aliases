@@ -63,7 +63,7 @@ alias rmdir='rmdir -pv'
 alias ducks='du -cks * | sort -rn | head -11'
 command -v screen >/dev/null \
   && alias screenr='screen -RR'
-command -v batcat >/dev/null \
+command -v tmux >/dev/null \
   && alias t='tmux attach || tmux new-session' \
   && alias ta='tmux attach -t' \
   && alias tn='tmux new-session' \
@@ -89,7 +89,7 @@ function lessf() {
 
 if command -v aptitude >/dev/null; then
 function update() {
-  hold=$(sudo apt-mark showhold)
+  local hold=$(sudo apt-mark showhold)
   [ $hold ] && echo -e "\e[0;91mpackages held back:\e[0m ${hold}" && echo
   sudo aptitude update \
     && sudo aptitude upgrade \
@@ -105,8 +105,8 @@ function ssh-add() {
 
 function ssh() {
   if [ "$#" -eq 1 ]; then
-    sshHostName=$(    cat $HOME/.ssh/config | sed -n "/$1/,/Host /p" | grep 'HostName'     | awk '{print $2}' | sed "s|%h|$1|g")
-    sshIdentityFile=$(cat $HOME/.ssh/config | sed -n "/$1/,/Host /p" | grep 'IdentityFile' | awk '{print $2}' | sed "s|%h|${sshHostName}|g")
+    local sshHostName=$(    cat $HOME/.ssh/config | sed -n "/$1/,/Host /p" | grep 'HostName'     | awk '{print $2}' | sed "s|%h|$1|g")
+    local sshIdentityFile=$(cat $HOME/.ssh/config | sed -n "/$1/,/Host /p" | grep 'IdentityFile' | awk '{print $2}' | sed "s|%h|${sshHostName}|g")
     [ -z "${sshIdentityFile// }" ] && echo "Unable to determine identity file for: $1" \
 	    || eval ssh-add $sshIdentityFile
   fi
@@ -114,11 +114,14 @@ function ssh() {
   return $?
 }
 
-if command -v enpasscli >/dev/null; then
+if command -v enpasscli-wrapper >/dev/null; then
+alias enpcp='enp copy'
+alias enpls='enp list'
 function enp() {
-  [   -z $(printenv MASTERPW) ] && read -s -p "Enter master password: " MASTERPW && export MASTERPW && echo
-  [ ! -z $(printenv MASTERPW) ] && enpasscli -vault=$HOME/.enpass-vault -keyfile=$HOME/.enpass-keyfile -sort "$@"
+  [ -z "$ENP_PIN" ] \
+    && read -s -p "Enter PIN: " ENP_PIN && echo \
+    && export ENP_PIN
+  enpasscli-wrapper "$@"
   return $?
 }
 fi
-
