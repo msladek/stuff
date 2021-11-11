@@ -114,14 +114,15 @@ function ssh() {
   return $?
 }
 
-if command -v enpasscli-wrapper >/dev/null; then
+if command -v enpasscli+ >/dev/null; then
 alias enpcp='enp copy'
 alias enpls='enp list'
 function enp() {
   [ -z "$ENP_PIN" ] \
     && read -s -p "Enter PIN: " ENP_PIN && echo \
     && export ENP_PIN
-  enpasscli-wrapper "$@"
+  enpasscli+ "$@" \
+    || unset ENP_PIN
   return $?
 }
 fi
