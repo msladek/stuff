@@ -115,14 +115,16 @@ function ssh() {
 }
 
 if command -v enpasscli+ >/dev/null; then
-alias enpcp='enp copy'
 alias enpls='enp list'
+alias enpsh='enp show'
+alias enpcp='enp copy'
 function enp() {
-  [ -z "$ENP_PIN" ] \
-    && read -s -p "Enter PIN: " ENP_PIN && echo \
-    && export ENP_PIN
+  [ -z "$enp_pin" ] \
+    && read -s -p "Enter PIN (or omit): " enp_pin && echo \
+    && export enp_pin
+  export pbkdf2_iter="1000000"
   enpasscli+ "$@" \
-    || unset ENP_PIN
+    || unset enp_pin
   return $?
 }
 fi
