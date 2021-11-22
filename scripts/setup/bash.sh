@@ -1,8 +1,7 @@
 #!/bin/bash
 
 echo -e "\nSetup bashrc ..."
-grep -qF -- ".bashrc" ~/.bash_profile \
-    || echo "\n[ -f ~/.bashrc ] && source ~/.bashrc" >> ~/.bash_profile
+# let's setup our own ~/.bash.d
 grep -qF -- ".bash.d" ~/.bashrc
 if [ ! $? -eq 0 ]; then
 cat <<"EOT" >> ~/.bashrc
@@ -14,6 +13,11 @@ if [ -d ~/.bash.d ]; then
 fi
 EOT
 fi
+# https://superuser.com/a/789499/1099716
+[ -f ~/.bash_profile ] && [ -f ~/.profile ] \
+  && echo && read -p "Remove .bash_profile in favour of .profile? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
+  && rm -f ~/.bash_profile
+fi
 
 echo -e "\nLink stuff directory ..."
 [ ! -d ~/stuff ] && echo "stuff not found" && exit 1
@@ -24,7 +28,7 @@ sudo ln -sfn /opt/stuff /root/stuff
 echo -e "\nLink bash goodies ..."
 mkdir -p ~/.bash.d
 chmod 744 ~/.bash.d
-ln -sf ~/stuff/config/user/bash/custom.sh ~/.bash.d/custom.sh && chmod u+x ~/.bash.d/custom.sh
+ln -sf ~/stuff/config/user/bash/custom.sh ~/.bash.d/custom.sh
 if [ -e ~/.bash_aliases ] || [ -h ~/.bash_aliases ]; then
   echo && read -p "Remove legacy bash_aliases? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
     && rm -f ~/.bash_aliases
