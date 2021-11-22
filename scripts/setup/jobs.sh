@@ -20,7 +20,6 @@ if $hasZFS; then
     sudo ln -sf /opt/stuff/scripts/jobs/zfs-auto-snap.sh /etc/cron.${label}/zfs-auto-snap
   done
   sudo ln -sfn /opt/stuff/private/config/$(hostname)/zfs-auto /etc/zfs-auto
-  mkdir -p /etc/cron.after
 else
   echo "skipped, zfs unavailable"
 fi

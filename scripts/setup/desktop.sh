@@ -28,6 +28,5 @@ case "$choice" in
     && ln -sf ~/stuff/services/ssh-agent.service ~/.config/systemd/user/ssh-agent.service \
     && systemctl --user enable ssh-agent \
     && systemctl --user start ssh-agent \
-    && echo 'SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket' >> ~/.bashrc
     || echo "... skip, already setup";;
 esac
