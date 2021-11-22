@@ -30,3 +30,6 @@ case "$choice" in
     && systemctl --user start ssh-agent \
     || echo "... skip, already setup";;
 esac
+
+mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
+  && ln -sf ~/stuff/config/user/bash/enpass.sh ~/.bash.d/80-enpass.sh

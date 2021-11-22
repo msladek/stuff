@@ -26,13 +26,15 @@ sudo ln -sfn ~/stuff /opt/stuff
 sudo ln -sfn /opt/stuff /root/stuff
 
 echo -e "\nLink bash goodies ..."
-mkdir -p ~/.bash.d
-chmod 744 ~/.bash.d
-ln -sf ~/stuff/config/user/bash/custom.sh ~/.bash.d/custom.sh
 if [ -e ~/.bash_aliases ] || [ -h ~/.bash_aliases ]; then
   echo && read -p "Remove legacy bash_aliases? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
     && rm -f ~/.bash_aliases
 fi
+mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
+  && ln -sf ~/stuff/config/user/bash/custom.sh    ~/.bash.d/10-custom.sh \
+  && ln -sf ~/stuff/config/user/bash/prompt.sh    ~/.bash.d/20-prompt.sh \
+  && ln -sf ~/stuff/config/user/bash/aliases.sh   ~/.bash.d/50-aliases.sh \
+  && ln -sf ~/stuff/config/user/bash/functions.sh ~/.bash.d/60-functions.sh
 ln -sf ~/stuff/config/user/vimrc ~/.vimrc
 ln -sf ~/stuff/config/user/tmux.conf ~/.tmux.conf
 
