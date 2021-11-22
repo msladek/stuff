@@ -3,6 +3,7 @@
 echo -e "\nSetup Git config ..."
 git config --global core.editor "vim"
 git config --global pull.rebase false
+git config --global push.default current
 if [ -f ~/.ssh/github ]; then
   git config --global core.sshCommand "ssh -i ~/.ssh/github -F /dev/null"
   cd ~/stuff/private > /dev/null 2>&1 \
