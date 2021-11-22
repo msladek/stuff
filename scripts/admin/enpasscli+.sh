@@ -7,7 +7,7 @@ command -v enpasscli >/dev/null || exit 1
 
 # path to the mpw store file
 [ -n "$mpw_store" ] || \
-  mpw_store=/tmp/enp_mpw_$USER
+  mpw_store=${XDG_RUNTIME_DIR}/enp.mpw
 # iteration count for pbkdf2 key derivation function
 [ -n "$pbkdf2_iter" ] || \
   pbkdf2_iter="1000000"
