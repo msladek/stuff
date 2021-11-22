@@ -2,6 +2,8 @@
 
 [ ! -d ~/stuff ] && echo "stuff not found" && exit 1
 sudo chown -R $USER:$USER ~/stuff
+sudo ln -sfn ~/stuff /opt/stuff
+sudo ln -sfn /opt/stuff /root/stuff
 echo -e "\nLink bash goodies ..."
 ln -sf ~/stuff/config/user/bash_aliases ~/.bash_aliases
 grep -qF -- ".bash_aliases" ~/.bashrc \

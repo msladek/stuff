@@ -87,6 +87,11 @@ function lessf() {
   return $?
 }
 
+## set correct ssh auth socket if agent service is running 
+## TODO test is this even needed?
+#systemctl --user status ssh-agent >/dev/null \
+#  && SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+
 if command -v aptitude >/dev/null; then
 function update() {
   local hold=$(sudo apt-mark showhold)
@@ -115,7 +120,7 @@ function ssh-add-fromcfg() {
   return $?
 }
 
-function ssh() {
+function ssh-custom() {
   [ "$#" -eq 1 ] && ssh-add-fromcfg $1
   command ssh "$@"
   return $?
