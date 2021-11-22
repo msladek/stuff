@@ -17,7 +17,6 @@ fi
 [ -f ~/.bash_profile ] && [ -f ~/.profile ] \
   && echo && read -p "Remove .bash_profile in favour of .profile? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
   && rm -f ~/.bash_profile
-fi
 
 echo -e "\nLink stuff directory ..."
 [ ! -d ~/stuff ] && echo "stuff not found" && exit 1
@@ -31,7 +30,7 @@ if [ -e ~/.bash_aliases ] || [ -h ~/.bash_aliases ]; then
     && rm -f ~/.bash_aliases
 fi
 mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
-  && ln -sf ~/stuff/config/user/bash/custom.sh    ~/.bash.d/10-custom.sh \
+  && ln -sf ~/stuff/config/user/bash/env.sh       ~/.bash.d/10-env.sh \
   && ln -sf ~/stuff/config/user/bash/prompt.sh    ~/.bash.d/20-prompt.sh \
   && ln -sf ~/stuff/config/user/bash/aliases.sh   ~/.bash.d/50-aliases.sh \
   && ln -sf ~/stuff/config/user/bash/functions.sh ~/.bash.d/60-functions.sh
