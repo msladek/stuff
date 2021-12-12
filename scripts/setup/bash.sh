@@ -5,12 +5,14 @@ echo -e "\nSetup bashrc ..."
 grep -qF -- ".bash.d" ~/.bashrc
 if [ ! $? -eq 0 ]; then
 cat <<"EOT" >> ~/.bashrc
+
 if [ -d ~/.bash.d ]; then
   for f in ~/.bash.d/*.sh; do
     [ -r $f ] && source $f
   done
   unset f
 fi
+
 EOT
 fi
 # https://superuser.com/a/789499/1099716
