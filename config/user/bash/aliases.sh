@@ -23,8 +23,9 @@ alias .....='cd ../../../../ && ll'
 
 # other aliases
 command -v batcat >/dev/null \
-  && alias bat=batcat \
-  && alias cat=batcat
+  && alias bat='batcat' \
+  && alias batp='bat -p' \
+  && alias cat='batp'
 alias lsports='sudo netstat -tulpn'
 alias untar='tar -zxvf'
 alias mkdir='mkdir -pv'
