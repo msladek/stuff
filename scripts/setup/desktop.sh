@@ -31,5 +31,8 @@ case "$choice" in
     || echo "... skip, already setup";;
 esac
 
+ln -sf /opt/stuff/bin/enpasscli+.sh /usr/local/bin/enpasscli+
+ln -sf /opt/stuff/bin/enpass-askpin.sh /usr/local/bin/enpass-askpin
+ln -sf /opt/stuff/bin/enpass-askpass.sh /usr/local/bin/enpass-askpass
 mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
   && ln -sf ~/stuff/config/user/bash/enpass.sh ~/.bash.d/80-enpass.sh
