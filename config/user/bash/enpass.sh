@@ -27,7 +27,7 @@ function enp() {
 if command -v enpass-askpass >/dev/null; then
 function ssh() {
   local require=never
-  enp check && require=force
+  ssh-add-has $1 || enp check && require=force
   SSH_ASKPASS=enpass-askpass SSH_ASKPASS_REQUIRE=$require command ssh "$@"
 }
 fi #enpass-askpass

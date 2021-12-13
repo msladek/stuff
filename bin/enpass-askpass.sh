@@ -14,7 +14,7 @@ askmsg="$1"
 # $1 - "Enter passphrase for <path/to/keyfile>: "
 [[ "${1,,}" == *"passphrase"* ]] \
   && command -v enpasscli+ >/dev/null \
-  && [ ! 6 -gt "${#enp_pin}" ] \
+  && [ ! -z "${enp_pin+x}" ] \
   && keyfile=$(echo "$1" | lastword | replace ':$' | xargs basename) \
   && [ ! -z "$keyfile" ] \
   && pass=$(enp_mode=noask enpasscli+ show "ssh $keyfile" 2>&1 \
