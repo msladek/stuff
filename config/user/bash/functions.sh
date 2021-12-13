@@ -26,25 +26,28 @@ function update() {
 }
 fi
 
-function ssh-add-once() {
-  command ssh-add -l | grep -q $(ssh-keygen -lf $1 | awk '{print $2}') && echo "already added: $1" || command ssh-add $1
-  return $?
+function ssh-cfg-get() {
+  command ssh -G $1 | grep "^${2,,} " | head -1 | awk '{print $2}'
 }
 
-function ssh-add-fromcfg() {
-  if [ -n "$1" ]; then
-    local sshHostName=$(    cat $HOME/.ssh/config | sed -n "/Host.* $1/,/Host /p" | grep 'HostName'     | awk '{print $2}' | sed "s|%h|$1|g")
-    local sshIdentityFile=$(cat $HOME/.ssh/config | sed -n "/Host.* $1/,/Host /p" | grep 'IdentityFile' | awk '{print $2}' | sed "s|%h|${sshHostName}|g")
-    local sshProxyJump=$(   cat $HOME/.ssh/config | sed -n "/Host.* $1/,/Host /p" | grep 'ProxyJump'    | awk '{print $2}' | sed "s|%h|$1|g")
-    ssh-add-fromcfg $sshProxyJump
-    [ -z "${sshIdentityFile// }" ] && echo "Unable to determine identity file for: $1" \
-	    || eval ssh-add-once $sshIdentityFile
+function ssh-add-has() {
+  local identityFile="${1/#\~/$HOME}"
+  if [ -f "$identityFile" ]; then
+    command ssh-add -l | grep -q $(ssh-keygen -lf "$identityFile" | awk '{print $2}')
+  elif [ -n "$1" ]; then
+    ssh-add-has $(ssh-cfg-get $1 'ProxyJump') && \
+    ssh-add-has $(ssh-cfg-get $1 'IdentityFile')
   fi
-  return $?
 }
 
-function ssh-custom() {
-  [ "$#" -eq 1 ] && ssh-add-fromcfg $1
-  command ssh "$@"
-  return $?
+function ssh-add-once() {
+  local identityFile="${1/#\~/$HOME}"
+  if [ -f "$identityFile" ]; then
+    ssh-add-has "$identityFile" \
+      && echo "identity already added: $1" \
+      || command ssh-add "$identityFile"
+  elif [ -n "$1" ]; then
+    ssh-add-once $(ssh-cfg-get $1 'ProxyJump') && \
+    ssh-add-once $(ssh-cfg-get $1 'IdentityFile')
+  fi
 }
