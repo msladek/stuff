@@ -19,9 +19,9 @@ if command -v aptitude >/dev/null; then
 function update() {
   local hold=$(sudo apt-mark showhold)
   [ $hold ] && echo -e "\e[0;91mpackages held back:\e[0m ${hold}" && echo
-  sudo aptitude update \
-    && sudo aptitude upgrade \
-    && sudo aptitude autoclean && echo \
+  aptitude "$@" update \
+    && aptitude upgrade \
+    && aptitude autoclean && echo \
     && echo "check restarts:" && sudo checkrestart
 }
 fi
