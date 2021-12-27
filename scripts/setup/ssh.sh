@@ -6,6 +6,7 @@ if [ -d ~/stuff/private ]; then
   ln -s ~/stuff/private/ssh/config ~/.ssh/config
   ln -s ~/stuff/private/ssh/config.d ~/.ssh/config.d
   ln -s ~/stuff/private/ssh/keys/github ~/.ssh/github
+  vim ~/.ssh/.config
 else
   echo "skipped, private repo missing"
 fi
