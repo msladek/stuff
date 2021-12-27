@@ -14,8 +14,8 @@ sudo aptitude -y install \
     sudo bash-completion apt-listbugs apt-listchanges apt-transport-https \
     net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
-    ntp git tree pv dstat bat vim rsync htop screen tmux sshfs smartmontools \
-    diff colordiff zip unzip unrar-free unp software-properties-common build-essential \
+    ntp git tree pv dstat bat vim rsync htop tmux sshfs smartmontools \
+    colordiff zip unzip unrar-free unp software-properties-common build-essential \
   | egrep -v "is already installed|Reading |Writing |Building |Initializing "
 
 function github-install-latest() {

@@ -4,7 +4,7 @@ echo -e "\nInstall desktop packages ..."
 sudo aptitude update > /dev/null && sudo aptitude install \
     openjdk-11-jdk openjdk-11-source openjdk-11-doc visualvm \
     gnome-system-tools gnome-system-monitor gnome-disk-utility \
-    glances hfsprogs gvfs-backends gvfs-fuse \
+    cool-retro-term glances hfsprogs gvfs-backends gvfs-fuse \
     gufw gparted baobab chromium enpass geany vlc gimp clipit \
   | egrep -v "is already installed|Reading |Writing |Building |Initializing "
 
@@ -31,8 +31,8 @@ case "$choice" in
     || echo "... skip, already setup";;
 esac
 
-ln -sf /opt/stuff/bin/enpasscli+.sh /usr/local/bin/enpasscli+
-ln -sf /opt/stuff/bin/enpass-askpin.sh /usr/local/bin/enpass-askpin
-ln -sf /opt/stuff/bin/enpass-askpass.sh /usr/local/bin/enpass-askpass
+sudo ln -sf /opt/stuff/bin/enpasscli+.sh /usr/local/bin/enpasscli+
+sudo ln -sf /opt/stuff/bin/enpass-askpin.sh /usr/local/bin/enpass-askpin
+sudo ln -sf /opt/stuff/bin/enpass-askpass.sh /usr/local/bin/enpass-askpass
 mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
   && ln -sf ~/stuff/config/user/bash/enpass.sh ~/.bash.d/80-enpass.sh

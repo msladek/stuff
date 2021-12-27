@@ -13,3 +13,4 @@ chown $USER:$(id -gn) ~/.ssh
 chmod -f 700 ~/.ssh
 chmod -f 600 ~/.ssh/*
 chmod -f 644 ~/.ssh/*.pub
+chmod -f 700 ~/.ssh/config.d/
