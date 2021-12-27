@@ -26,6 +26,10 @@ function update() {
 }
 fi
 
+function ssh-cfg-has() {
+  [ ! -z "$1" ] && [[ $1 != -* ]] && ! command ssh -G $1 | grep -q "^identityfile ~/.ssh/id_rsa$"
+}
+
 function ssh-cfg-get() {
   command ssh -G $1 | grep "^${2,,} " | head -1 | awk '{print $2}'
 }
@@ -34,7 +38,7 @@ function ssh-add-has() {
   local identityFile="${1/#\~/$HOME}"
   if [ -f "$identityFile" ]; then
     command ssh-add -l | grep -q $(ssh-keygen -lf "$identityFile" | awk '{print $2}')
-  elif [ -n "$1" ]; then
+  elif ssh-cfg-has $1; then
     ssh-add-has $(ssh-cfg-get $1 'ProxyJump') && \
     ssh-add-has $(ssh-cfg-get $1 'IdentityFile')
   fi
@@ -46,8 +50,10 @@ function ssh-add-once() {
     ssh-add-has "$identityFile" \
       && echo "identity already added: $1" \
       || command ssh-add "$identityFile"
-  elif [ -n "$1" ]; then
-    ssh-add-once $(ssh-cfg-get $1 'ProxyJump') && \
+  elif ssh-cfg-has $1; then
+    ssh-add-once $(ssh-cfg-get $1 'ProxyJump')
     ssh-add-once $(ssh-cfg-get $1 'IdentityFile')
+  else
+    command ssh-add "$@"
   fi
 }
