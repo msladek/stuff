@@ -11,7 +11,7 @@ sudo aptitude update > /dev/null && sudo aptitude -y upgrade
 
 echo -e "Install essentials packages ..."
 sudo aptitude -y install \
-    sudo bash-completion apt-listbugs apt-listchanges apt-transport-https \
+    doas bash-completion apt-listbugs apt-listchanges apt-transport-https \
     net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
     ntp git tree pv dstat bat vim rsync htop tmux sshfs smartmontools \

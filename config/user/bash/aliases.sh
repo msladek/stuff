@@ -9,6 +9,9 @@ alias ln='ln -i'
 
 # sudo stuff
 alias sudo='sudo '
+command -v doas >/dev/null \
+  && alias sudo='echo doas ' \
+  || alias doas='sudo '
 
 # some more ls aliases
 command -v lsd >/dev/null \
