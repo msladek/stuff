@@ -7,7 +7,7 @@ PRIV_DIR=$HOME/stuff/private
 if [ -d $PRIV_DIR ]; then
   ln -sf $PRIV_DIR/ssh/config $SSH_DIR/config
   ln -sfn $PRIV_DIR/ssh/config.d $SSH_DIR/config.d
-  ln -sf $PRIV_DIR/ssh/keys/github $SSH_DIR/github
+  ln -s $PRIV_DIR/ssh/keys/github $SSH_DIR/github
   vim $SSH_DIR/config
 else
   echo "skipped, private repo missing"
