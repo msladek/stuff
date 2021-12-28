@@ -1,12 +1,12 @@
 #!/bin/bash
 
 echo -e "\nInstall desktop packages ..."
-sudo aptitude update > /dev/null && sudo aptitude install \
+sudo aptitude -q=2 update && sudo aptitude -q=2 install \
     openjdk-11-jdk openjdk-11-source openjdk-11-doc visualvm \
     gnome-system-tools gnome-system-monitor gnome-disk-utility \
-    cool-retro-term glances hfsprogs gvfs-backends gvfs-fuse \
+    grub-customizer glances hfsprogs gvfs-backends gvfs-fuse \
     gufw gparted baobab chromium enpass geany vlc gimp clipit \
-  | egrep -v "is already installed|Reading |Writing |Building |Initializing "
+      | grep -v 'is already installed at the requested version'
 
 echo
 echo -e "Setup Desktop Git config ..."
@@ -31,6 +31,14 @@ case "$choice" in
     || echo "... skip, already setup";;
 esac
 
+echo -e "\nInstall Font Adobe Source Code Pro ..."
+FONT_DIR="$HOME/.fonts/adobe-fonts/source-code-pro"
+FONT_URL_ADOBE='https://github.com/adobe-fonts/source-code-pro.git'
+git clone --depth 1 --branch release $FONT_URL_ADOBE $FONT_DIR \
+	&& fc-cache -f -v $FONT_DIR \
+  || echo "... skip, already setup"
+
+echo -e "\nSetup enpasscli ..."
 sudo ln -sf /opt/stuff/bin/enpasscli+.sh /usr/local/bin/enpasscli+
 sudo ln -sf /opt/stuff/bin/enpass-askpin.sh /usr/local/bin/enpass-askpin
 sudo ln -sf /opt/stuff/bin/enpass-askpass.sh /usr/local/bin/enpass-askpass

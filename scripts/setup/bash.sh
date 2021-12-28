@@ -22,7 +22,7 @@ fi
 
 echo -e "\nLink stuff directory ..."
 [ ! -d ~/stuff ] && echo "stuff not found" && exit 1
-sudo chown -R $USER:$USER ~/stuff
+sudo chown -R $USER:$(id -gn) ~/stuff
 sudo ln -sfn ~/stuff /opt/stuff
 sudo ln -sfn /opt/stuff /root/stuff
 
@@ -42,5 +42,5 @@ ln -sf ~/stuff/config/user/tmux.conf ~/.tmux.conf
 echo -e "\nEnable sudo insults ..."
 echo -e 'Defaults insults' | sudo tee /etc/sudoers.d/insults > /dev/null
 
-sudo -e "\nEnable doas ..."
-echo -e "permit persist $USER as root" | doas tee /etc/doas.conf > /dev/null
+echo -e "\nEnable doas ..."
+echo -e "permit persist $USER as root" | sudo tee /etc/doas.conf > /dev/null

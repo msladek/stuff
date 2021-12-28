@@ -1,17 +1,17 @@
 #!/bin/bash
 
 echo -e "\nSetup SSH ..."
-mkdir -p ~/.ssh
-if [ -d ~/stuff/private ]; then
-  ln -s ~/stuff/private/ssh/config ~/.ssh/config
-  ln -s ~/stuff/private/ssh/config.d ~/.ssh/config.d
-  ln -s ~/stuff/private/ssh/keys/github ~/.ssh/github
-  vim ~/.ssh/.config
+SSH_DIR=$HOME/.ssh
+install -d -m 700 -o $USER -g $(id -gn) $SSH_DIR
+PRIV_DIR=$HOME/stuff/private
+if [ -d $PRIV_DIR ]; then
+  ln -sf $PRIV_DIR/ssh/config $SSH_DIR/config
+  ln -sfn $PRIV_DIR/ssh/config.d $SSH_DIR/config.d
+  ln -sf $PRIV_DIR/ssh/keys/github $SSH_DIR/github
+  vim $SSH_DIR/config
 else
   echo "skipped, private repo missing"
 fi
-chown $USER:$(id -gn) ~/.ssh
-chmod -f 700 ~/.ssh
-chmod -f 600 ~/.ssh/*
-chmod -f 644 ~/.ssh/*.pub
-chmod -f 700 ~/.ssh/config.d/
+chmod -f 600 $SSH_DIR/*
+chmod -f 644 $SSH_DIR/*.pub
+chmod -f 700 $SSH_DIR/config.d/

@@ -3,7 +3,7 @@ echo -e "Setup msmtp for root ..."
 
 command -v msmtp &> /dev/null \
   || sudo aptitude install msmtp msmtp-mta \
-  || (echo "failed install" && exit 1)
+  || echo "failed install" && exit 1
 
 read -sp "Mailing password: " password; echo
 [[ ! -z "$password" ]] \
@@ -18,4 +18,3 @@ unset password
 echo "aliases /etc/aliases" | sudo tee /etc/msmtprc >/dev/null
 sudo chmod 600 /etc/msmtprc
 echo "TODO add mails to /etc/aliases"
-

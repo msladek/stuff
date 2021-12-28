@@ -1,5 +1,5 @@
 #!/bin/bash
-setupDir="$( cd "$( dirname "$0" )" && pwd )"
+setupDir="$(dirname "$(readlink -f "$0")")"
 
 bash "$setupDir/installs.sh"
 bash "$setupDir/bash.sh"
@@ -39,4 +39,4 @@ echo
 read -p "Setup XFCE (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
   && bash "$setupDir/xfce.sh"
 
-echo -e "\n... done!"
+echo -e "\n... all done!"
