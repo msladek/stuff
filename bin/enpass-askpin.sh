@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # pin min length
-[ -n "$enp_pin_length" ] || \
-  enp_pin_length=6
+enp_pin_length=${enp_pin_length:-6}
 
 # request pin if not already set (or empty +x)
 while [ -z "${enp_pin+x}" ]; do

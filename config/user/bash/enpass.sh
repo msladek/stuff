@@ -27,13 +27,13 @@ function enp() {
 if command -v enpass-askpass >/dev/null; then
 function ssh-enp() {
   local require=never
-  ssh-add-has "${@: -1}" || enp check && require=force
+  ! ssh-add-has "${@: -1}" && enp check && require=force
   SSH_ASKPASS=enpass-askpass SSH_ASKPASS_REQUIRE=$require command ssh "$@"
 }
 alias ssh='ssh-enp'
 function ssh-enp-add() {
   local require=never
-  ssh-add-has "${@: -1}" || enp check && require=force
+  ! ssh-add-has "${@: -1}" && enp check && require=force
   SSH_ASKPASS=enpass-askpass SSH_ASKPASS_REQUIRE=$require ssh-add-once "$@"
 }
 alias ssh-add='ssh-enp-add'

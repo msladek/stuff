@@ -1,27 +1,32 @@
 #!/bin/bash
 ## install:
 ## sudo ln -s .../enpasscli+.sh /usr/local/bin/enpasscli+
-## ln -s .../key.enpasskey .enpass-keyfile
-## ln -s $HOME/Documents/Enpass/Vaults/primary/ .enpass-vault
+## ln -s .../key.enpasskey ~/.enpasscli/keyfile
+## ln -s ~/Documents/Enpass/Vaults/primary/ ~/.enpasscli/vault
 
-# make sure enpasscli is available in the path
-command -v enpasscli >/dev/null || exit 1
+! command -v enpasscli >/dev/null \
+  && echo "enpasscli not available" 1>&2 \
+  && exit 1
+
+enp_vault=${enp_vault:-$HOME/.enpasscli/vault}
+[ ! -r "$enp_vault" ] \
+  && echo "vault \"${enp_vault}\" not readable " 1>&2 \
+  && exit 1
+enp_keyfile=${enp_keyfile:-$HOME/.enpasscli/keyfile}
+[ ! -r "$enp_keyfile" ] \
+  && echo "keyfile \"${enp_keyfile}\" not readable " 1>&2 \
+  && exit 1
 
 # path to the mpw store file
-[ -n "$mpw_store" ] || \
-  mpw_store=${XDG_RUNTIME_DIR}/enp.mpw
+mpw_store=${mpw_store:-${XDG_RUNTIME_DIR:-/tmp}/enp.mpw}
 # use stdin to ask for credentials
-[ -n "$enp_mode" ] || \
-  enp_mode=ask
+enp_mode=${enp_mode:-ask}
 # iteration count for pbkdf2 key derivation function
-[ -n "$pbkdf2_iter" ] || \
-  pbkdf2_iter=100000
+pbkdf2_iter=${pbkdf2_iter:-100000}
 # enpasscli param list
-[ -n "$enp_params" ] || \
-  enp_params="-vault=$HOME/.enpass-vault -keyfile=$HOME/.enpass-keyfile -sort"
+enp_params=${enp_params:--vault=${enp_vault} -keyfile=${enp_keyfile} -sort}
 # openssl enc param list
-[ -n "$ssl_params" ] || \
-  ssl_params="-aes-256-cbc -pbkdf2 -iter $pbkdf2_iter -salt -base64"
+ssl_params=${ssl_params:--aes-256-cbc -pbkdf2 -iter $pbkdf2_iter -salt -base64}
 
 if [ "$1" = "rm" ]; then
   rm -f $mpw_store
@@ -55,19 +60,15 @@ fi
 
 # execute enpasscli with set mpw and write it to the store if unlock was successful and pin is available
 if [ -n "$mpw" ]; then
-  export MASTERPW=$mpw
-  ## NOTE we don't get telling error codes from enpasscli (only 0/1)
-  ## thus we determine mpw correctness by using 'show', it seems to always return 0 for correct mpw
-  if enpasscli $enp_params show non-existing-dummy &>/dev/null; then
-    [ "$mpw_typed" = true ] && [ -n "$enp_pin" ] \
-      && touch $mpw_store && chmod 600 $mpw_store \
-      && echo "${pin_challenge}:${mpw}" | openssl enc -e $ssl_params -out $mpw_store -k $enp_pin
-    [ "$1" = 'check' ] \
-      || enpasscli $enp_params "$@"
-    exit
-  else
-    echo "oops, wrong master password" 1>&2
+  MASTERPW=$mpw enpasscli $enp_params "$@"
+  exit_code=$?
+  [ $exit_code -lt 2 ] && [ "$mpw_typed" = true ] && [ -n "$enp_pin" ] \
+    && touch $mpw_store && chmod 600 $mpw_store \
+    && echo "${pin_challenge}:${mpw}" | openssl enc -e $ssl_params -out $mpw_store -k $enp_pin
+  [ $exit_code -gt 1 ] \
+    && echo "oops, wrong master password" 1>&2
   fi
+  exit $exit_code
 fi
 
 exit 1
