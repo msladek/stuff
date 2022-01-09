@@ -6,16 +6,16 @@ if command -v enpasscli >/dev/null; then
 export enp_vault=$HOME/.enpasscli/vault
 export enp_keyfile=$HOME/.enpasscli/keyfile
 
-alias enpls='enp list'
-alias enpsh='enp show'
-alias enpcp='enp copy'
+alias enpls='enp list -sort'
+alias enpsh='enp show -sort'
+alias enpcp='enp copy -clipboardPrimary'
 alias enppw='enp pass'
 
 function enp() {
   local pin="$PIN"
   [ -z "$pin" ] \
     && read -s -p "Enter PIN: " pin && echo 1>&2
-  enp_params="-sort -clipboardPrimary -pin -vault=${enp_vault} -keyfile=${enp_keyfile}"
+  enp_params="-pin -vault=${enp_vault} -keyfile=${enp_keyfile}"
   PIN=$pin enpasscli $enp_params "$@"
   local exit_code=$?
   [ $exit_code -eq 0 ] && [ -z "$PIN" ] && [ -n "$pin" ] \
