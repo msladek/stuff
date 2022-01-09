@@ -5,6 +5,7 @@ function lastword() { awk 'NF{ print $NF }'; }
 pass=''
 askmsg="$1"
 
+
 # $1 - "(<identifier>) Verification code: "
 [[ "${1,,}" == *"verification code"* ]] \
   && identifier=$(echo "$1" | firstword | replace '[()]') \
@@ -13,15 +14,12 @@ askmsg="$1"
 
 # $1 - "Enter passphrase for <path/to/keyfile>: "
 [[ "${1,,}" == *"passphrase"* ]] \
-  && command -v enpasscli+ >/dev/null \
-  && [ ! -z "${enp_pin+x}" ] \
+  && command -v enpasscli >/dev/null \
+  && [ ! -z "$PIN" ] \
   && keyfile=$(echo "$1" | lastword | replace ':$' | xargs basename) \
   && [ ! -z "$keyfile" ] \
-  && pass=$(enp_mode=noask enpasscli+ show "ssh $keyfile" 2>&1 \
-    | grep 'pass :' \
-    | lastword \
-    | replace '"$' \
-    | replace '\\\\' '\\')
+  && enp_params="-nonInteractive -pin -vault=${enp_vault} -keyfile=${enp_keyfile}" \
+  && pass=$(enpasscli ${enp_params} pass "ssh ${keyfile}")
 
 [ -z $pass ] \
   && ssh-askpass "$askmsg" \
