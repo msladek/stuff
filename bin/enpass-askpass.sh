@@ -14,9 +14,9 @@ elif [[ "${1,,}" == *"passphrase"* ]] && command -v enpasscli >/dev/null; then
   enp_params="-nonInteractive -pin -vault=${enp_vault} -keyfile=${enp_keyfile}"
   keyfile=$(echo "$1" | lastword | replace ':$' | xargs basename)
   pepper=$(cat /tmp/upid)
-  [ ! -z "$PIN" ] && [ ! -z "$keyfile" ] \
+  [ ! -z "$ENP_PIN" ] && [ ! -z "$keyfile" ] \
     && echo "enpass-askpass - ${keyfile}" 1>&2 \
-    && pass=$(PIN_PEPPER="${pepper}" enpasscli ${enp_params} pass "ssh ${keyfile}") \
+    && pass=$(ENP_PIN_PEPPER="${pepper}" enpasscli ${enp_params} pass "ssh ${keyfile}") \
     || echo "enpass-askpass - ${keyfile} FAILED" 1>&2
 fi
 
