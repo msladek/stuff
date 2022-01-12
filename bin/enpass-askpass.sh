@@ -5,22 +5,21 @@ function lastword() { awk 'NF{ print $NF }'; }
 pass=''
 askmsg="$1"
 
-
 # $1 - "(<identifier>) Verification code: "
-[[ "${1,,}" == *"verification code"* ]] \
-  && identifier=$(echo "$1" | firstword | replace '[()]') \
-  && [ ! -z "$identifier" ] \
-  && askmsg="Enter PIN for '${identifier}': "
-
+if [[ "${1,,}" == *"verification code"* ]]; then
+  identifier=$(echo "$1" | firstword | replace '[()]')
+  askmsg="Enter OTP for '${identifier}': "
 # $1 - "Enter passphrase for <path/to/keyfile>: "
-[[ "${1,,}" == *"passphrase"* ]] \
-  && command -v enpasscli >/dev/null \
-  && [ ! -z "$PIN" ] \
-  && keyfile=$(echo "$1" | lastword | replace ':$' | xargs basename) \
-  && [ ! -z "$keyfile" ] \
-  && enp_params="-nonInteractive -pin -vault=${enp_vault} -keyfile=${enp_keyfile}" \
-  && pass=$(enpasscli ${enp_params} pass "ssh ${keyfile}")
+elif [[ "${1,,}" == *"passphrase"* ]] && command -v enpasscli >/dev/null; then
+  enp_params="-nonInteractive -pin -vault=${enp_vault} -keyfile=${enp_keyfile}"
+  keyfile=$(echo "$1" | lastword | replace ':$' | xargs basename)
+  pepper=$(cat /tmp/upid)
+  [ ! -z "$PIN" ] && [ ! -z "$keyfile" ] \
+    && echo "enpass-askpass - ${keyfile}" 1>&2 \
+    && pass=$(PIN_PEPPER="${pepper}" enpasscli ${enp_params} pass "ssh ${keyfile}") \
+    || echo "enpass-askpass - ${keyfile} FAILED" 1>&2
+fi
 
 [ -z $pass ] \
-  && ssh-askpass "$askmsg" \
+  && ssh-askpass "$askmsg" 2>/dev/null \
   || echo $pass

@@ -1,6 +1,6 @@
 # history without limits
-HISTFILESIZE=
-HISTSIZE=
+HISTFILESIZE=100000
+HISTSIZE=100000
 # avoid duplicates
 HISTCONTROL=ignoredups:erasedups
 # enable timestamps
