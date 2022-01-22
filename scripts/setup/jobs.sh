@@ -13,14 +13,19 @@ if [ -d "$backupDir" ]; then
 else
   echo "skipped, no /mnt/backup linked"
 fi
-echo "... hourly zfs-health"
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
+  echo "... hourly zfs-health"
   sudo ln -sf /opt/stuff/scripts/jobs/zfs-health.sh /etc/cron.hourly/zfs-health
-  for label in hourly daily weekly monthly; do
-    sudo rm -f /etc/cron.${label}/zfs-auto-snapshot
-    sudo ln -sf /opt/stuff/scripts/jobs/zfs-auto-snap.sh /etc/cron.${label}/zfs-auto-snap
-  done
-  sudo ln -sfn /opt/stuff/private/config/$(hostname)/zfs-auto /etc/zfs-auto
+  echo "... sanoid"
+  if command -v sanoid > /dev/null; then
+    sudo mkdir -p /etc/sanoid
+    [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
+      && sudo ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
+    sudo ln -sf /opt/stuff/private/etc/$(hostname)/sanoid.conf /etc/sanoid/sanoid.conf
+    sudo systemctl enable --now sanoid.timer
+  else
+    echo "skipped, sanoid not available"
+  fi
 else
-  echo "skipped, no zfs pools available"
+  echo "skipped zfs setup, no pools available"
 fi
