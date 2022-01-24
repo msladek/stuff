@@ -1,0 +1,8 @@
+[Unit]
+Description=Syncoid runner
+Requires=zfs.target
+After=zfs.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/stuff/private/etc/${HOSTNAME}/syncoid.sh
