@@ -16,8 +16,8 @@ if [ -d $PRIV_DIR ]; then
   ln -s $PRIV_DIR/ssh/keys/github $SSH_DIR/github
   vim $SSH_DIR/config
 
-  echo "... setup sshd config"
   [ -d /opt/stuff/private/etc/$(hostname)/sshd ] \
+    && read -p "Setup sshd_config? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
     && sudo ln -sT /opt/stuff/private/etc/$(hostname)/sshd /etc/ssh/sshd_config.d
 
 else
