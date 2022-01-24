@@ -26,8 +26,7 @@ case "$choice" in
   n|N ) ;;
   * ) mkdir -p ~/.config/systemd/user \
     && ln -sf ~/stuff/etc/systemd/ssh-agent.service ~/.config/systemd/user/ssh-agent.service \
-    && systemctl --user enable ssh-agent \
-    && systemctl --user start ssh-agent \
+    && systemctl --user enable --now ssh-agent \
     || echo "... skip, already setup";;
 esac
 

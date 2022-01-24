@@ -5,4 +5,4 @@ After=zfs.target
 
 [Service]
 Type=oneshot
-ExecStart=/opt/stuff/private/etc/${HOSTNAME}/syncoid.sh
+ExecStart=/opt/stuff/private/etc/$(hostname)/syncoid.sh
