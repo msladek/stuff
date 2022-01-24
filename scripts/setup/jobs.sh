@@ -1,5 +1,6 @@
 #!/bin/bash
 echo -e "\nSetup Jobs ..."
+etcDir=/opt/stuff/private/etc/$(hostname)
 echo "... weekly hosts update"
 sudo ln -sf /opt/stuff/scripts/jobs/hosts-update.sh /etc/cron.weekly/hosts-update
 echo "... weekly fstrim"
@@ -21,17 +22,18 @@ if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
     sudo mkdir -p /etc/sanoid
     [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
       && sudo ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
-    sudo ln -sf /opt/stuff/private/etc/$(hostname)/sanoid.conf /etc/sanoid/sanoid.conf
+    sudo ln -sf ${etcDir}/sanoid.conf /etc/sanoid/sanoid.conf
     sudo systemctl enable --now sanoid.timer
   else
     echo "skipped, sanoid not available"
   fi
   echo "... syncoid"
   command -v syncoid > /dev/null \
-    && sudo ln -sf /opt/stuff/etc/systemd/syncoid.service /etc/systemd/system/syncoid.service \
+    && sudo ln -sf ${etcDir}/systemd/syncoid@* /etc/systemd/system/ \
     && sudo systemctl daemon-reload \
-    && sudo ln -sf /opt/stuff/private/etc/$(hostname)/systemd/syncoid.timer /etc/systemd/system/syncoid.timer \
-    && sudo systemctl enable --now syncoid.timer \
+    && for timer in ${etcDir}/systemd/syncoid@*.timer; do \
+         sudo systemctl enable --now $(basename $timer); \
+       done \
     || echo "skipped, syncoid not available"
 else
   echo "skipped zfs setup, no pools available"
