@@ -25,7 +25,7 @@ read -p "Setup SSH agent service (Y/n)?" choice
 case "$choice" in
   n|N ) ;;
   * ) mkdir -p ~/.config/systemd/user \
-    && ln -sf ~/stuff/services/ssh-agent.service ~/.config/systemd/user/ssh-agent.service \
+    && ln -sf ~/stuff/etc/systemd/ssh-agent.service ~/.config/systemd/user/ssh-agent.service \
     && systemctl --user enable ssh-agent \
     && systemctl --user start ssh-agent \
     || echo "... skip, already setup";;
