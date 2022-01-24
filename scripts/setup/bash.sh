@@ -41,6 +41,8 @@ ln -sf ~/stuff/config/user/tmux.conf ~/.tmux.conf
 
 echo -e "\nEnable sudo insults ..."
 echo -e 'Defaults insults' | sudo tee /etc/sudoers.d/insults > /dev/null
+sudo chmod o-rwx /etc/sudoers.d/insults
 
 echo -e "\nEnable doas ..."
 echo -e "permit persist $USER as root" | sudo tee /etc/doas.conf > /dev/null
+sudo chmod o-rwx /etc/doas.conf
