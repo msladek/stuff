@@ -20,6 +20,10 @@ read -p "Setup mailing? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
  && bash "$setupDir/mail.sh"
 
 echo
+read -p "Setup SSH Server? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
+ && bash "$setupDir/sshd.sh"
+
+echo
 read -p "Setup jobs? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
  && bash "$setupDir/jobs.sh"
 
