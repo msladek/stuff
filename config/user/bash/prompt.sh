@@ -1,10 +1,12 @@
-# history without limits
-HISTFILESIZE=100000
-HISTSIZE=100000
+# eternal bash history
+HISTFILE=~/.bash_history_eternal
+# make sure those line are commented out in .bashrc
+HISTFILESIZE=
+HISTSIZE=
 # avoid duplicates
 HISTCONTROL=ignoredups:erasedups
 # enable timestamps
-HISTTIMEFORMAT="%F %T  "
+HISTTIMEFORMAT="[%F %T]  "
 # when the shell exits, append to the history file instead of overwriting it
 shopt -s histappend
 # after each command, append to the history file

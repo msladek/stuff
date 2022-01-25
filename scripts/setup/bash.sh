@@ -39,6 +39,14 @@ mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
 ln -sf ~/stuff/config/user/vimrc ~/.vimrc
 ln -sf ~/stuff/config/user/tmux.conf ~/.tmux.conf
 
+echo -e "\nSetup eternal bash history ..."
+# https://stackoverflow.com/a/19533853/1238689
+sed -i '/HISTSIZE=/s/^[#[:space:]]*/#/g' ~/.bashrc
+sed -i '/HISTFILESIZE=/s/^[#[:space:]]*/#/g' ~/.bashrc
+[ -f ~/.bash_history ] \
+  && cat ~/.bash_history >> ~/.bash_history_eternal \
+  && rm ~/.bash_history
+
 echo -e "\nEnable sudo insults ..."
 echo -e 'Defaults insults' | sudo tee /etc/sudoers.d/insults > /dev/null
 sudo chmod o-rwx /etc/sudoers.d/insults
