@@ -22,6 +22,7 @@ function update() {
   aptitude "$@" update \
     && aptitude upgrade \
     && aptitude autoclean && echo \
+    && apt autoremove && echo \
     && echo "check restarts:" && sudo checkrestart
 }
 fi

@@ -43,8 +43,12 @@ command -v batcat >/dev/null \
   && alias batp='bat -p' \
   && alias cat='batp'
 
+command -v tldr >/dev/null \
+  && alias man='tldr'
+
 # other aliases
 alias vi='vim'
+alias cmd='command'
 alias lsports='sudo netstat -atulpn'
 alias untar='tar -zxvf'
 alias mkdir='mkdir -pv'
