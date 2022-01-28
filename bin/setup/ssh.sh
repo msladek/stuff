@@ -9,11 +9,14 @@ install -d -m 700 -o $USER -g $(id -gn) $sshDir
 echo "... setup ssh config"
 privDir=$HOME/stuff/private
 if [ -d "$privDir" ]; then
+  ## cleanup
   [ -L "${sshDir}/config" ] && rm -v "${sshDir}/config"
+  [ -L "${sshDir}/config.d" ] && rm -v "${sshDir}/config.d"
   [ -f ${sshDir}/config ] \
     && echo 'config already exists' \
-    || cp ${privDir}/ssh/config ${sshDir}/config
-  ln -sfn ${privDir}/ssh/config.d ${sshDir}/config.d
+    || cp ${privDir}/etc/user/ssh/config ${sshDir}/config
+  mkdir -p ${sshDir}/config.d \
+    && ln -sf ${privDir}/etc/user/ssh/config.d/* ${sshDir}/config.d/
 else
   echo "skipped, private repo missing"
 fi
