@@ -24,4 +24,15 @@ sudo ln -sf /opt/stuff/bin/enpass-askpass.sh /usr/local/bin/enpass-askpass
 mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
   && ln -sf /opt/stuff/etc/user/bash/enpass.sh ~/.bash.d/80-enpass.sh
 
+echo -e "\nSetup Tiling..."
+if command -v quicktile > /dev/null; then
+     ln -sf /opt/stuff/etc/user/quicktile.cfg ~/.config/quicktile.cfg \
+  && ln -sf /opt/stuff/etc/user/autostart/QuickTile.desktop ~/.config/autostart/QuickTile.desktop \
+  || echo "... skip, already setup"
+#  && ln -sf /opt/stuff/etc/user/xmodmap.cfg ~/.config/xmodmap.cfg
+#  && ln -sf /opt/stuff/etc/user/autostart/XModMap.desktop ~/.config/autostart/XModMap.desktop
+else
+  echo "... skip, QuickTile not installed"
+fi
+
 exit 0
