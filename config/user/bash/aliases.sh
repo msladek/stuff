@@ -9,8 +9,12 @@ alias ln='ln -i'
 
 # sudo stuff
 alias sudo='sudo '
+alias apt="sudo apt"
+alias aptitude="sudo aptitude"
 command -v doas >/dev/null \
-  && alias sudo='doas '
+  && alias sudo='doas ' \
+  && alias apt='doas apt' \
+  && alias aptitude='doas aptitude'
 
 # some more ls aliases
 command -v lsd >/dev/null \
@@ -25,17 +29,12 @@ alias ...='cd ../../ && ll'
 alias ....='cd ../../../ && ll'
 alias .....='cd ../../../../ && ll'
 
-# colorize grep output
+# colorize outputs
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-
-# colorize diff output
 command -v colordiff >/dev/null \
   alias diff='colordiff'
-
-alias apt="sudo apt"
-alias aptitude="sudo aptitude"
 
 # give cat some wings
 command -v batcat >/dev/null \
@@ -43,24 +42,28 @@ command -v batcat >/dev/null \
   && alias batp='bat -p' \
   && alias cat='batp'
 
+# other aliases
 command -v tldr >/dev/null \
   && alias man='tldr'
-
-# other aliases
-alias vi='vim'
+command -v vim >/dev/null \
+  && alias vi='vim'
 alias cmd='command'
-alias lsports='sudo netstat -atulpn'
+alias lsports='netstat -atulpn'
 alias untar='tar -zxvf'
 alias mkdir='mkdir -pv'
 alias rmdir='rmdir -pv'
 alias ducks='du -cks * | sort -rn | head -11'
 
-# tmux/screen simplifications
+# tmux/screen aliases
 command -v screen >/dev/null \
   && alias screenr='screen -RR'
 command -v tmux >/dev/null \
-  && alias t='tmux attach || tmux new-session' \
-  && alias ta='tmux attach -t' \
-  && alias tn='tmux new-session' \
-  && alias tc='tmux new-session' \
-  && alias tl='tmux list-sessions'
+  && alias tmuxr='tmux attach || tmux new-session' \
+  && alias screen='tmux' \
+  && alias screenr='tmuxr'
+
+# zfs aliases
+command -v zfs >/dev/null \
+  && zl='zfs list' \
+  && zla='zfs list -t all' \
+  && zls='zfs list -t snapshot'
