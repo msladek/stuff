@@ -32,13 +32,13 @@ if [ -e ~/.bash_aliases ] || [ -h ~/.bash_aliases ]; then
     && rm -f ~/.bash_aliases
 fi
 mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
-  && ln -sf ~/stuff/config/user/bash/env.sh       ~/.bash.d/10-env.sh \
-  && ln -sf ~/stuff/config/user/bash/prompt.sh    ~/.bash.d/20-prompt.sh \
-  && ln -sf ~/stuff/config/user/bash/aliases.sh   ~/.bash.d/50-aliases.sh \
-  && ln -sf ~/stuff/config/user/bash/functions.sh ~/.bash.d/60-functions.sh \
-  && ln -sf ~/stuff/config/user/bash/tmux.sh      ~/.bash.d/95-tmux.sh
-ln -sf ~/stuff/config/user/vimrc ~/.vimrc
-ln -sf ~/stuff/config/user/tmux.conf ~/.tmux.conf
+  && ln -sf /opt/stuff/etc/user/bash/env.sh       ~/.bash.d/10-env.sh \
+  && ln -sf /opt/stuff/etc/user/bash/prompt.sh    ~/.bash.d/20-prompt.sh \
+  && ln -sf /opt/stuff/etc/user/bash/aliases.sh   ~/.bash.d/50-aliases.sh \
+  && ln -sf /opt/stuff/etc/user/bash/functions.sh ~/.bash.d/60-functions.sh \
+  && ln -sf /opt/stuff/etc/user/bash/tmux.sh      ~/.bash.d/95-tmux.sh
+ln -sf /opt/stuff/etc/user/vimrc ~/.vimrc
+ln -sf /opt/stuff/etc/user/tmux.conf ~/.tmux.conf
 
 echo -e "\nSetup eternal bash history ..."
 # https://stackoverflow.com/a/19533853/1238689
