@@ -35,7 +35,8 @@ mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
   && ln -sf ~/stuff/config/user/bash/env.sh       ~/.bash.d/10-env.sh \
   && ln -sf ~/stuff/config/user/bash/prompt.sh    ~/.bash.d/20-prompt.sh \
   && ln -sf ~/stuff/config/user/bash/aliases.sh   ~/.bash.d/50-aliases.sh \
-  && ln -sf ~/stuff/config/user/bash/functions.sh ~/.bash.d/60-functions.sh
+  && ln -sf ~/stuff/config/user/bash/functions.sh ~/.bash.d/60-functions.sh \
+  && ln -sf ~/stuff/config/user/bash/tmux.sh      ~/.bash.d/95-tmux.sh
 ln -sf ~/stuff/config/user/vimrc ~/.vimrc
 ln -sf ~/stuff/config/user/tmux.conf ~/.tmux.conf
 
