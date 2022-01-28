@@ -21,13 +21,11 @@ fi
   && rm -f ~/.bash_profile
 
 echo -e "\nLink stuff directory ..."
-[ ! -d ~/stuff ] && echo "stuff not found" && exit 1
-sudo chown -R $USER:$(id -gn) ~/stuff
-sudo ln -sfn ~/stuff /opt/stuff
-sudo ln -sfn /opt/stuff /root/stuff
+[ ! -d /opt/stuff ] && echo "stuff not found" && exit 1
+ln -s /opt/stuff ~/stuff
 
 echo -e "\nLink bash goodies ..."
-if [ -e ~/.bash_aliases ] || [ -h ~/.bash_aliases ]; then
+if [ -e ~/.bash_aliases ] || [ -L ~/.bash_aliases ]; then
   echo && read -p "Remove legacy bash_aliases? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
     && rm -f ~/.bash_aliases
 fi

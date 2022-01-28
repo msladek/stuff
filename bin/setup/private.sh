@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ ! -d ~/stuff/private ]; then
+if [ ! -d /opt/stuff/private ]; then
   echo
   read -p "Setup private repo? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
-    && git clone git@github.com:msladek/stuffp.git ~/stuff/private
+    && git clone git@github.com:msladek/stuffp.git /opt/stuff/private
 fi
-[ -d ~/stuff/private ] \
-  && chown -R $USER:$(id -gn) ~/stuff/private \
-  && chmod -R go-rwx ~/stuff/private
+[ -d /opt/stuff/private ] \
+  && chown -R $USER:$(id -gn) /opt/stuff/private \
+  && chmod -R go-rwx /opt/stuff/private
