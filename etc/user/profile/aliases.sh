@@ -65,6 +65,6 @@ command -v tmux >/dev/null \
 
 # zfs aliases
 command -v zfs >/dev/null \
-  && zl='zfs list' \
-  && zla='zfs list -t all' \
-  && zls='zfs list -t snapshot'
+  && alias zl='zfs list' \
+  && alias zla='zfs list -t all' \
+  && alias zls='zfs list -t snapshot'
