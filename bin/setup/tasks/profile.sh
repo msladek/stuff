@@ -6,8 +6,15 @@ echo -e "\nSetup shell profile ..."
   && exit 1
 
 echo -e "... link stuff directory"
-[ ! -d /opt/stuff ] && echo "stuff not found" && exit 1
-ln -sT /opt/stuff ~/stuff
+stuffDir=/opt/msladek/stuff
+[ ! -d $stuffDir ] && echo "stuff not found" && exit 1
+# fix symlinked main dir
+[ -L $stuffDir ] \
+  && echo '... fixing stuff dir' \
+  && oldStuffDir=$(readlink $stuffDir) \
+  && rm -v $stuffDir \
+  && mv "$oldStuffDir" $stuffDir
+ln -sT $stuffDir ~/stuff
 
 [ ! -f ~/.profile ] && cp /etc/skel/.profile ~/
 # https://superuser.com/a/789499/1099716
@@ -27,14 +34,14 @@ fi
 EOT
 fi
 mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
-  && ln -sf /opt/stuff/etc/user/profile/env.sh       ~/.profile.d/10-env.sh \
-  && ln -sf /opt/stuff/etc/user/profile/prompt.sh    ~/.profile.d/20-prompt.sh \
-  && ln -sf /opt/stuff/etc/user/profile/aliases.sh   ~/.profile.d/50-aliases.sh \
-  && ln -sf /opt/stuff/etc/user/profile/functions.sh ~/.profile.d/60-functions.sh \
-  && ln -sf /opt/stuff/etc/user/profile/tmux.sh      ~/.profile.d/95-tmux.sh
+  && ln -sf $stuffDir/etc/user/profile/env.sh       ~/.profile.d/10-env.sh \
+  && ln -sf $stuffDir/etc/user/profile/prompt.sh    ~/.profile.d/20-prompt.sh \
+  && ln -sf $stuffDir/etc/user/profile/aliases.sh   ~/.profile.d/50-aliases.sh \
+  && ln -sf $stuffDir/etc/user/profile/functions.sh ~/.profile.d/60-functions.sh \
+  && ln -sf $stuffDir/etc/user/profile/tmux.sh      ~/.profile.d/95-tmux.sh
 
-ln -sf /opt/stuff/etc/user/vimrc ~/.vimrc
-ln -sf /opt/stuff/etc/user/tmux.conf ~/.tmux.conf
+ln -sf $stuffDir/etc/user/vimrc ~/.vimrc
+ln -sf $stuffDir/etc/user/tmux.conf ~/.tmux.conf
 
 echo -e "... link bash goodies"
 if [ -e ~/.bash_aliases ] || [ -L ~/.bash_aliases ]; then

@@ -10,7 +10,7 @@ sshDir=~/.ssh
 install -d -m 700 -o $USER -g $(id -gn) $sshDir
 
 echo "... setup ssh config"
-privDir=/opt/stuff/private
+privDir=/opt/msladek/stuffp
 if [ -d "$privDir" ]; then
   ## cleanup
   [ -L "${sshDir}/config" ] && rm -v "${sshDir}/config"
@@ -24,7 +24,7 @@ else
   # TODO basic config.d setup if it doesn't exist
   # install -T -m 600 -o $USER -g $(id -gn) /dev/null $sshDir/config
   # echo -e "IdentitiesOnly yes\nForwardAgent no\n" >> $sshDir/config
-  echo "skipped, private repo missing"
+  echo "skipped, stuffp repo missing"
 fi
 
 chmod -f 600 ${sshDir}/*

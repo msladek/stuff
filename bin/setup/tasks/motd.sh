@@ -9,7 +9,7 @@ command -v neofetch &> /dev/null \
   || aptitude install neofetch \
   || echo "failed install" && exit 1
 truncate -s 0 /etc/motd
-echo -e '#!/bin/sh\nneofetch --config /opt/stuff/etc/neofetch.conf' \
+echo -e '#!/bin/sh\nneofetch --config /opt/msladek/stuff/etc/neofetch.conf' \
   | tee /etc/update-motd.d/50-neofetch > /dev/null
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
   echo -e '#!/bin/sh\necho "zfs status: $(zpool status -x)"' \

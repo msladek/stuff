@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # usage from e.g. crontab:
-#  *  *  *  *  * root	/opt/scripts/server/jobs/check-remote.sh saturn.sladek.co 512
+#  *  *  *  *  * root	/opt/msladek/stuff/bin/jobs/check-remote.sh saturn.sladek.co 512
 #
 
 die() {

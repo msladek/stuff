@@ -5,11 +5,20 @@ echo -e "\nSetup stuffp ..."
   && echo 'skipped, requires non-root' \
   && exit 1
 
-if [ ! -d /opt/stuff/private ]; then
+stuffpDir=/opt/msladek/stuffp
+if [ ! -d $stuffpDir ]; then
   echo
-  read -p "Setup private repo? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
-    && git clone git@github.com:msladek/stuffp.git /opt/stuff/private
+  read -p "Clone stuffp repo? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
+    && git clone git@github.com:msladek/stuffp.git $stuffpDir
 fi
-[ -d /opt/stuff/private ] \
-  && chown -R $USER:$(id -gn) /opt/stuff/private \
-  && chmod -R go-rwx /opt/stuff/private
+[ -d $stuffpDir ] \
+  && chown -R $USER:$(id -gn) $stuffpDir \
+  && chmod -R go-rwx $stuffpDir \
+  && ln -sT $stuffpDir ~/stuffp
+
+# fix symlinked stuffp dir
+[ -L $stuffpDir ] \
+  && echo '... fixing stuffp dir' \
+  && oldStuffpDir=$(readlink $stuffpDir) \
+  && rm -v $stuffpDir \
+  && mv "$oldStuffpDir" $stuffpDir

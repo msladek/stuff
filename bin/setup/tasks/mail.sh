@@ -19,7 +19,7 @@ echo -e "... setup user mailing"
 read -sp "Mailing password: " password; echo
 ## FIXME password is exposed to ps in sed command
 [[ ! -z "$password" ]] \
-  && cp /opt/stuff/etc/msmtprc ~/.msmtprc \
+  && cp /opt/msladek/stuff/etc/msmtprc ~/.msmtprc \
   && chmod 600 ~/.msmtprc \
   && sed -i -e "s/<hostname>/$(hostname)/g" ~/.msmtprc \
   && sed -i -e "s/<password>/${password}/g" ~/.msmtprc \

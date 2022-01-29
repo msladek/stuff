@@ -5,7 +5,7 @@ echo -e "\nSetup SSH server ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-sshdDir=/opt/stuff/private/etc/$(hostname)/sshd
+sshdDir=/opt/msladek/stuffp/etc/$(hostname)/sshd
 [ -d "$sshdDir" ] \
   && chown root:root ${sshdDir}/* \
   && chmod 644 ${sshdDir}/* \

@@ -5,23 +5,18 @@ echo -e "\nSetup Jobs ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-etcDir=/opt/stuff/private/etc/$(hostname)
+etcDir=/opt/msladek/stuffp/etc/$(hostname)
 echo "... weekly hosts update"
-ln -sf /opt/stuff/bin/jobs/hosts-update.sh /etc/cron.weekly/hosts-update
+ln -sf /opt/msladek/stuff/bin/jobs/hosts-update.sh /etc/cron.weekly/hosts-update
 echo "... weekly fstrim"
-ln -sf /opt/stuff/bin/jobs/fstrim.sh /etc/cron.weekly/fstrim
+ln -sf /opt/msladek/stuff/bin/jobs/fstrim.sh /etc/cron.weekly/fstrim
 echo "... weekly os-rsync"
-backupDir=/mnt/backup
-[ ! -d "$backupDir" ] && read -p "Backup dir: " backupDirTo \
-  && [ -d "$backupDirTo" ] && ln -s $backupDirTo $backupDir
-if [ -d "$backupDir" ]; then
-  ln -sf /opt/stuff/bin/jobs/os-rsync.sh /etc/cron.weekly/os-rsync
-else
-  echo "skipped, no /mnt/backup linked"
-fi
+[ -d /mnt/backup ] \
+  && ln -sf /opt/msladek/stuff/bin/jobs/os-rsync.sh /etc/cron.weekly/os-rsync
+  || echo "skipped, no /mnt/backup linked"
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
   echo "... hourly zfs-health"
-  ln -sf /opt/stuff/bin/jobs/zfs-health.sh /etc/cron.hourly/zfs-health
+  ln -sf /opt/msladek/stuff/bin/jobs/zfs-health.sh /etc/cron.hourly/zfs-health
   echo "... sanoid"
   if command -v sanoid > /dev/null; then
     mkdir -p /etc/sanoid
