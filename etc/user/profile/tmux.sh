@@ -12,3 +12,7 @@ command -v tmux >/dev/null \
 
 [ "$TERM_PROGRAM" = tmux ] \
   && alias ssh='TERM=xterm-256color ssh'
+
+[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] \
+  && command -v neofetch >/dev/null \
+  && neofetch
