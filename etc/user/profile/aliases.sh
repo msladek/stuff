@@ -48,6 +48,7 @@ command -v tldr >/dev/null \
 command -v vim >/dev/null \
   && alias vi='vim'
 alias cmd='command'
+alias ex='exit'
 alias lsports='netstat -atulpn'
 alias untar='tar -zxvf'
 alias mkdir='mkdir -pv'

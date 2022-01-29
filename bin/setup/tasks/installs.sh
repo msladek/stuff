@@ -14,7 +14,7 @@ aptitude -q=2 update > /dev/null && aptitude -q=2 -y upgrade
 
 echo -e "... install essentials packages"
 aptitude -q=2 -y install \
-    doas bash-completion apt-listchanges apt-transport-https \
+    sudo bash-completion apt-listchanges apt-transport-https \
     net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
     ntp git tree pv dstat bat vim rsync htop tmux sshfs smartmontools ncdu \
