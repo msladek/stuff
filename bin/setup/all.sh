@@ -6,6 +6,7 @@ bash "$setupDir/bash.sh"
 bash "$setupDir/private.sh"
 bash "$setupDir/ssh.sh"
 bash "$setupDir/git.sh"
+bash "$setupDir/sudo.sh"
 
 echo
 read -p "Setup firmware? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
