@@ -16,8 +16,5 @@ sudo bash "$taskDir/sshd.sh"
 sudo bash "$taskDir/jobs.sh"
 sudo bash "$taskDir/smart.sh"
 sudo bash "$taskDir/motd.sh"
-sudo bash "$taskDir/desktop-installs.sh"
-     bash "$taskDir/desktop-setup.sh"
-sudo bash "$taskDir/desktop-xfce.sh"
 
 echo -e "\n... done!"
