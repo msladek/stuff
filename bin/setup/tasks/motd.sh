@@ -13,8 +13,8 @@ truncate -s 0 /etc/motd
 [ -f $neofetchConf ] \
   && chown root:root $neofetchConf \
   && chmod 644 $neofetchConf \
-echo -e "#!/bin/sh\nneofetch --config $neofetchConf" \
-  | tee /etc/update-motd.d/50-neofetch > /dev/null
+  && echo -e "#!/bin/sh\nneofetch --config $neofetchConf" \
+   | tee /etc/update-motd.d/50-neofetch > /dev/null
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
   echo -e '#!/bin/sh\necho "zfs status: $(zpool status -x)"' \
     | tee /etc/update-motd.d/60-zpool > /dev/null
