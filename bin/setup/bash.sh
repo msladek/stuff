@@ -1,40 +1,42 @@
 #!/bin/bash
 
-echo -e "\nSetup bashrc ..."
-# let's setup our own ~/.bash.d
-grep -qF -- ".bash.d" ~/.bashrc
-if [ ! $? -eq 0 ]; then
-cat <<"EOT" >> ~/.bashrc
+echo -e "\nSetup shell profile ..."
+[ $EUID -eq 0 ] \
+  && echo 'skipped, requires non-root' \
+  && exit 1
 
-if [ -d ~/.bash.d ]; then
-  for f in ~/.bash.d/*.sh; do
+[ ! -f ~/.profile ] && cp /etc/skel/.profile ~/
+# let's setup our own ~/.profile.d
+grep -qF -- ".profile.d" ~/.profile
+if [ ! $? -eq 0 ]; then
+cat <<"EOT" >> ~/.profile
+if [ -d ~/.profile.d ]; then
+  for f in ~/.profile.d/*.sh; do
     [ -r $f ] && source $f
   done
   unset f
 fi
-
 EOT
 fi
 # https://superuser.com/a/789499/1099716
-[ -f ~/.bash_profile ] && [ -f ~/.profile ] \
-  && echo && read -p "Remove .bash_profile in favour of .profile? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
-  && rm -f ~/.bash_profile
+rm -f ~/.bash_profile ~/.bash_login
+rm -rf ~/.bash.d # remove legacy dir
 
 echo -e "\nLink stuff directory ..."
 [ ! -d /opt/stuff ] && echo "stuff not found" && exit 1
-ln -s /opt/stuff ~/stuff
+ln -sT /opt/stuff ~/stuff
 
 echo -e "\nLink bash goodies ..."
 if [ -e ~/.bash_aliases ] || [ -L ~/.bash_aliases ]; then
   echo && read -p "Remove legacy bash_aliases? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
     && rm -f ~/.bash_aliases
 fi
-mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
-  && ln -sf /opt/stuff/etc/user/bash/env.sh       ~/.bash.d/10-env.sh \
-  && ln -sf /opt/stuff/etc/user/bash/prompt.sh    ~/.bash.d/20-prompt.sh \
-  && ln -sf /opt/stuff/etc/user/bash/aliases.sh   ~/.bash.d/50-aliases.sh \
-  && ln -sf /opt/stuff/etc/user/bash/functions.sh ~/.bash.d/60-functions.sh \
-  && ln -sf /opt/stuff/etc/user/bash/tmux.sh      ~/.bash.d/95-tmux.sh
+mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
+  && ln -sf /opt/stuff/etc/user/bash/env.sh       ~/.profile.d/10-env.sh \
+  && ln -sf /opt/stuff/etc/user/bash/prompt.sh    ~/.profile.d/20-prompt.sh \
+  && ln -sf /opt/stuff/etc/user/bash/aliases.sh   ~/.profile.d/50-aliases.sh \
+  && ln -sf /opt/stuff/etc/user/bash/functions.sh ~/.profile.d/60-functions.sh \
+  && ln -sf /opt/stuff/etc/user/bash/tmux.sh      ~/.profile.d/95-tmux.sh
 ln -sf /opt/stuff/etc/user/vimrc ~/.vimrc
 ln -sf /opt/stuff/etc/user/tmux.conf ~/.tmux.conf
 
@@ -46,10 +48,4 @@ sed -i '/HISTFILESIZE=/s/^[#[:space:]]*/#/g' ~/.bashrc
   && cat ~/.bash_history >> ~/.bash_history_eternal \
   && rm ~/.bash_history
 
-echo -e "\nEnable sudo insults ..."
-echo -e 'Defaults insults' | sudo tee /etc/sudoers.d/insults > /dev/null
-sudo chmod o-rwx /etc/sudoers.d/insults
-
-echo -e "\nEnable doas ..."
-echo -e "permit persist $USER as root" | sudo tee /etc/doas.conf > /dev/null
-sudo chmod o-rwx /etc/doas.conf
+exit 0

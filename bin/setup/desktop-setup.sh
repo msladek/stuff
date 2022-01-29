@@ -19,8 +19,9 @@ git clone --depth 1 --branch release $FONT_URL_ADOBE $FONT_DIR \
   || echo "... skip, already setup"
 
 echo -e "\nSetup enpasscli ..."
-sudo ln -sf /opt/stuff/bin/enpasscli /usr/local/bin/enpasscli
-sudo ln -sf /opt/stuff/bin/enpass-askpass.sh /usr/local/bin/enpass-askpass
+mkdir -p ~/bin
+ln -sf /opt/stuff/bin/enpasscli ~/bin/enpasscli
+ln -sf /opt/stuff/bin/enpass-askpass.sh ~/bin/enpass-askpass
 mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
   && ln -sf /opt/stuff/etc/user/bash/enpass.sh ~/.bash.d/80-enpass.sh
 
