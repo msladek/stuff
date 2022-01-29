@@ -27,8 +27,8 @@ echo -e "\nSetup enpasscli ..."
 mkdir -p ~/bin
 ln -sf /opt/stuff/bin/enpasscli ~/bin/enpasscli
 ln -sf /opt/stuff/bin/enpass-askpass.sh ~/bin/enpass-askpass
-mkdir -p ~/.bash.d && chmod 740 ~/.bash.d \
-  && ln -sf /opt/stuff/etc/user/bash/enpass.sh ~/.bash.d/80-enpass.sh
+mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
+  && ln -sf /opt/stuff/etc/user/profile/enpass.sh ~/.profile.d/80-enpass.sh
 
 echo -e "\nSetup Tiling..."
 if command -v quicktile > /dev/null; then

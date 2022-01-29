@@ -27,11 +27,11 @@ fi
 EOT
 fi
 mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
-  && ln -sf /opt/stuff/etc/user/bash/env.sh       ~/.profile.d/10-env.sh \
-  && ln -sf /opt/stuff/etc/user/bash/prompt.sh    ~/.profile.d/20-prompt.sh \
-  && ln -sf /opt/stuff/etc/user/bash/aliases.sh   ~/.profile.d/50-aliases.sh \
-  && ln -sf /opt/stuff/etc/user/bash/functions.sh ~/.profile.d/60-functions.sh \
-  && ln -sf /opt/stuff/etc/user/bash/tmux.sh      ~/.profile.d/95-tmux.sh
+  && ln -sf /opt/stuff/etc/user/profile/env.sh       ~/.profile.d/10-env.sh \
+  && ln -sf /opt/stuff/etc/user/profile/prompt.sh    ~/.profile.d/20-prompt.sh \
+  && ln -sf /opt/stuff/etc/user/profile/aliases.sh   ~/.profile.d/50-aliases.sh \
+  && ln -sf /opt/stuff/etc/user/profile/functions.sh ~/.profile.d/60-functions.sh \
+  && ln -sf /opt/stuff/etc/user/profile/tmux.sh      ~/.profile.d/95-tmux.sh
 
 ln -sf /opt/stuff/etc/user/vimrc ~/.vimrc
 ln -sf /opt/stuff/etc/user/tmux.conf ~/.tmux.conf

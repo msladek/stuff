@@ -21,6 +21,9 @@ if [ -d "$privDir" ]; then
   mkdir -p ${sshDir}/config.d \
     && ln -sf ${privDir}/etc/user/ssh/config.d/* ${sshDir}/config.d/
 else
+  # TODO basic config.d setup if it doesn't exist
+  # install -T -m 600 -o $USER -g $(id -gn) /dev/null $sshDir/config
+  # echo -e "IdentitiesOnly yes\nForwardAgent no\n" >> $sshDir/config
   echo "skipped, private repo missing"
 fi
 
