@@ -6,5 +6,9 @@
 command -v tmux >/dev/null \
   && [ -n "$PS1" ] && [[ $- == *i* ]] \
   && [[ ! "$TERM" =~ screen ]] \
-  && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] \
+  && [[ ! "$TERM" =~ tmux ]] \
+  && [ -z "$TMUX" ] \
   && exec tmux new-session -A -s main
+
+[ "$TERM_PROGRAM" = tmux ] \
+  && alias ssh='TERM=xterm-256color ssh'
