@@ -1,7 +1,12 @@
 #!/bin/bash
 
+echo -e "\nSetup desktop user stuff ..."
+[ $EUID -eq 0 ] \
+  && echo 'skipped, requires non-root' \
+  && exit 1
+
 echo
-read -p "Setup SSH agent service (Y/n)?" choice
+read -p "Setup SSH agent service (Y/n) ?" choice
 case "$choice" in
   n|N ) ;;
   * ) mkdir -p ~/.config/systemd/user \
@@ -12,8 +17,8 @@ case "$choice" in
 esac
 
 echo -e "\nInstall Font Adobe Source Code Pro ..."
-FONT_DIR="$HOME/.fonts/adobe-fonts/source-code-pro"
-FONT_URL_ADOBE='https://github.com/adobe-fonts/source-code-pro.git'
+FONT_DIR=~/.fonts/adobe-fonts/source-code-pro
+FONT_URL_ADOBE=https://github.com/adobe-fonts/source-code-pro.git
 git clone --depth 1 --branch release $FONT_URL_ADOBE $FONT_DIR \
 	&& fc-cache -f -v $FONT_DIR \
   || echo "... skip, already setup"

@@ -1,7 +1,11 @@
 #!/bin/bash
 
 echo -e "\nInstall XFCE packages ..."
-sudo aptitude -q=2 update && sudo aptitude -q=2 install \
+[ $EUID -ne 0 ] \
+  && echo 'skipped, requires root' \
+  && exit 1
+
+aptitude -q=2 update && aptitude -q=2 install \
     thunar-archive-plugin lightdm-gtk-greeter-settings \
     xfce4-goodies xfce4-whiskermenu-plugin xfce4-battery-plugin xfce4-clipman-plugin \
     xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-taskmanager xfce4-screenshooter \

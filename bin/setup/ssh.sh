@@ -1,13 +1,16 @@
 #!/bin/bash
 
-echo -e "\nSetup SSH ..."
+echo -e "\nSetup SSH client ..."
+[ $EUID -eq 0 ] \
+  && echo 'skipped, requires non-root' \
+  && exit 1
 
-echo "... setup home directory"
-sshDir=$HOME/.ssh
+echo "... setup ~/.ssh"
+sshDir=~/.ssh
 install -d -m 700 -o $USER -g $(id -gn) $sshDir
 
 echo "... setup ssh config"
-privDir=$HOME/stuff/private
+privDir=/opt/stuff/private
 if [ -d "$privDir" ]; then
   ## cleanup
   [ -L "${sshDir}/config" ] && rm -v "${sshDir}/config"
@@ -24,3 +27,5 @@ fi
 chmod -f 600 ${sshDir}/*
 chmod -f 644 ${sshDir}/*.pub
 chmod -f 700 ${sshDir}/config.d/
+
+exit 0

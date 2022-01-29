@@ -5,8 +5,8 @@ upid="/tmp/upid"
   && install -T -m 600 /dev/null $upid \
   && openssl rand -base64 32  > $upid
 
-export enp_vault=$HOME/.enpasscli/vault
-export enp_keyfile=$HOME/.enpasscli/keyfile
+export enp_vault=~/.enpasscli/vault
+export enp_keyfile=~/.enpasscli/keyfile
 export ENP_PIN_ITER_COUNT=2000000
 
 alias enpls='enp -sort list'

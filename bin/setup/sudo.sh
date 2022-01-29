@@ -6,11 +6,11 @@ echo -e "\nSetup sudo ..."
   && exit 1
 
 echo -e "Enable sudo insults ..."
-echo -e 'Defaults insults' | sudo tee /etc/sudoers.d/insults > /dev/null
-sudo chmod o-rwx /etc/sudoers.d/insults
+echo -e 'Defaults insults' | tee /etc/sudoers.d/insults > /dev/null
+chmod o-rwx /etc/sudoers.d/insults
 
 echo -e "Enable doas ..."
-echo -e "permit persist $USER as root" | sudo tee /etc/doas.conf > /dev/null
-sudo chmod o-rwx /etc/doas.conf
+echo -e "permit persist $USER as root" | tee /etc/doas.conf > /dev/null
+chmod o-rwx /etc/doas.conf
 
 exit 0

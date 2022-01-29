@@ -1,4 +1,8 @@
 #!/bin/bash
-echo -e "Install firmware packages ..."
-sudo aptitude -q=2 update && sudo aptitude -q=2 -y install \
+echo -e "\nSetup Install firmware packages ..."
+[ $EUID -ne 0 ] \
+  && echo 'skipped, requires root' \
+  && exit 1
+
+aptitude -q=2 update && aptitude -q=2 -y install \
     amd64-microcode intel-microcode firmware-linux firmware-linux-nonfree

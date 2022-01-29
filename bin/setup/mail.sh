@@ -1,20 +1,30 @@
 #!/bin/bash
-echo -e "Setup msmtp for root ..."
 
+echo -e "\nSetup msmtp for root ..."
+[ $EUID -ne 0 ] \
+  && echo 'skipped, requires root' \
+  && exit 1
+
+echo -e "... install msmtp"
 command -v msmtp &> /dev/null \
-  || sudo aptitude install msmtp msmtp-mta \
+  || aptitude install msmtp msmtp-mta \
   || echo "failed install" && exit 1
 
+echo -e "... setup aliases"
+echo "aliases /etc/aliases" | tee /etc/msmtprc >/dev/null
+chmod 600 /etc/msmtprc
+echo "TODO add mails to /etc/aliases"
+
+echo -e "... setup user mailing"
 read -sp "Mailing password: " password; echo
+## FIXME password is exposed to ps in sed command
 [[ ! -z "$password" ]] \
-  && sudo cp /opt/stuff/etc/msmtprc /root/.msmtprc \
-  && sudo sed -i -e "s/<hostname>/$(hostname)/g" /root/.msmtprc \
-  && sudo sed -i -e "s/<password>/${password}/g" /root/.msmtprc \
-  && sudo chmod 600 /root/.msmtprc \
-  && echo -e "Subject: Test MSMTP\n\norigin: $(hostname)" | sudo msmtp root@sladek.co \
-  || echo "Unable to setup msmtprc config"
+  && cp /opt/stuff/etc/msmtprc ~/.msmtprc \
+  && chmod 600 ~/.msmtprc \
+  && sed -i -e "s/<hostname>/$(hostname)/g" ~/.msmtprc \
+  && sed -i -e "s/<password>/${password}/g" ~/.msmtprc \
+  && -e "Subject: Test MSMTP\n\norigin: $(hostname)" | msmtp ${USER}@sladek.co \
+  || echo 'unable to setup ~/.msmtprc'
 unset password
 
-echo "aliases /etc/aliases" | sudo tee /etc/msmtprc >/dev/null
-sudo chmod 600 /etc/msmtprc
-echo "TODO add mails to /etc/aliases"
+exit 0

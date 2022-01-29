@@ -1,11 +1,16 @@
 #!/bin/bash
-echo -e "Setup UFW ..."
+
+echo -e "\nSetup UFW ..."
+[ $EUID -ne 0 ] \
+  && echo 'skipped, requires root' \
+  && exit 1
+
 command -v ufw &> /dev/null \
-  || sudo aptitude install ufw \
+  || aptitude install ufw \
   || echo "failed install" && exit 1
-sudo ufw default deny incoming
+ufw default deny incoming
 read -p "Allow 512/tcp (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
-  && sudo ufw limit 512/tcp comment 'ssh rate limit'
+  && ufw limit 512/tcp comment 'ssh rate limit'
 read -p "Enable Firewall (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
-  && sudo ufw enable
-sudo ufw status numbered
+  && ufw enable
+ufw status numbered

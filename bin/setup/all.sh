@@ -37,11 +37,13 @@ read -p "Setup dynamic motd? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
  && bash "$setupDir/motd.sh"
 
 echo
-read -p "Setup desktop (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
-  && bash "$setupDir/desktop-installs.sh" \
-  && bash "$setupDir/desktop-setup.sh" \
-  && bash "$setupDir/git-msladek.sh" \
-  && read -p "Setup XFCE (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
-  && bash "$setupDir/desktop-xfce.sh"
+read -p "Setup desktop (y/N)? "
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  bash "$setupDir/desktop-installs.sh"
+  bash "$setupDir/desktop-setup.sh"
+  bash "$setupDir/git-msladek.sh"
+  read -p "Setup XFCE (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
+    && bash "$setupDir/desktop-xfce.sh"
+fi
 
 echo -e "\n... all done!"
