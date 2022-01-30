@@ -6,6 +6,7 @@ echo -e "\nSetup UFW ..."
   && exit 1
 
 ! command -v ufw >/dev/null \
+  && echo "... install ufw" \
   && ! aptitude install ufw \
   && echo "failed install" && exit 1
 
@@ -13,7 +14,7 @@ if ! ufw status | grep -qF active; then
   ufw default deny incoming
   command -v sshd >/dev/null \
     && sshPort=$(sshd -T | grep port | head -n1 | cut -d' ' -f2) \
-    && ! grep -qF -- "tcp $sshPort" /lib/ufw/user.rules
+    && ! grep -qF -- "tcp $sshPort" /lib/ufw/user.rules \
     && ufw limit $sshPort/tcp comment 'ssh rate limit'
   ufw enable
 fi 

@@ -5,6 +5,11 @@ echo -e "\nSetup S.M.A.R.T. monitoring ..."
   && echo 'skipped, requires root' \
   && exit 1
 
+! command -v smartctl >/dev/null \
+  && echo "... install smartmontools" \
+  && ! aptitude install smartmontools \
+  && echo "failed install" && exit 1
+
 # S/../.././02 = Short test daily at 02:00
 # L/../01/./03 = Long test first day each month at 03:00
 ! grep -q -- '^DEVICESCAN ' /etc/smartd.conf \
