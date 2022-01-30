@@ -9,7 +9,7 @@ if [ -w "/etc/hosts" ]; then
     && echo "copied initial custom.conf"
   ## download blocklist and compile
   listURL='https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts'
-  wget --no-verbose -O /etc/hosts.d/$blocklistConf $listURL \
+  curl -s $listURL | grep '^0.0.0.0 ' > /etc/hosts.d/$blocklistConf \
     && cat /etc/hosts.d/*.conf > /etc/hosts \
     && systemctl restart systemd-networkd \
     && echo "hosts list updated"

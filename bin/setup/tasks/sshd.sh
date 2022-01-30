@@ -12,6 +12,6 @@ sshdDir=/opt/msladek/stuffp/etc/$(hostname)/sshd
   && { [ ! -L "/etc/ssh/sshd_config.d" ] || rm -v "/etc/ssh/sshd_config.d"; } \
   && mkdir -p /etc/ssh/sshd_config.d \
   && ln -sf ${sshdDir}/* /etc/ssh/sshd_config.d/ \
-  || "skipped"
+  || echo "skipped" # TODO reasonable base setup?
 
 exit 0
