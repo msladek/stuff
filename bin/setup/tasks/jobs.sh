@@ -30,7 +30,7 @@ echo "... weekly os-rsync"
   || echo "skipped, no /mnt/backup linked"
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
   echo "... hourly zfs-health"
-  activate $jobDir/zfs-health.sh /etc/cron.daily/zfs-health 755
+  activate $jobDir/zfs-health.sh /etc/cron.hourly/zfs-health 755
   echo "... sanoid"
   if command -v sanoid > /dev/null; then
     mkdir -p /etc/sanoid
