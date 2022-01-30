@@ -6,9 +6,9 @@ echo -e "\nSetup msmtp for root ..."
   && exit 1
 
 echo -e "... install msmtp"
-command -v msmtp &> /dev/null \
-  || aptitude install msmtp msmtp-mta \
-  || echo "failed install" && exit 1
+! command -v msmtp &> /dev/null \
+  && ! aptitude install msmtp msmtp-mta \
+  && echo "failed install" && exit 1
 
 echo -e "... setup aliases"
 echo "aliases /etc/aliases" | tee /etc/msmtprc >/dev/null
@@ -16,9 +16,10 @@ chmod 600 /etc/msmtprc
 echo "TODO add mails to /etc/aliases"
 
 echo -e "... setup user mailing"
-read -sp "Mailing password: " password; echo
 ## FIXME password is exposed to ps in sed command
-[[ ! -z "$password" ]] \
+[ ! -f ~/.msmtprc ] \
+  && read -sp "Mailing password: " password && echo \
+  && [ ! -z "$password" ] \
   && cp /opt/msladek/stuff/etc/msmtprc ~/.msmtprc \
   && chmod 600 ~/.msmtprc \
   && sed -i -e "s/<hostname>/$(hostname)/g" ~/.msmtprc \

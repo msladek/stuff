@@ -5,12 +5,15 @@ echo -e "\nSetup UFW ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-command -v ufw &> /dev/null \
-  || aptitude install ufw \
-  || echo "failed install" && exit 1
-ufw default deny incoming
-read -p "Allow 512/tcp (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
-  && ufw limit 512/tcp comment 'ssh rate limit'
-read -p "Enable Firewall (y/N)?" && [[ $REPLY =~ ^[Yy]$ ]] \
-  && ufw enable
-ufw status numbered
+! command -v ufw >/dev/null \
+  && ! aptitude install ufw \
+  && echo "failed install" && exit 1
+
+if ! ufw status | grep -qF active; then
+  ufw default deny incoming
+  command -v sshd >/dev/null \
+    && sshPort=$(sshd -T | grep port | head -n1 | cut -d' ' -f2) \
+    && ! grep -qF -- "tcp $sshPort" /lib/ufw/user.rules
+    && ufw limit $sshPort/tcp comment 'ssh rate limit'
+  ufw enable
+fi 

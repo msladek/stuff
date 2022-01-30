@@ -5,9 +5,9 @@ echo -e "\nSetup motd ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-command -v neofetch &> /dev/null \
-  || aptitude install neofetch \
-  || echo "failed install" && exit 1
+! command -v neofetch &> /dev/null \
+  && ! aptitude install neofetch \
+  && echo "failed install" && exit 1
 neofetchConf=/opt/msladek/stuff/etc/neofetch.conf
 truncate -s 0 /etc/motd
 [ -f $neofetchConf ] \
