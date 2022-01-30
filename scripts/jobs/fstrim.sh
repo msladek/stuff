@@ -1,1 +1,0 @@
-../../bin/jobs/fstrim.sh

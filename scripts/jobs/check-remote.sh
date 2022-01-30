@@ -1,1 +1,0 @@
-../../bin/jobs/check-remote.sh

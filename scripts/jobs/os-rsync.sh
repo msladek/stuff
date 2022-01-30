@@ -1,1 +1,0 @@
-../../bin/jobs/os-rsync.sh

@@ -1,1 +1,0 @@
-../../bin/jobs/zfs-auto-snap.sh
