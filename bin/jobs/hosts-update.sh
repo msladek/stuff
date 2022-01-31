@@ -11,6 +11,5 @@ if [ -w "/etc/hosts" ]; then
   listURL='https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts'
   curl -s $listURL | grep '^0.0.0.0 ' > /etc/hosts.d/$blocklistConf \
     && cat /etc/hosts.d/*.conf > /etc/hosts \
-    && systemctl restart systemd-networkd \
     && echo "hosts list updated"
 fi

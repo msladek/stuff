@@ -5,19 +5,23 @@ echo -e "\nSetup Jobs ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-jobDir=/opt/msladek/stuff/bin/jobs
-etcDir=/opt/msladek/stuff/etc
+unitDir=/opt/msladek/stuff/etc/systemd
 etcHostDir=/opt/msladek/stuffp/etc/$(hostname)
 
-# make the file immutable by non-roots before symlinking
-# set sticky bit on parent dir
+# make the file immutable by other users, sets sticky bit on parent dir
+function claim() {
+  [ -f $1 ] \
+    && chown $USER $(dirname $1) && chmod 1775 $(dirname $1) \
+    && chown $USER $1 && chmod 644 $1 \
+    && { [[ $1 != *.sh ]] || chmod +x $1; }
+}
+
 function activate() {
   for i in $1; do
-    [ -f $i ] \
-      && chown root $(dirname $i) && chmod 1775 $(dirname $i) \
-      && chown root $i && chmod 644 $i \
-      && { [[ $i != *.sh ]] || chmod +x $i; } \
-      && ln -sf $i $2
+    [[ $i =~ \.service ]] \
+      && script=$(grep "^ExecStart=.*\.sh" $i | cut -c11-) \
+      && claim $script
+    claim $i && ln -sf $i $2
   done
 }
 
@@ -28,28 +32,46 @@ function activateTimer() {
     && systemctl daemon-reload \
     && for timer in ${1}*.timer; do \
         systemctl enable --now $(basename $timer); \
-       done
+       done \
+    && echo "done" || { echo "failed" && false; }
 }
 
-echo "... weekly hosts update"
-activate $jobDir/hosts-update.sh /etc/cron.weekly/hosts-update
+echo "... hosts file update"
+activateTimer $unitDir/hosts-update \
+  && rm -f /etc/cron.weekly/hosts-update
 
-echo "... weekly fstrim"
-activate $jobDir/fstrim.sh /etc/cron.weekly/fstrim
+echo "... filesytem trim"
+activateTimer $unitDir/fstrim \
+  && rm -f /etc/cron.weekly/fstrim
 
-echo "... weekly os-rsync"
-[ -w /mnt/backup/os ] \
-  && activate $jobDir/os-rsync.sh /etc/cron.weekly/os-rsync \
-  || echo "skipped, no /mnt/backup/os linked"
+echo "... OS sync"
+if [ -w /mnt/backup/os ]; then
+  activateTimer $unitDir/os-rsync \
+    && rm -f /etc/cron.weekly/os-rsync
+else
+  echo "skipped, /mnt/backup/os not linked"
+fi
 
-echo "... daily smart-dump"
-[ -w /mnt/backup/smart ] \
-  && activateTimer "$etcDir/systemd/smart-dump" \
-  || echo "skipped, no /mnt/backup/smart linked"
+echo "... smart attribute dump"
+if [ -w /mnt/backup/smart ]; then
+  activateTimer $unitDir/smart-dump
+else
+  echo "skipped, /mnt/backup/smart not linked"
+fi
 
-if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
-  echo "... hourly zfs-health"
-  activate $jobDir/zfs-health.sh /etc/cron.hourly/zfs-health
+echo "... database dump"
+if [ -w /mnt/backup/mysql ]; then
+  activateTimer $unitDir/mysql-dump
+else
+  echo "skipped, /mnt/backup/mysql not linked"
+fi
+
+if ! command -v zpool > /dev/null || [ $(zpool list -H | wc -l) -eq 0 ]; then
+  echo "skipped zfs setup, no pools available"
+else
+  echo "... zfs health check"
+  activateTimer $unitDir/zfs-health \
+    && rm -f /etc/cron.hourly/zfs-health
 
   echo "... sanoid"
   if command -v sanoid > /dev/null; then
@@ -63,10 +85,9 @@ if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
   fi
 
   echo "... syncoid"
-  command -v syncoid > /dev/null \
-    && activateTimer "$etcHostDir/systemd/syncoid" \
-    || echo "skipped, syncoid not available"
-
-else
-  echo "skipped zfs setup, no pools available"
+  if command -v syncoid > /dev/null; then
+    activateTimer "$etcHostDir/systemd/syncoid"
+  else
+    echo "skipped, syncoid not available"
+  fi
 fi

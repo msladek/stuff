@@ -10,7 +10,7 @@ for db in $databases; do
   if [ "$db" ]; then
     file="${mysql_backup_path}/${db}.sql.gz"
     rm -f $file
-    sudo mysqldump --defaults-file=${defaults_file} \
+    mysqldump --defaults-file=${defaults_file} \
       --add-drop-table --add-locks --comments --create-options --disable-keys \
       --dump-date --extended-insert --no-create-db --lock-tables \
       --set-charset --quick --routines --events --triggers \
