@@ -8,29 +8,31 @@ echo -e "\nSetup Jobs ..."
 jobDir=/opt/msladek/stuff/bin/jobs
 etcDir=/opt/msladek/stuffp/etc/$(hostname)
 
+# make the file immutable by non-roots before symlinking
+# set sticky bit on parent dir
 function activate() {
-  mask=${3:-644}
   for i in $1; do
     [ -f $i ] \
-      && chown root:root $i \
-      && chmod $mask $i \
+      && chown root $(dirname $i) && chmod 1775 $(dirname $i) \
+      && chown root $i && chmod 644 $i \
+      && { [[ $i != *.sh ]] || chmod +x $i; } \
       && ln -sf $i $2
   done
 }
 
 echo "... weekly hosts update"
-activate $jobDir/hosts-update.sh /etc/cron.weekly/hosts-update 755
+activate $jobDir/hosts-update.sh /etc/cron.weekly/hosts-update
 
 echo "... weekly fstrim"
-activate $jobDir/fstrim.sh /etc/cron.weekly/fstrim 755
+activate $jobDir/fstrim.sh /etc/cron.weekly/fstrim
 
 echo "... weekly os-rsync"
 [ -d /mnt/backup ] \
-  && activate $jobDir/os-rsync.sh /etc/cron.weekly/os-rsync 755 \
+  && activate $jobDir/os-rsync.sh /etc/cron.weekly/os-rsync \
   || echo "skipped, no /mnt/backup linked"
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
   echo "... hourly zfs-health"
-  activate $jobDir/zfs-health.sh /etc/cron.hourly/zfs-health 755
+  activate $jobDir/zfs-health.sh /etc/cron.hourly/zfs-health
   echo "... sanoid"
   if command -v sanoid > /dev/null; then
     mkdir -p /etc/sanoid

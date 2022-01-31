@@ -5,13 +5,13 @@ echo -e "\nSetup SSH server ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-sshdDir=/opt/msladek/stuffp/etc/$(hostname)/sshd
-[ -d "$sshdDir" ] \
-  && chown root:root ${sshdDir}/* \
-  && chmod 644 ${sshdDir}/* \
+sshdConfDir=/opt/msladek/stuffp/etc/$(hostname)/sshd
+[ -d "$sshdConfDir" ] \
+  && chown root $sshdConfDir && chmod 1775 $sshdConfDir \
+  && chown root $sshdConfDir/* && chmod 644 $sshdConfDir/* \
   && { [ ! -L "/etc/ssh/sshd_config.d" ] || rm -v "/etc/ssh/sshd_config.d"; } \
   && mkdir -p /etc/ssh/sshd_config.d \
-  && ln -sf ${sshdDir}/* /etc/ssh/sshd_config.d/ \
+  && ln -sf $sshdConfDir/* /etc/ssh/sshd_config.d/ \
   || echo "skipped" # TODO reasonable base setup?
 
 exit 0

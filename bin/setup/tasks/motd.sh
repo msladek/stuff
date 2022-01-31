@@ -11,8 +11,8 @@ echo -e "\nSetup motd ..."
 neofetchConf=/opt/msladek/stuff/etc/neofetch.conf
 truncate -s 0 /etc/motd
 [ -f $neofetchConf ] \
-  && chown root:root $neofetchConf \
-  && chmod 644 $neofetchConf \
+  && chown root $(dirname $neofetchConf) && chmod 1775 $(dirname $neofetchConf) \
+  && chown root $neofetchConf && chmod 644 $neofetchConf \
   && echo -e "#!/bin/sh\nneofetch --config $neofetchConf" \
    | tee /etc/update-motd.d/50-neofetch > /dev/null
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
