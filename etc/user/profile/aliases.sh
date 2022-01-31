@@ -43,8 +43,6 @@ command -v batcat >/dev/null \
   && alias cat='batp'
 
 # other aliases
-command -v tldr >/dev/null \
-  && alias man='tldr'
 command -v vim >/dev/null \
   && alias vi='vim'
 alias cmd='command'
