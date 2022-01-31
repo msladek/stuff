@@ -1,0 +1,6 @@
+[Unit]
+Description=Dumping smart attributes
+
+[Service]
+Type=oneshot
+ExecStart=/opt/msladek/stuff/bin/jobs/smart-dump.sh

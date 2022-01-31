@@ -1,0 +1,10 @@
+[Unit]
+Description=Dumping smart attributes daily
+Requires=smart-dump.service
+ 
+[Timer]
+OnCalendar=02:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -3,6 +3,8 @@ backupDir="/mnt/backup/os"
 log="/var/log/os-rsync.log"
 touch $log
 
-currDate=$(date +"%Y-%m-%d %H:%M")
-echo "[${currDate}] / -> ${backupDir}" >> $log
-rsync -ax --delete / "$backupDir" &>> $log
+if [ -w $backupDir ]; then
+  currDate=$(date +"%Y-%m-%d %H:%M")
+  echo "[${currDate}] / -> ${backupDir}" >> $log
+  rsync -ax --delete / "$backupDir" &>> $log
+fi
