@@ -9,6 +9,11 @@ if [ -w $smartDir ]; then
       && [[ ! $device =~ ^/dev/disk/by-id/nvme-nvme ]] \
       && smartctl -i $device &>/dev/null \
       && mkdir -p $smartDir/$dateStr \
-      && smartctl -A $device > $smartDir/$dateStr/$(basename $device)
+      && smartctl -A $device > $smartDir/$dateStr/$(basename $device) \
+      && echo "written $smartDir/$dateStr/$(basename $device)"
   done
+  exit 0
+else
+  echo "${smartDir} not writable"
+  exit 1
 fi
