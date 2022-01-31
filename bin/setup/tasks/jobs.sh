@@ -22,10 +22,11 @@ function activate() {
 }
 
 function activateTimer() {
-  unitDir="${2:-$etcDir}/systemd"
-  activate "$unitDir/$1*.{service,timer}" /etc/systemd/system/ \
+  [ -d "$unitDir" ] \
+    && activate "${1}*.service" /etc/systemd/system/ \
+    && activate "${1}*.timer" /etc/systemd/system/ \
     && systemctl daemon-reload \
-    && for timer in $unitDir/$1*.timer; do \
+    && for timer in ${1}*.timer; do \
         systemctl enable --now $(basename $timer); \
        done
 }
@@ -43,7 +44,7 @@ echo "... weekly os-rsync"
 
 echo "... daily smart-dump"
 [ -w /mnt/backup/smart ] \
-  && activateTimer 'smart-dump' \
+  && activateTimer "$etcDir/systemd/smart-dump" \
   || echo "skipped, no /mnt/backup/smart linked"
 
 if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
@@ -63,7 +64,7 @@ if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
 
   echo "... syncoid"
   command -v syncoid > /dev/null \
-    && activateTimer 'syncoid' "$etcHostDir" \
+    && activateTimer "$etcHostDir/systemd/syncoid" \
     || echo "skipped, syncoid not available"
 
 else
