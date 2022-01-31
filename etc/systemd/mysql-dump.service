@@ -1,0 +1,6 @@
+[Unit]
+Description=mysql-dump
+
+[Service]
+Type=oneshot
+ExecStart=/opt/msladek/stuff/bin/jobs/mysql-dump.sh

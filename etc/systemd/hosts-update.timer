@@ -1,0 +1,10 @@
+[Unit]
+Description=hosts-update timer
+Requires=hosts-update.service
+ 
+[Timer]
+OnCalendar=Sun 05:30 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

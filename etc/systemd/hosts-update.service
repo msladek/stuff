@@ -1,0 +1,6 @@
+[Unit]
+Description=hosts-update
+
+[Service]
+Type=oneshot
+ExecStart=/opt/msladek/stuff/bin/jobs/hosts-update.sh

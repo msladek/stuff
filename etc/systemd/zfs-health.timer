@@ -1,0 +1,10 @@
+[Unit]
+Description=zfs-health timer
+Requires=zfs-health.service
+ 
+[Timer]
+OnCalendar=*:30
+Persistent=true
+
+[Install]
+WantedBy=timers.target

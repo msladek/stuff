@@ -1,0 +1,10 @@
+[Unit]
+Description=mysql-dump timer
+Requires=mysql-dump.service
+ 
+[Timer]
+OnCalendar=01:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

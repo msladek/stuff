@@ -1,5 +1,5 @@
 [Unit]
-Description=Dumping smart attributes
+Description=smart-dump
 
 [Service]
 Type=oneshot

@@ -1,0 +1,6 @@
+[Unit]
+Description=fstrim
+
+[Service]
+Type=oneshot
+ExecStart=/opt/msladek/stuff/bin/jobs/fstrim.sh

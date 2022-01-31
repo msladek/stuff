@@ -1,0 +1,10 @@
+[Unit]
+Description=os-rsync timer
+Requires=os-rsync.service
+ 
+[Timer]
+OnCalendar=Sun 05:45 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
