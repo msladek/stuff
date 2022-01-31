@@ -45,6 +45,7 @@ command -v batcat >/dev/null \
 # other aliases
 command -v vim >/dev/null \
   && alias vi='vim'
+alias less='less --mouse --wheel-lines=5'
 alias cmd='command'
 alias ex='exit'
 alias lsports='netstat -atulpn'
