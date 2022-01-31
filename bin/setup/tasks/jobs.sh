@@ -22,7 +22,7 @@ function activate() {
 }
 
 function activateTimer() {
-  [ -d "$unitDir" ] \
+  [ -d "$(dirname $1)" ] \
     && activate "${1}*.service" /etc/systemd/system/ \
     && activate "${1}*.timer" /etc/systemd/system/ \
     && systemctl daemon-reload \
