@@ -10,7 +10,7 @@ etcHostDir=/opt/msladek/stuffp/etc/$(hostname)
 
 # make the file immutable by other users, sets sticky bit on parent dir
 function claim() {
-  [ -f $1 ] \
+  [ -n $1 ] && [ -f $1 ] \
     && chown $USER $(dirname $1) && chmod 1775 $(dirname $1) \
     && chown $USER $1 && chmod 644 $1 \
     && { [[ $1 != *.sh ]] || chmod +x $1; }
@@ -18,7 +18,7 @@ function claim() {
 
 function activate() {
   for i in $1; do
-    [[ $i =~ \.service ]] \
+    [[ $i =~ \.service$ ]] \
       && script=$(grep "^ExecStart=.*\.sh" $i | cut -c11-) \
       && claim $script
     claim $i && ln -sf $i $2
