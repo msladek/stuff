@@ -23,9 +23,9 @@ if [ "$PUBLIC_IP" != "$actualIp" ]; then
   subject="[URGENT] $(hostname) IP reassigned"
   message="I, $(hostname), have been assigned the new IP ${actualIp} at ${currDate} from previous IP ${PUBLIC_IP}"
   sendMail "$subject" "$message"
-  echo "[${currDate}] ${message}" >> $log
+  echo "[${currDate}] ${message}" | tee -a $log
 else
-  echo "[${currDate}] $(hostname) still has IP $actualIp" >> $log
+  echo "[${currDate}] $(hostname) still has IP $actualIp" | tee -a $log
 fi
 
 exit 0

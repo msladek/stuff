@@ -25,7 +25,7 @@ nc -z $host $port -w 10  &>/dev/null     && isRemoteUp=true || isRemoteUp=false
 test -f $lock                            && existsLock=true || existsLock=false
 
 if ! $isLocalUp; then
-  echo "[${currDate}] unable to check remote, no connection..." >> $log
+  echo "[${currDate}] unable to check remote, no connection..." | tee -a $log
 elif $isRemoteUp; then
   if $existsLock; then
     downDate=$(cat $lock)
@@ -33,19 +33,19 @@ elif $isRemoteUp; then
     message="${host}:${port} is back online from $(hostname), was down between ${downDate} and ${currDate}"
     sendMail "$subject" "$message"
     rm $lock
-    echo "[${currDate}] ${message}" >> $log
+    echo "[${currDate}] ${message}" | tee -a $log
   elif [ $(date +"%M") == "00" ]; then
-    echo "[${currDate}] ${host}:${port} is online" >> $log
+    echo "[${currDate}] ${host}:${port} is online" | tee -a $log
   fi
 else
   if $existsLock; then
-    echo "[${currDate}] ${host}:${port} still offline, waiting..." >> $log
+    echo "[${currDate}] ${host}:${port} still offline, waiting..." | tee -a $log
   else
     echo $currDate > $lock
     subject="[URGENT] ${host} offline"
     message="${host}:${port} went offline from $(hostname) at ${currDate}"
     sendMail "$subject" "$message"
-    echo "[${currDate}] ${message}" >> $log
+    echo "[${currDate}] ${message}" | tee -a $log
   fi
 fi
 
