@@ -3,7 +3,7 @@ Description=mysql-dump timer
 Requires=mysql-dump.service
  
 [Timer]
-OnCalendar=01:00 UTC
+OnCalendar=01:15 UTC
 Persistent=true
 
 [Install]

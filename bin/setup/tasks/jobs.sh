@@ -10,7 +10,7 @@ etcHostDir=/opt/msladek/stuffp/etc/$(hostname)
 
 # make the file immutable by other users, sets sticky bit on parent dir
 function claim() {
-  [ -n $1 ] && [ -f $1 ] \
+  [ ! -z $1 ] && [ -f $1 ] \
     && chown $USER $(dirname $1) && chmod 1775 $(dirname $1) \
     && chown $USER $1 && chmod 644 $1 \
     && { [[ $1 != *.sh ]] || chmod +x $1; }
@@ -31,7 +31,7 @@ function activateTimer() {
     && activate "${1}*.timer" /etc/systemd/system/ \
     && systemctl daemon-reload \
     && for timer in ${1}*.timer; do \
-        systemctl enable --now $(basename $timer); \
+        systemctl enable $(basename $timer); \
        done \
     && echo "done" || { echo "failed" && false; }
 }
@@ -79,7 +79,8 @@ else
     [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
       && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
     activate $etcHostDir/sanoid.conf /etc/sanoid/sanoid.conf \
-      && systemctl enable --now sanoid.timer
+      && systemctl enable sanoid.timer \
+      && rm -f /etc/cron.d/sanoid
   else
     echo "skipped, sanoid not available"
   fi
