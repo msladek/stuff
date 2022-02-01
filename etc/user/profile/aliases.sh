@@ -62,6 +62,27 @@ command -v tmux >/dev/null \
   && alias screen='tmux' \
   && alias screenr='tmuxr'
 
+# systemctl aliases
+alias sc='sudo SYSTEMD_EDITOR=vim systemctl'
+alias scs='systemctl status'
+alias scl='systemctl list-unit-files'
+alias sclu='systemctl list-units'
+alias sclt='systemctl list-timers --all'
+
+# git aliases
+command -v git >/dev/null \
+  && alias gia='git add' \
+  && alias gib='git branch' \
+  && alias gic='git commit' \
+  && alias gid='git diff' \
+  && alias gii='git init' \
+  && alias gim='git merge' \
+  && alias gio='git checkout' \
+  && alias gip='git pull' \
+  && alias gir='git reset' \
+  && alias gis='git status' \
+  && alias giu='git push -u' \
+
 # zfs aliases
 command -v zfs >/dev/null \
   && alias zl='zfs list' \
