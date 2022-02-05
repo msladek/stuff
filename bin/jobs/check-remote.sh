@@ -8,8 +8,8 @@ die() {
   echo >&2 "failed - $@"; exit 1;
 }
 
-sendMail() {
-  echo -e "Subject: $1\n\n$2" | msmtp root@sladek.co
+send() {
+  echo -e "Subject: $1\n\n$2" | sendmail root@sladek.co
 }
 
 [[ "${1}" =~ ^[a-zA-Z\.].*$ ]]  && host="$1" || die "invalid host $1" 
@@ -31,7 +31,7 @@ elif $isRemoteUp; then
     downDate=$(cat $lock)
     subject="[INFO] ${host} online"
     message="${host}:${port} is back online from $(hostname), was down between ${downDate} and ${currDate}"
-    sendMail "$subject" "$message"
+    send "$subject" "$message"
     rm $lock
     echo "[${currDate}] ${message}" | tee -a $log
   elif [ $(date +"%M") == "00" ]; then
@@ -44,7 +44,7 @@ else
     echo $currDate > $lock
     subject="[URGENT] ${host} offline"
     message="${host}:${port} went offline from $(hostname) at ${currDate}"
-    sendMail "$subject" "$message"
+    send "$subject" "$message"
     echo "[${currDate}] ${message}" | tee -a $log
   fi
 fi
