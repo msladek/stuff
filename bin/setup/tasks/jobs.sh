@@ -16,19 +16,23 @@ function claim() {
     && { [[ $1 != *.sh ]] || chmod +x $1; }
 }
 
-function activate() {
+function install() {
+  claim "$1" && ln -sf "$1" "$2"
+}
+
+function installUnit {
   for i in $1; do
     [[ $i =~ \.service$ ]] \
       && script=$(grep "^ExecStart=.*\.sh" $i | cut -c11-) \
       && claim $script
-    claim $i && ln -sf $i $2
+    install "$i" /etc/systemd/system/
   done
 }
 
-function activateTimer() {
+function installTimer() {
   [ -d "$(dirname $1)" ] \
-    && activate "${1}*.service" /etc/systemd/system/ \
-    && activate "${1}*.timer" /etc/systemd/system/ \
+    && installUnit "${1}*.service" \
+    && installUnit "${1}*.timer" \
     && systemctl daemon-reload \
     && for timer in ${1}*.timer; do \
         systemctl enable $(basename $timer); \
@@ -36,19 +40,19 @@ function activateTimer() {
     && echo "done" || { echo "failed" && false; }
 }
 
-claim $unitDir/notify-failure@.service
+installUnit notify-failure@.service
 
 echo "... hosts file update"
-activateTimer $unitDir/hosts-update \
+installTimer $unitDir/hosts-update \
   && rm -f /etc/cron.weekly/hosts-update
 
 echo "... filesytem trim"
-activateTimer $unitDir/fstrim \
+installTimer $unitDir/fstrim \
   && rm -f /etc/cron.weekly/fstrim
 
 echo "... OS sync"
 if [ -w /mnt/backup/os ]; then
-  activateTimer $unitDir/os-rsync \
+  installTimer $unitDir/os-rsync \
     && rm -f /etc/cron.weekly/os-rsync
 else
   echo "skipped, /mnt/backup/os not linked"
@@ -56,14 +60,14 @@ fi
 
 echo "... smart attribute dump"
 if [ -w /mnt/backup/smart ]; then
-  activateTimer $unitDir/smart-dump
+  installTimer $unitDir/smart-dump
 else
   echo "skipped, /mnt/backup/smart not linked"
 fi
 
 echo "... database dump"
 if [ -w /mnt/backup/mysql ]; then
-  activateTimer $unitDir/mysql-dump
+  installTimer $unitDir/mysql-dump
 else
   echo "skipped, /mnt/backup/mysql not linked"
 fi
@@ -72,7 +76,7 @@ if ! command -v zpool > /dev/null || [ $(zpool list -H | wc -l) -eq 0 ]; then
   echo "skipped zfs setup, no pools available"
 else
   echo "... zfs health check"
-  activateTimer $unitDir/zfs-health \
+  installTimer $unitDir/zfs-health \
     && rm -f /etc/cron.hourly/zfs-health
 
   echo "... sanoid"
@@ -80,7 +84,7 @@ else
     mkdir -p /etc/sanoid
     [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
       && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
-    activate $etcHostDir/sanoid.conf /etc/sanoid/sanoid.conf \
+    install $etcHostDir/sanoid.conf /etc/sanoid/sanoid.conf \
       && systemctl enable sanoid.timer \
       && rm -f /etc/cron.d/sanoid
   else
@@ -89,7 +93,7 @@ else
 
   echo "... syncoid"
   if command -v syncoid > /dev/null; then
-    activateTimer "$etcHostDir/systemd/syncoid"
+    installTimer "$etcHostDir/systemd/syncoid"
   else
     echo "skipped, syncoid not available"
   fi

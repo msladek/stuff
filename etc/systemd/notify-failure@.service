@@ -3,7 +3,7 @@ Description=notify-failure
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'echo -e "Subject: [IMPORTANT] [$(hostname)] systemd unit failure\n\n$(systemctl status %i)" | sendmail root'
+ExecStart=/opt/msladek/stuff/bin/jobs/notify-status %i
 
 [Install]
 WantedBy=multi-user.target
