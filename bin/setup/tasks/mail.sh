@@ -16,7 +16,7 @@ if [ ! -f ~/.msmtprc ]; then
   echo -e "... setup user mailing"
   read -sp "Mailing password: " password && echo
   [ ! -z "$password" ] \
-    && install -T -m 600 -o $USER -g $(id -gn) /opt/msladek/stuff/etc/msmtprc ~/.msmtprc
+    && install -T -m 600 -o $USER -g $(id -gn) /opt/msladek/stuff/etc/msmtprc ~/.msmtprc \
     && sed -i -e "s/<hostname>/$(hostname)/g" ~/.msmtprc \
     && sed -i -e "s/<password>/${password}/g" ~/.msmtprc \
     || echo 'unable to setup ~/.msmtprc'
@@ -30,6 +30,6 @@ unset password
   && vim /etc/aliases
 
 [ -f ~/.msmtprc ] \
-    && echo -e "Subject: Test MSMTP\n\norigin: $(hostname)" | sendmail root
+    && echo -e "Subject: MSMTP Setup success\n\norigin: $(hostname)" | sendmail root
 
 exit 0
