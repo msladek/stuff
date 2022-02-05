@@ -10,23 +10,26 @@ echo -e "\nSetup msmtp for root ..."
   && ! aptitude install msmtp msmtp-mta \
   && echo "failed install" && exit 1
 
-echo -e "... setup aliases"
-echo "aliases /etc/aliases" | tee /etc/msmtprc >/dev/null
-chmod 600 /etc/msmtprc
-echo "TODO add mails to /etc/aliases"
-
-## FIXME password is exposed to ps in sed command
+## TODO password is exposed to ps in sed command
+## -> password to keyring instead of plaintex in file
 if [ ! -f ~/.msmtprc ]; then
   echo -e "... setup user mailing"
   read -sp "Mailing password: " password && echo
   [ ! -z "$password" ] \
-    && cp /opt/msladek/stuff/etc/msmtprc ~/.msmtprc \
-    && chmod 600 ~/.msmtprc \
+    && install -T -m 600 -o $USER -g $(id -gn) /opt/msladek/stuff/etc/msmtprc ~/.msmtprc
     && sed -i -e "s/<hostname>/$(hostname)/g" ~/.msmtprc \
     && sed -i -e "s/<password>/${password}/g" ~/.msmtprc \
-    && -e "Subject: Test MSMTP\n\norigin: $(hostname)" | msmtp ${USER}@sladek.co \
     || echo 'unable to setup ~/.msmtprc'
 fi
 unset password
+
+[ -f ~/.msmtprc ] \
+  && ! grep -qF -- "aliases" ~/.msmtprc \
+  && echo -e "... setup aliases" \
+  && echo -e "\naliases /etc/aliases" >> ~/.msmtprc \
+  && vim /etc/aliases
+
+[ -f ~/.msmtprc ] \
+    && echo -e "Subject: Test MSMTP\n\norigin: $(hostname)" | sendmail root
 
 exit 0
