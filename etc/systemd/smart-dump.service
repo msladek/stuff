@@ -1,7 +1,7 @@
 [Unit]
 Description=smart-dump
+OnFailure=notify-status@%n
 
 [Service]
 Type=oneshot
 ExecStart=/opt/msladek/stuff/bin/jobs/smart-dump.sh
-OnFailure=notify-failure@%n

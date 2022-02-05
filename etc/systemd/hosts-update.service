@@ -1,7 +1,7 @@
 [Unit]
 Description=hosts-update
+OnFailure=notify-status@%n
 
 [Service]
 Type=oneshot
 ExecStart=/opt/msladek/stuff/bin/jobs/hosts-update.sh
-OnFailure=notify-failure@%n

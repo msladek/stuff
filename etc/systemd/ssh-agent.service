@@ -1,11 +1,11 @@
 [Unit]
 Description=SSH key agent
+OnFailure=notify-status@%n
 
 [Service]
 Type=simple
 Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
 ExecStart=/usr/bin/ssh-agent -D -a $SSH_AUTH_SOCK
-OnFailure=notify-failure@%n
 
 [Install]
 WantedBy=default.target

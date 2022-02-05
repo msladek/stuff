@@ -1,7 +1,7 @@
 [Unit]
 Description=mysql-dump
+OnFailure=notify-status@%n
 
 [Service]
 Type=oneshot
 ExecStart=/opt/msladek/stuff/bin/jobs/mysql-dump.sh
-OnFailure=notify-failure@%n
