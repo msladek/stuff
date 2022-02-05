@@ -6,7 +6,7 @@ if command -v tmux >/dev/null; then
     [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] \
       && run-parts /etc/update-motd.d \
       && last --time-format=iso $USER \
-       | grep 'pts' | egrep -v "tmux|:S"
+       | grep 'pts' | egrep -v "tmux|:S" \
        | head -n2 | tail -n1 \
        | awk {'print "Last login: " $4 " from " $3'}
   elif [ -n "$PS1" ] && [[ $- == *i* ]] \
