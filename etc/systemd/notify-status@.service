@@ -1,5 +1,5 @@
 [Unit]
-Description=notify-failure
+Description=notify-status
 
 [Service]
 Type=oneshot

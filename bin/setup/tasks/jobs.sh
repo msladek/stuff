@@ -40,7 +40,7 @@ function installTimer() {
     && echo "done" || { echo "failed" && false; }
 }
 
-installUnit $unitDir/notify-failure@.service
+installUnit $unitDir/notify-status@.service
 
 echo "... hosts file update"
 installTimer $unitDir/hosts-update \
