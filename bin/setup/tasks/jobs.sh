@@ -36,7 +36,7 @@ function activateTimer() {
     && echo "done" || { echo "failed" && false; }
 }
 
-claim $unitDir/notify-failure
+claim $unitDir/notify-failure@.service
 
 echo "... hosts file update"
 activateTimer $unitDir/hosts-update \

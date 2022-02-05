@@ -3,8 +3,7 @@ Description=notify-failure
 
 [Service]
 Type=oneshot
-ExecStart=echo -e "Subject: [IMPORTANT] [$(hostname)] systemd unit failure\n\n$(systemctl status %i)" \
-        | sendmail root
+ExecStart=/bin/sh -c 'echo -e "Subject: [IMPORTANT] [$(hostname)] systemd unit failure\n\n$(systemctl status %i)" | sendmail root'
 
 [Install]
 WantedBy=multi-user.target
