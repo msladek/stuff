@@ -4,3 +4,4 @@ Description=os-rsync
 [Service]
 Type=oneshot
 ExecStart=/opt/msladek/stuff/bin/jobs/os-rsync.sh
+OnFailure=notify-failure@%n

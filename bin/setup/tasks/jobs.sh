@@ -36,6 +36,8 @@ function activateTimer() {
     && echo "done" || { echo "failed" && false; }
 }
 
+claim $unitDir/notify-failure
+
 echo "... hosts file update"
 activateTimer $unitDir/hosts-update \
   && rm -f /etc/cron.weekly/hosts-update

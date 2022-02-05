@@ -13,6 +13,7 @@ User=portmap
 ExecStart=/usr/bin/ssh -N -L <map_port_local>:127.0.0.1:<map_port_remote> -o ServerAliveInterval=60 -p <ssh_port> -i ~/.ssh/<keyfile> <host>
 Restart=always
 RestartSec=60
+OnFailure=notify-failure@%n
 
 [Install]
 WantedBy=multi-user.target

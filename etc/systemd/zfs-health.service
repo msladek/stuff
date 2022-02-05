@@ -4,3 +4,4 @@ Description=zfs-health
 [Service]
 Type=oneshot
 ExecStart=/opt/msladek/stuff/bin/jobs/zfs-health.sh
+OnFailure=notify-failure@%n
