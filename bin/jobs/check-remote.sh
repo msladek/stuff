@@ -9,7 +9,7 @@ die() {
 }
 
 send() {
-  echo -e "Subject: $1\n\n$2" | sendmail root@sladek.co
+  echo -e "Subject: $1\n\n$2" | sendmail root
 }
 
 [[ "${1}" =~ ^[a-zA-Z\.].*$ ]]  && host="$1" || die "invalid host $1" 

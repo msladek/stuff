@@ -18,7 +18,7 @@ currDate=$(date +"%Y-%m-%d %H:%M")
 if [ "$PUBLIC_IP" != "$actualIp" ]; then
   subject="[URGENT] $(hostname) IP reassigned"
   message="I, $(hostname), have been assigned the new IP ${actualIp} at ${currDate} from previous IP ${PUBLIC_IP}"
-  echo -e "Subject: ${subject}\n\n${message}" | sendmail root@sladek.co
+  echo -e "Subject: ${subject}\n\n${message}" | sendmail root
   echo "[${currDate}] ${message}" | tee -a $log
 else
   echo "[${currDate}] $(hostname) still has IP $actualIp" | tee -a $log
