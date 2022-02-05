@@ -21,9 +21,13 @@ aptitude -q=2 -y install \
     zip unzip unrar-free unp software-properties-common build-essential \
       | grep -v 'is already installed at the requested version'
 
-if [ $(lsb_release -sc) = 'sid' ] && ! command -v apt-listbugs > /dev/null; then
-  echo -e "... install apt-listbugs"
-  aptitude -q=2 -y install apt-listbugs
+if [ $(lsb_release -sc) = 'sid' ]; then
+  ! command -v apt-listbugs > /dev/null \
+    && echo -e "... install apt-listbugs" \
+    && aptitude -q=2 -y install apt-listbugs
+elif command -v debian-security-support > /dev/null; then
+  echo -e "... install security-support" \
+  aptitude -q=2 -y install debian-security-support
 fi
 
 echo -e "... clean packages"

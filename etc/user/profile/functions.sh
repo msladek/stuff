@@ -22,8 +22,13 @@ function update() {
   aptitude "$@" update \
     && aptitude upgrade \
     && aptitude autoclean && echo \
-    && apt autoremove && echo \
+    && apt autoremove && echo
+  ret=$?
+  [ $ret -eq 0] && command -v checkrestart >/dev/null \
     && echo "check restarts:" && sudo checkrestart
+  [ $ret -eq 0] && command -v check-support-status >/dev/null \
+    && echo "check support:" && sudo check-support-status
+  return $ret
 }
 fi
 
