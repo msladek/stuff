@@ -3,7 +3,7 @@ Description=notify-failure
 
 [Service]
 Type=oneshot
-ExecStart=/opt/msladek/stuff/bin/jobs/notify-status %i
+ExecStart=/opt/msladek/stuff/bin/jobs/notify-status.sh %i
 
 [Install]
 WantedBy=multi-user.target
