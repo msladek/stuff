@@ -12,9 +12,6 @@ COND4=$(/sbin/zpool list -pH -o capacity | awk '$1 >= 90 {print}')
 CONDITION="${COND1}${COND2}${COND3}${COND4}"
 if [ "${CONDITION}" ]; then
   echo "ZFS health check FAILED: ${CONDITION} - $(/sbin/zpool status -x)"
-  subject="[IMPORTANT] [$(hostname)] ZFS health check failed"
-  message="$(/sbin/zpool status)\n\n$(/sbin/zpool list)"
-  echo -e "Subject: ${subject}\n\n${message}" | sendmail root
   exit 1
 else
   echo "ZFS health check passed: $(/sbin/zpool status -x)"
