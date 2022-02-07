@@ -1,11 +1,14 @@
 [Unit]
 Description=SSH key agent
-OnFailure=notify-status@%n
+StartLimitBurst=5
+StartLimitIntervalSec=500
 
 [Service]
 Type=simple
 Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
 ExecStart=/usr/bin/ssh-agent -D -a $SSH_AUTH_SOCK
+Restart=on-failure
+RestartSec=60
 
 [Install]
 WantedBy=default.target

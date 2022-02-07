@@ -70,6 +70,10 @@ function ssh-add-once() {
 }
 
 if command -v git >/dev/null; then
+function git-pull-stuff() {
+  [ -d /opt/msladek/stuff/.git ] && git -C /opt/msladek/stuff pull
+  [ -d /opt/msladek/stuffp/.git ] && git -C /opt/msladek/stuffp pull
+}
 # pull repo with mixed permissions
 function git-pull-force() {
   git="git -C $1"

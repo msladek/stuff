@@ -1,7 +1,11 @@
 [Unit]
 Description=fstrim
 OnFailure=notify-status@%n
+StartLimitBurst=2
+StartLimitIntervalSec=10000
 
 [Service]
 Type=oneshot
+Restart=on-failure
+RestartSec=3600
 ExecStart=/opt/msladek/stuff/bin/jobs/fstrim.sh
