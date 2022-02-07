@@ -72,6 +72,7 @@ source /usr/share/bash-completion/completions/systemctl \
 
 # journalctl aliases / completion
 alias jc='sudo journalctl'
+alias jcu='sudo journalctl -u'
 source /usr/share/bash-completion/completions/journalctl \
   && complete -F _journalctl jc
 
