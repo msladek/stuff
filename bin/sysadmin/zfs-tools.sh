@@ -1,6 +1,18 @@
 #!/bin/bash
 echo 'importing zfs-tools ...'
 
+echo '... zfs-dataset-substitute($mountpoint $fromDataset $toDataset)'
+function zfs-dataset-substitute() {
+  [ -z "$1" ] && echo 'no mountpoint provided' && return 1
+  [ -z "$3" ] && echo 'no toDataset provided' && return 1
+  if [ ! -z "$2" ] && [ $2 != 'none' ]; then
+    [ "$1" != "$(zfs get -H -o value mountpoint $2)" ] \
+      && echo "fromDataset [${2}] not mounted at [${1}]" && return 1
+    zfs set mountpoint=none $2
+  fi
+  zfs set mountpoint="$1" $3 \
+}
+
 echo '... zfs-dataset-forEach($command [$postCommand])'
 function zfs-dataset-forEach() {
   [ -z "$1" ] && echo 'no command provided' && return 1
@@ -39,12 +51,27 @@ echo '... zfs-snaps-rename($sedReplace $grepFilter)'
 function zfs-snaps-rename() {
   [ -z "$1" ] && echo 'no sed replace provided' && return 1
   [ -z "$2" ] && echo 'no grep filter provided' && return 1
+  [ "$doItNow" == "true" ] || echo >&2 "DRY-RUN, set doItNow=true"
   for oldname in $(zfs list -H -t snapshot -o name | grep "$2"); do
     newname=$(echo $oldname | sed -E "$1")
     [ -n "$newname" ] && [ "$newname" != "$oldname" ] \
       && echo "$oldname -> $newname" \
       && [ "$doItNow" == "true" ] \
-      && sudo zfs rename $oldname $newname
+      && zfs rename $oldname $newname
+  done
+  unset doItNow
+}
+
+echo '... zfs-snaps-destroy($grepFilter)'
+## $grepFilter: '@syncoid_'
+function zfs-snaps-destroy() {
+  [ -z "$1" ] && echo 'no grep filter provided' && return 1
+  [ "$doItNow" == "true" ] || echo >&2 "DRY-RUN, set doItNow=true"
+  for snap in $(zfs list -H -t snapshot -o name | grep "$2"); do
+    [ -n "$snap" ] \
+      && echo "deleting: $snap" \
+      && [ "$doItNow" == "true" ] \
+      && zfs destroy $snap
   done
   unset doItNow
 }
