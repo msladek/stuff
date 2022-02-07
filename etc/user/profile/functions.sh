@@ -74,14 +74,14 @@ if command -v git >/dev/null; then
 function git-pull-force() {
   git="git -C $1"
   $git fetch || return 1
+  $git clean --interactive
+  $git reset --hard
   local branch=$($git remote | head -n1)/$($git branch --show-current)  
   for file in $($git diff --name-only @ @{u}); do
     [ -w "$file" ] && local sudo='' || local sudo='sudo'
     $sudo $git checkout $branch $file \
       || return 1
   done
-  $git clean --interactive
-  $git reset --hard
   $git pull
 }
 fi #git
