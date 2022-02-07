@@ -20,10 +20,10 @@ alias ll='ls -aFlh --color=auto'
 alias la='ls -AFlh --color=auto'
 
 # aliases for backing out of dirs
-alias ..='cd ../ && ll'
-alias ...='cd ../../ && ll'
-alias ....='cd ../../../ && ll'
-alias .....='cd ../../../../ && ll'
+alias ..='cd ../ && l'
+alias ...='cd ../../ && l'
+alias ....='cd ../../../ && l'
+alias .....='cd ../../../../ && l'
 
 # colorize outputs
 alias grep='grep --color=auto'
@@ -89,7 +89,7 @@ if command -v git >/dev/null; then
   alias gio='git checkout'
   alias gip='git pull'
   alias gir='git reset'
-  alias gis='git status'
+  alias gis='git status -s'
   alias giu='git push -u'
   alias gicu='git commit && git push -u'
   source /usr/share/bash-completion/completions/git \

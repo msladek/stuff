@@ -16,6 +16,7 @@ stuffDir=/opt/msladek/stuff
   && mv "$oldStuffDir" $stuffDir
 ln -sT $stuffDir ~/stuff
 
+echo -e "... link profile"
 [ ! -f ~/.profile ] && cp /etc/skel/.profile ~/
 # https://superuser.com/a/789499/1099716
 rm -f ~/.bash_profile ~/.bash_login
@@ -44,7 +45,6 @@ mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
 ln -sf $stuffDir/etc/user/vimrc ~/.vimrc
 ln -sf $stuffDir/etc/user/tmux.conf ~/.tmux.conf
 
-echo -e "... link bash goodies"
 if [ -e ~/.bash_aliases ] || [ -L ~/.bash_aliases ]; then
   echo && read -p "Remove legacy bash_aliases? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
     && rm -f ~/.bash_aliases

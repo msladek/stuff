@@ -1,18 +1,22 @@
 function mkcd() {
-  [ -w "./" ] && mkdir "$@" || (sudo mkdir "$@" && sudo chown $USER:$USER "${@: -1}") && cd "${@: -1}"
-  return $?
+  dir="${@: -1}"
+  parent="$dir"
+  while [ ! -d "$parent" ]; do parent=$(dirname "$parent"); done
+  [ -w "$parent" ] \
+    && mkdir "$@" \
+    || { sudo mkdir "$@" \
+      && sudo chown $USER:$(id -gn) "$dir"; } \
+    && cd "$dir"
 }
 
 function tailf() {
-  [ -r "${@: -1}" ] && tail -f -n1000 "$@" \
-               || sudo tail -f -n1000 "$@"
-  return $?
+  [ -r "${@: -1}" ] && local sudo='' || local sudo='sudo'
+  $sudo tail -f -n1000 "$@"
 }
 
 function lessf() {
-  [ -r "${@: -1}" ] && less -n +F "$@" \
-               || sudo less -n +F "$@"
-  return $?
+  [ -r "${@: -1}" ] && local sudo='' || local sudo='sudo'
+  $sudo less -n +F "$@"
 }
 
 if command -v aptitude >/dev/null; then
@@ -64,3 +68,20 @@ function ssh-add-once() {
     command ssh-add "$@"
   fi
 }
+
+if command -v git >/dev/null; then
+# pull repo with mixed permissions
+function git-pull-force() {
+  git="git -C $1"
+  $git fetch || return 1
+  local branch=$($git remote | head -n1)/$($git branch --show-current)  
+  for file in $($git diff --name-only @ @{u}); do
+    [ -w "$file" ] && local sudo='' || local sudo='sudo'
+    $sudo $git checkout $branch $file \
+      || return 1
+  done
+  $git clean --interactive
+  $git reset --hard
+  $git pull
+}
+fi #git
