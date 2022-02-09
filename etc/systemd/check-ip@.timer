@@ -1,0 +1,10 @@
+[Unit]
+Description=check-ip [%i]
+Requires=check-ip@%i.service
+
+[Timer]
+OnCalendar=*:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

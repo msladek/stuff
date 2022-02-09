@@ -1,27 +1,11 @@
 #!/bin/bash
-
-die() {
-  echo >&2 "failed - $@"; exit 1;
-}
-
-source /etc/profile
-# PUBLIC_IP should be set in /etc/profile.d/
-[[ "${PUBLIC_IP}." =~ ^([0-9]{1,3}\.){4}$ ]] \
-  || die "expected valid env variable PUBLIC_IP" 
-name="check-ip"
-log="/var/log/$name.log"
-touch $log
-
-actualIp=$(curl -s ipinfo.io/ip)
-currDate=$(date +"%Y-%m-%d %H:%M")
-
-if [ "$PUBLIC_IP" != "$actualIp" ]; then
-  subject="[URGENT] $(hostname) IP reassigned"
-  message="I, $(hostname), have been assigned the new IP ${actualIp} at ${currDate} from previous IP ${PUBLIC_IP}"
-  echo -e "Subject: ${subject}\n\n${message}" | sendmail root
-  echo "[${currDate}] ${message}" | tee -a $log
-else
-  echo "[${currDate}] $(hostname) still has IP $actualIp" | tee -a $log
-fi
-
-exit 0
+expectedIp="$1"
+domain="o-o.myaddr.l.google.com"
+for i in 4 3 2 1; do
+  ns="ns${i}.google.com"
+  actualIp=$(dig +short -4 TXT ${domain} @${ns} | sed 's/[^0-9.]//g')
+  [ "$expectedIp" = "$actualIp" ] && exit 0
+  sleep 1
+done
+echo >&2 "IP reassigned - \"${expectedIp}\" -> \"${actualIp}\""
+exit 1

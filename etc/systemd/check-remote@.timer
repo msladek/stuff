@@ -1,0 +1,10 @@
+[Unit]
+Description=check-remote [%i]
+Requires=check-remote@%i.service
+
+[Timer]
+OnCalendar=*:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
