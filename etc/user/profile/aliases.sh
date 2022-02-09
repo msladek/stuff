@@ -81,6 +81,8 @@ if command -v git >/dev/null; then
   alias gia='git add'
   alias gib='git branch'
   alias gic='git commit'
+  alias gicp='git cherry-pick'
+  alias gico='git checkout'
   alias gid='git diff'
   alias gif='git fetch'
   alias gii='git init'
@@ -88,14 +90,19 @@ if command -v git >/dev/null; then
   alias gim='git merge'
   alias gio='git checkout'
   alias gip='git pull'
+  alias gipl='git pull'
+  alias gipu='git push -u'
   alias gir='git reset'
-  alias gis='git status -s'
+  alias gis='git status'
+  alias giss='git status -s'
   alias giu='git push -u'
   alias gicu='git commit && git push -u'
   source /usr/share/bash-completion/completions/git \
     && __git_complete gia _git_add \
     && __git_complete gib _git_branch \
     && __git_complete gic _git_commit \
+    && __git_complete gicp _git_cherry_pick \
+    && __git_complete gico _git_checkout \
     && __git_complete gid _git_diff \
     && __git_complete gif _git_fetch \
     && __git_complete gii _git_init \
@@ -103,8 +110,11 @@ if command -v git >/dev/null; then
     && __git_complete gim _git_merge \
     && __git_complete gio _git_checkout \
     && __git_complete gip _git_pull \
+    && __git_complete gipl _git_pull \
+    && __git_complete gipu _git_push \
     && __git_complete gir _git_reset \
     && __git_complete gis _git_status \
+    && __git_complete giss _git_status \
     && __git_complete giu _git_push \
     && __git_complete gicu _git_push
 fi
