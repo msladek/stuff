@@ -1,8 +1,12 @@
 [Unit]
-Description=notify-status
+Description=notify-status [%i]
+StartLimitBurst=80
+StartLimitIntervalSec=80000
 
 [Service]
 Type=oneshot
+Restart=on-failure
+RestartSec=900
 ExecStart=/opt/msladek/stuff/bin/jobs/notify-status.sh %i
 
 [Install]
