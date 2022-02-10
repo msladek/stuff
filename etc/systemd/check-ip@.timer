@@ -3,7 +3,7 @@ Description=check-ip [%i]
 Requires=check-ip@%i.service
 
 [Timer]
-OnCalendar=*:00
+OnCalendar=*:0/15
 Persistent=true
 
 [Install]

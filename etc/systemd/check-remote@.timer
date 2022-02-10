@@ -3,7 +3,7 @@ Description=check-remote [%i]
 Requires=check-remote@%i.service
 
 [Timer]
-OnCalendar=*:00
+OnCalendar=*:*
 Persistent=true
 
 [Install]
