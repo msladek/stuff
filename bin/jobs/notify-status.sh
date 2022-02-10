@@ -1,7 +1,7 @@
 #!/bin/bash
 [ -z "${1}" ] && echo >&2 "empty service name" && exit 1
 service="$1"
-dateFile="/tmp/notify-status-${service}.timestamp"
+dateFile="/tmp/notify-status@${service}.timestamp"
 
 #  %s - seconds since 1970-01-01 00:00:00 UTC 
 currDate=$(date +%s)

@@ -64,6 +64,7 @@ command -v tmux >/dev/null \
 # systemctl aliases / completion
 alias sc='sudo SYSTEMD_EDITOR=vim systemctl'
 alias scs='systemctl status'
+alias scf='systemctl --state=failed'
 alias scl='systemctl list-unit-files'
 alias sclu='systemctl list-units'
 alias sclt='systemctl list-timers --all'
@@ -75,6 +76,11 @@ alias jc='sudo journalctl'
 alias jcu='sudo journalctl -u'
 source /usr/share/bash-completion/completions/journalctl \
   && complete -F _journalctl jc
+
+# ufw
+command -v ufw >/dev/null \
+  && alias ufw="sudo ufw" \
+  && alias ufws="ufw status numbered"
 
 # git aliases / completion
 if command -v git >/dev/null; then
