@@ -1,8 +1,8 @@
 [Unit]
 Description=os-rsync timer
-Requires=os-rsync.service
  
 [Timer]
+Unit=os-rsync.service
 OnCalendar=Sun 05:45 UTC
 Persistent=true
 

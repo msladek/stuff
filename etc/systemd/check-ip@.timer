@@ -1,8 +1,9 @@
 [Unit]
 Description=check-ip [%i]
-Requires=check-ip@%i.service
+After=network-online.target
 
 [Timer]
+Unit=check-ip@%i.service
 OnCalendar=*:0/15
 Persistent=true
 

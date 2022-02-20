@@ -1,8 +1,9 @@
 [Unit]
 Description=hosts-update timer
-Requires=hosts-update.service
+After=network-online.target
  
 [Timer]
+Unit=hosts-update.service
 OnCalendar=Sun 05:30 UTC
 Persistent=true
 

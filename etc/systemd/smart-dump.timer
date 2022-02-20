@@ -1,8 +1,8 @@
 [Unit]
 Description=smart-dump timer
-Requires=smart-dump.service
  
 [Timer]
+Unit=smart-dump.service
 OnCalendar=Sun 05:40 UTC
 Persistent=true
 

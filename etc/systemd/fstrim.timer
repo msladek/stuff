@@ -1,8 +1,8 @@
 [Unit]
 Description=fstrim timer
-Requires=fstrim.service
  
 [Timer]
+Unit=fstrim.service
 OnCalendar=Sun 05:35 UTC
 Persistent=true
 

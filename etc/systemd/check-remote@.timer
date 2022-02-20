@@ -1,8 +1,9 @@
 [Unit]
 Description=check-remote [%i]
-Requires=check-remote@%i.service
+After=network-online.target
 
 [Timer]
+Unit=check-remote@%i.service
 OnCalendar=*:*
 Persistent=true
 

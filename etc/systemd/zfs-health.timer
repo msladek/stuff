@@ -1,8 +1,8 @@
 [Unit]
 Description=zfs-health timer
-Requires=zfs-health.service
  
 [Timer]
+Unit=zfs-health.service
 OnCalendar=*:30
 Persistent=true
 

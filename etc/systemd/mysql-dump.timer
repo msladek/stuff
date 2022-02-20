@@ -1,8 +1,8 @@
 [Unit]
 Description=mysql-dump timer
-Requires=mysql-dump.service
  
 [Timer]
+Unit=mysql-dump.service
 OnCalendar=01:15 UTC
 Persistent=true
 
