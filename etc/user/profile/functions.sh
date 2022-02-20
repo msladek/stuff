@@ -76,14 +76,15 @@ function git-pull-stuff() {
 }
 # pull repo with mixed permissions
 function git-pull-force() {
-  git="git -C $1"
+  [ -z "$1" ] && git="git" || git="git -C $1"
   $git fetch || return 1
   $git clean --interactive
   $git reset --hard
   local branch=$($git remote | head -n1)/$($git branch --show-current)  
   for file in $($git diff --name-only @ @{u}); do
-    [ -w "$file" ] && local sudo='' || local sudo='sudo'
-    $sudo $git checkout $branch $file \
+    [ -w "$file" ] && continue
+    echo "force checkout $file"
+    sudo $git checkout $branch $file \
       || return 1
   done
   $git pull
