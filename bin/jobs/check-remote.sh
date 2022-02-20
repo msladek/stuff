@@ -20,7 +20,7 @@ elif ! $wasRemoteUp; then
   currDate=$(date --date="@${currTimestamp}" +"%Y-%m-%d %H:%M")
   downDate=$(date --date="@$(cat $lock)" +"%Y-%m-%d %H:%M")
   echo "back online, was down between ${downDate} and ${currDate}"
-  rm $lock  
-  exit 1 # fail here to send notification 
+  rm $lock
+  exit 55 # fail with 55 here to send notification regardless
 fi
 exit 0
