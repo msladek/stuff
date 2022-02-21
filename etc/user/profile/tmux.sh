@@ -4,6 +4,7 @@ if command -v tmux >/dev/null; then
   if [ "$TERM_PROGRAM" = tmux ] || [ -n "$TMUX" ]; then
     # run motd within tmux if we're remote
     [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] \
+      && [ -d /etc/update-motd.d ] \
       && run-parts /etc/update-motd.d \
       && last --time-format=iso $USER \
        | grep 'pts' | egrep -v "tmux|:S" \
