@@ -10,7 +10,7 @@ function zfs-dataset-substitute() {
       && echo "fromDataset [${2}] not mounted at [${1}]" && return 1
     zfs set mountpoint=none $2
   fi
-  zfs set mountpoint="$1" $3 \
+  zfs set mountpoint="$1" $3
 }
 
 echo '... zfs-dataset-forEach($command [$postCommand])'
