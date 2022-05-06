@@ -7,12 +7,12 @@ echo -e "Setup Git config for msladek ..."
 
 git config --global user.name "Marc Sladek"
 git config --global user.email "marc@sladek.me"
-git config --global user.signingkey 8C64BE4EC6D00407
-git config --global commit.gpgsign true
 githubGPG=~/.ssh/github_gpg
 [ -f "$githubGPG" ] \
   && gpg --import "${githubGPG}.pub" \
   && gpg --import "$githubGPG" \
-  || echo "WARNING: no gpg keys found, please import manually."
+  && git config --global user.signingkey 8C64BE4EC6D00407 \
+  && git config --global commit.gpgsign true \
+  || echo "WARNING: gpg keys not found at ${githubGPG}, please retry with priv/pub keys inplace."
 
 exit 0
