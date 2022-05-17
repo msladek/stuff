@@ -1,3 +1,6 @@
+## let wildcard * also match hidden files .*
+shopt -s dotglob
+
 ## TODO check and only add if missing
 PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin:/opt/bin
 
