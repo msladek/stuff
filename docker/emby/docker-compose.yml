@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  emby:
+    image: emby/embyserver
+    container_name: embyserver
+    env_file: .env
+    ports:
+      - 8096:8096 # HTTP
+      - 8920:8920 # HTTPS
+    volumes:
+      - /mnt/emby:/config
+      - /mnt/data/videos:/mnt/videos:ro
+    restart: unless-stopped

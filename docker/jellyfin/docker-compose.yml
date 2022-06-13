@@ -1,0 +1,17 @@
+version: "3"
+services:
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    env_file: .env
+    ports:
+      - 8092:8096 # HTTP
+      - 8910:8920 # HTTPS
+    volumes:
+      - /mnt/jellyfin/config:/config
+      - /mnt/jellyfin/cache:/config/cache
+      - /mnt/jellyfin/transcodes:/transcodes
+      - /mnt/data/videos:/data:ro
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped
