@@ -37,7 +37,7 @@ command -v zpool > /dev/null \
   && [ $(zpool list -H | wc -l) -gt 0 ] \
   && cat > /etc/update-motd.d/60-zpool <<'endmsg'
 #!/bin/sh
-echo -e "zfs status: $(zpool status -x)\n"
+echo "zfs status: $(zpool status -x)\n"
 endmsg
 
 ## 80-last
@@ -47,8 +47,7 @@ command -v last > /dev/null \
 last --time-format=iso $USER \
   | grep 'pts' | egrep -v "tmux|:S" \
   | head -n2 | tail -n1 \
-  | awk {'print "Last login: " $4 " from " $3'} \
-  && echo
+  | awk {'print "Last login: " $4 " from " $3'}
 endmsg
 
 chmod +x /etc/update-motd.d/*
