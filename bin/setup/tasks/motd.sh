@@ -21,13 +21,13 @@ endmsg
 ## 55-drivetemp
 # https://unix.stackexchange.com/questions/558112
 modinfo drivetemp > /dev/null \
-  && modprobe drivetemp
+  && modprobe drivetemp \
   && echo drivetemp > /etc/modules-load.d/drivetemp.conf \
   && cat > /etc/update-motd.d/55-drivetemp <<'endmsg'
 #!/bin/sh
 for f in /sys/class/scsi_disk/*/device/model; do
   [ -d "${f%/*}/hwmon" ] && \
-    printf "%s (%-.2s°C)\n" "$(cat ${f%})" "$(cat ${f%/*}/hwmon/hwmon*/temp1_input);
+    printf "%s (%-.2s°C)\n" "$(cat ${f%})" "$(cat ${f%/*}/hwmon/hwmon*/temp1_input)";
 done
 endmsg
 
