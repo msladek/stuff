@@ -29,6 +29,7 @@ for f in /sys/class/scsi_disk/*/device/model; do
   [ -d "${f%/*}/hwmon" ] && \
     printf "%s (%-.2s°C)\n" "$(cat ${f%})" "$(cat ${f%/*}/hwmon/hwmon*/temp1_input)";
 done
+echo
 endmsg
 
 ## 60-zpool
@@ -36,7 +37,7 @@ command -v zpool > /dev/null \
   && [ $(zpool list -H | wc -l) -gt 0 ] \
   && cat > /etc/update-motd.d/60-zpool <<'endmsg'
 #!/bin/sh
-echo "zfs status: $(zpool status -x)"
+echo -e "zfs status: $(zpool status -x)\n"
 endmsg
 
 ## 80-last
@@ -46,7 +47,8 @@ command -v last > /dev/null \
 last --time-format=iso $USER \
   | grep 'pts' | egrep -v "tmux|:S" \
   | head -n2 | tail -n1 \
-  | awk {'print "Last login: " $4 " from " $3'}
+  | awk {'print "Last login: " $4 " from " $3'} \
+  && echo
 endmsg
 
 chmod +x /etc/update-motd.d/*
