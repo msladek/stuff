@@ -18,23 +18,25 @@ neofetchConf=/opt/msladek/stuff/etc/neofetch.conf
 neofetch --config $neofetchConf
 endmsg
 
+## 55-drivetemp
+# https://unix.stackexchange.com/questions/558112
+modinfo drivetemp > /dev/null \
+  && modprobe drivetemp
+  && echo drivetemp > /etc/modules-load.d/drivetemp.conf \
+  && cat > /etc/update-motd.d/55-drivetemp <<'endmsg'
+#!/bin/sh
+for f in /sys/class/scsi_disk/*/device/model; do
+  [ -d "${f%/*}/hwmon" ] && \
+    printf "%s (%-.2s°C)\n" "$(cat ${f%})" "$(cat ${f%/*}/hwmon/hwmon*/temp1_input);
+done
+endmsg
+
 ## 60-zpool
 command -v zpool > /dev/null \
   && [ $(zpool list -H | wc -l) -gt 0 ] \
   && cat > /etc/update-motd.d/60-zpool <<'endmsg'
 #!/bin/sh
 echo "zfs status: $(zpool status -x)"
-endmsg
-
-## 61-drivetemp
-# https://unix.stackexchange.com/questions/558112
-modinfo drivetemp > /dev/null \
-  && echo drivetemp > /etc/modules-load.d/drivetemp.conf \
-  && cat > /etc/update-motd.d/61-drivetemp <<'endmsg'
-#!/bin/sh
-for f in /sys/class/scsi_disk/*/device/model; do
-  printf "%s (%-.2s°C)\n" "`<${f%}`" "`<${f%/*}/hwmon/hwmon*/temp1_input`";
-done
 endmsg
 
 ## 80-last
