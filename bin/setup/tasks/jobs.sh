@@ -67,7 +67,7 @@ else
 fi
 
 echo "... database dump"
-if [ -w /mnt/backup/mysql ]; then
+if [ -w /mnt/backup/mysql ] && [ -f /etc/mysql/debian.cnf ]; then
   installTimer $unitDir/mysql-dump
 else
   echo "skipped, /mnt/backup/mysql not linked"

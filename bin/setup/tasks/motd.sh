@@ -5,21 +5,49 @@ echo -e "\nSetup motd ..."
   && echo 'skipped, requires root' \
   && exit 1
 
+## 50-neofetch
 ! command -v neofetch &> /dev/null \
   && ! aptitude install neofetch \
   && echo "failed install" && exit 1
 neofetchConf=/opt/msladek/stuff/etc/neofetch.conf
-truncate -s 0 /etc/motd
 [ -f $neofetchConf ] \
   && chown root $(dirname $neofetchConf) && chmod 1775 $(dirname $neofetchConf) \
   && chown root $neofetchConf && chmod 644 $neofetchConf \
-  && echo -e "#!/bin/sh\nneofetch --config $neofetchConf" \
-   | tee /etc/update-motd.d/50-neofetch > /dev/null
-if command -v zpool > /dev/null && [ $(zpool list -H | wc -l) -gt 0 ]; then
-  echo -e '#!/bin/sh\necho "zfs status: $(zpool status -x)"' \
-    | tee /etc/update-motd.d/60-zpool > /dev/null
-fi
-# TODO use drivetemp https://unix.stackexchange.com/questions/558112/standard-way-to-check-the-hard-drive-temperature-without-installing-additional-p
+  && cat > /etc/update-motd.d/50-neofetch <<endmsg
+#!/bin/sh
+neofetch --config $neofetchConf
+endmsg
+
+## 60-zpool
+command -v zpool > /dev/null \
+  && [ $(zpool list -H | wc -l) -gt 0 ] \
+  && cat > /etc/update-motd.d/60-zpool <<'endmsg'
+#!/bin/sh
+echo "zfs status: $(zpool status -x)"
+endmsg
+
+## 61-drivetemp
+# https://unix.stackexchange.com/questions/558112
+modinfo drivetemp > /dev/null \
+  && echo drivetemp > /etc/modules-load.d/drivetemp.conf \
+  && cat > /etc/update-motd.d/61-drivetemp <<'endmsg'
+#!/bin/sh
+for f in /sys/class/scsi_disk/*/device/model; do
+  printf "%s (%-.2s°C)\n" "`<${f%}`" "`<${f%/*}/hwmon/hwmon*/temp1_input`";
+done
+endmsg
+
+## 80-last
+command -v last > /dev/null \
+  && cat > /etc/update-motd.d/80-last <<'endmsg'
+#!/bin/sh
+last --time-format=iso $USER \
+  | grep 'pts' | egrep -v "tmux|:S" \
+  | head -n2 | tail -n1 \
+  | awk {'print "Last login: " $4 " from " $3'}
+endmsg
+
 chmod +x /etc/update-motd.d/*
+truncate -s 0 /etc/motd
 
 exit 0

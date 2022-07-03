@@ -5,11 +5,7 @@ if command -v tmux >/dev/null; then
     # run motd within tmux if we're remote
     [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] \
       && [ -d /etc/update-motd.d ] \
-      && run-parts /etc/update-motd.d \
-      && last --time-format=iso $USER \
-       | grep 'pts' | egrep -v "tmux|:S" \
-       | head -n2 | tail -n1 \
-       | awk {'print "Last login: " $4 " from " $3'}
+      && run-parts /etc/update-motd.d
   elif [ -n "$PS1" ] && [[ $- == *i* ]] \
     && [[ ! "$TERM" =~ screen ]] \
     && [ ! "$TERM_PROGRAM" = vscode ]; then
