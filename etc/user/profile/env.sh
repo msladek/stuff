@@ -1,8 +1,25 @@
 ## let wildcard * also match hidden files .*
 shopt -s dotglob
 
-## TODO check and only add if missing
-PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin:/opt/bin
+## complete PATH environment variable
+paths="
+  ${HOME}/.local/bin
+  ${HOME}/bin
+  /usr/local/bin
+  /usr/bin
+  /bin
+  /opt/bin
+  /usr/local/sbin
+  /usr/sbin
+  /sbin
+  /opt/sbin
+"
+for p in $paths; do
+  [ -d "$p" ] \
+    && [[ ":${PATH}:" != *":${p}:"* ]] \
+    && PATH=$PATH:$p
+done
+unset p paths
 
 ## set correct ssh auth socket if agent service is running 
 systemctl --user status ssh-agent >/dev/null \
