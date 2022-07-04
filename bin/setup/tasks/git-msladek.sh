@@ -6,7 +6,7 @@ echo -e "Setup Git config for msladek ..."
   && exit 1
 
 git config --global user.name "Marc Sladek"
-git config --global user.email "marc@sladek.me"
+git config --global user.email "marc@sladek.dev"
 githubGPG=~/.ssh/github_gpg
 [ -f "$githubGPG" ] \
   && gpg --import "${githubGPG}.pub" \
