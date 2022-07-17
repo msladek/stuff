@@ -1,6 +1,6 @@
 function mkcd() {
-  dir="${@: -1}"
-  parent="$dir"
+  local dir="${@: -1}"
+  local parent="$dir"
   while [ ! -d "$parent" ]; do parent=$(dirname "$parent"); done
   [ -w "$parent" ] \
     && mkdir "$@" \

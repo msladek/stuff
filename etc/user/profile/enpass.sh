@@ -10,7 +10,7 @@ export ENP_PIN_ITER_COUNT=2000000
 
 alias enpls='enp -sort list'
 alias enpsh='enp -sort show'
-alias enpcp='enp -clipboardPrimary copy'
+alias enpcp='enp-copy-primary'
 alias enppw='enp pass'
 
 function enp() {
@@ -21,10 +21,17 @@ function enp() {
   local exit_code=$?
   [ $exit_code -eq 0 ] && [ -z "$ENP_PIN" ] && [ -n "$pin" ] \
     && export ENP_PIN=$pin \
-    && trap 'unset ENP_PIN' SIGUSR1 \
+    && trap 'unset ENP_PIN' SIGUSR2 \
     && local current_pid=$BASHPID \
-    && ( ( sleep 300; kill -SIGUSR1 $current_pid ) & ) > /dev/null 2>&1
+    && ( ( sleep 300; kill -SIGUSR2 $current_pid ) & ) > /dev/null 2>&1
   return $exit_code
+}
+
+function enp-copy-primary() {
+  enp -clipboardPrimary copy "$@" \
+    && trap 'xclip -i < /dev/null' SIGUSR1 \
+    && local current_pid=$BASHPID \
+    && ( ( sleep 30; kill -SIGUSR1 $current_pid ) & ) > /dev/null 2>&1
 }
 
 if command -v enpass-askpass >/dev/null; then
