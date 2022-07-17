@@ -67,7 +67,7 @@ echo '... zfs-snaps-destroy($grepFilter)'
 function zfs-snaps-destroy() {
   [ -z "$1" ] && echo 'no grep filter provided' && return 1
   [ "$doItNow" == "true" ] || echo >&2 "DRY-RUN, set doItNow=true"
-  for snap in $(zfs list -H -t snapshot -o name | grep "$2"); do
+  for snap in $(zfs list -H -t snapshot -o name | grep "$1"); do
     [ -n "$snap" ] \
       && echo "deleting: $snap" \
       && [ "$doItNow" == "true" ] \
