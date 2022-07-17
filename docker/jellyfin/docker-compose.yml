@@ -10,7 +10,7 @@ services:
     volumes:
       - /mnt/jellyfin/config:/config
       - /mnt/jellyfin/cache:/config/cache
-      - /mnt/jellyfin/transcodes:/transcodes
+      - /mnt/jellyfin/cache/transcodes:/transcodes
       - /mnt/data/videos:/data:ro
     devices:
       - /dev/dri:/dev/dri
