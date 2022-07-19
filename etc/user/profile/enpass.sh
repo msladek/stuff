@@ -14,24 +14,35 @@ alias enpcp='enp-copy-primary'
 alias enppw='enp pass'
 
 function enp() {
-  enp_params="-pin -vault=${enp_vault} -keyfile=${enp_keyfile}"
+  enp_params="-and -pin -vault=${enp_vault} -keyfile=${enp_keyfile}"
   local pin="$ENP_PIN"
   [ -z "$pin" ] && read -s -p "Enter PIN: " pin && echo 1>&2
   ENP_PIN=$pin ENP_PIN_PEPPER=$(cat /tmp/upid) enpasscli $enp_params "$@"
   local exit_code=$?
   [ $exit_code -eq 0 ] && [ -z "$ENP_PIN" ] && [ -n "$pin" ] \
     && export ENP_PIN=$pin \
+    && _enp-kill-bg-process ENP_CLEAR_PIN \
     && trap 'unset ENP_PIN' SIGUSR2 \
     && local current_pid=$BASHPID \
-    && ( ( sleep 300; kill -SIGUSR2 $current_pid ) & ) > /dev/null 2>&1
+    && ( (ENP_CLEAR_PIN=true sleep 300 && kill -SIGUSR2 $current_pid) & )
   return $exit_code
 }
 
 function enp-copy-primary() {
   enp -clipboardPrimary copy "$@" \
-    && trap 'xclip -i < /dev/null' SIGUSR1 \
+    && _enp-kill-bg-process ENP_CLEAR_XSEL \
+    && trap 'xsel -c' SIGUSR1 \
     && local current_pid=$BASHPID \
-    && ( ( sleep 30; kill -SIGUSR1 $current_pid ) & ) > /dev/null 2>&1
+    && ( (ENP_CLEAR_XSEL=true sleep 30 && kill -SIGUSR1 $current_pid) & )
+}
+
+function _enp-kill-bg-process() {
+  [ -z "$1" ] && return 1
+  for pid in $(pgrep sleep); do
+    strings /proc/${pid}/environ | grep -qF "${1}=true" \
+      && kill -INT $pid
+  done
+  return 0
 }
 
 if command -v enpass-askpass >/dev/null; then
