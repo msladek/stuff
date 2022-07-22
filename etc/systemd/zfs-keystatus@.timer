@@ -1,0 +1,10 @@
+[Unit]
+Description=zfs-keystatus [%i]
+After=zfs-import.target
+
+[Timer]
+Unit=zfs-keystatus@%i.service
+OnStartupSec=1min
+
+[Install]
+WantedBy=timers.target

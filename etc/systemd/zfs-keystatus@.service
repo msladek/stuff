@@ -1,0 +1,11 @@
+[Unit]
+Description=zfs-keystatus [%i]
+OnFailure=notify-status@%n
+StartLimitBurst=3
+StartLimitIntervalSec=1000
+
+[Service]
+Type=oneshot
+Restart=on-failure
+RestartSec=300
+ExecStart=/opt/msladek/stuff/bin/jobs/zfs-keystatus.sh %i

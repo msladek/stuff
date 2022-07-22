@@ -80,6 +80,13 @@ else
   installTimer $unitDir/zfs-health \
     && rm -f /etc/cron.hourly/zfs-health
 
+  echo "... zfs keystatus"
+  for dataset in $(zfs get encryptionroot -H -ovalue -tfilesystem | uniq); do
+    zfs list -H -o name | grep -qF -- "${dataset}" \
+      && echo -n "${dataset} ... " \
+      && installTimer $unitDir/zfs-keystatus@${dataset}
+  done
+
   echo "... sanoid"
   if command -v sanoid > /dev/null; then
     mkdir -p /etc/sanoid

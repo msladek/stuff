@@ -11,7 +11,7 @@ COND4=$(/sbin/zpool list -pH -o capacity | awk '$1 >= 90 {print}')
 
 CONDITION="${COND1}${COND2}${COND3}${COND4}"
 if [ "${CONDITION}" ]; then
-  echo "ZFS health check FAILED: ${CONDITION} - $(/sbin/zpool status -x)"
+  echo >&2 "ZFS health check FAILED: ${CONDITION} - $(/sbin/zpool status -x)"
   exit 1
 else
   echo "ZFS health check passed: $(/sbin/zpool status -x)"

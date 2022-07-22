@@ -47,7 +47,7 @@ function ssh-cfg-get() {
 function ssh-add-has() {
   local identityFile="${1/#\~/$HOME}"
   if [ -f "$identityFile" ]; then
-    command ssh-add -l | grep -q $(ssh-keygen -lf "$identityFile" | awk '{print $2}')
+    command ssh-add -l | grep -q -- $(ssh-keygen -lf "$identityFile" | awk '{print $2}')
   elif ssh-cfg-has $1; then
     ssh-add-has $(ssh-cfg-get $1 'ProxyJump') && \
     ssh-add-has $(ssh-cfg-get $1 'IdentityFile')
