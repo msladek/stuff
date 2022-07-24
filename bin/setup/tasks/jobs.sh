@@ -23,7 +23,7 @@ function installFile() {
 function installUnit() {
   for i in $1; do
     [[ $i =~ \.service$ ]] \
-      && script=$(grep "^ExecStart=.*\.sh" "$i" | cut -c11-) \
+      && local script=$(grep "^ExecStart=.*\.sh" "$i" | cut -c11-) \
       && claim "$script"
     installFile "$i" /etc/systemd/system/
   done
@@ -84,7 +84,7 @@ else
   installEnableTimedService $unitDir/zfs-health \
     && rm -f /etc/cron.hourly/zfs-health
 
-  echo "... zfs keystatus" \
+  echo "... zfs keystatus"
   installTimedService $unitDir/zfs-keystatus
   for dataset in $(zfs get encryptionroot -H -ovalue -tfilesystem | uniq); do
     zfs list -H -o name | grep -qF -- "${dataset}" \

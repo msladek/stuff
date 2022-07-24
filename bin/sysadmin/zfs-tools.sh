@@ -1,16 +1,26 @@
 #!/bin/bash
+[ "${BASH_SOURCE[0]}" = "${0}" ] \
+  && echo "ERROR: this script is inteded to be sourced" \
+  && exit 1
 echo 'importing zfs-tools ...'
 
-echo '... zfs-dataset-substitute($mountpoint $fromDataset $toDataset)'
-function zfs-dataset-substitute() {
-  [ -z "$1" ] && echo 'no mountpoint provided' && return 1
-  [ -z "$3" ] && echo 'no toDataset provided' && return 1
-  if [ ! -z "$2" ] && [ $2 != 'none' ]; then
-    [ "$1" != "$(zfs get -H -o value mountpoint $2)" ] \
-      && echo "fromDataset [${2}] not mounted at [${1}]" && return 1
-    zfs set mountpoint=none $2
-  fi
-  zfs set mountpoint="$1" $3
+echo '... zfs-dataset-exists($dataset)'
+function zfs-dataset-exists() {
+  zfs list "$1" &> /dev/null
+}
+
+echo '... zfs-mountpoint-swap($dataset1 $dataset2)'
+function zfs-mountpoint-swap() {
+  ! zfs-dataset-exists "$1" && echo 'invalid fromDataset provided' && return 1
+  ! zfs-dataset-exists "$2" && echo 'invalid toDataset provided' && return 1
+  local mountpoint1=$(zfs get -H -o value mountpoint "$1")
+  local mountpoint2=$(zfs get -H -o value mountpoint "$2")
+  [ -n "$mountpoint1" ] \
+    && zfs set mountpoint="${mountpoint2:-none}" "$1" \
+    && zfs list -H -o name,mountpoint "$1" \
+    && zfs set mountpoint="${mountpoint1:-none}" "$2" \
+    && zfs list -H -o name,mountpoint "$2" \
+    || { echo 'failed' && false; }
 }
 
 echo '... zfs-dataset-forEach($command [$postCommand])'
@@ -23,24 +33,24 @@ function zfs-dataset-forEach() {
 
 echo '... zfs-snaps-forEach($dataset $command [$postCommand])'
 function zfs-snaps-forEach() {
-  [ -z "$1" ] && echo 'no dataset provided' && return 1
+  ! zfs-dataset-exists "$1" && echo 'invalid dataset provided' && return 1
   [ -z "$2" ] && echo 'no command provided' && return 1
-  for snap in $(zfs list -H -t snapshot -o name -s creation $1); do
+  for snap in $(zfs list -H -t snapshot -o name -s creation "$1"); do
     $2 $snap $3
   done
 }
 
 echo '... zfs-snaps-first($dataset)'
 function zfs-snaps-first() {
-  [ -z "$1" ] && echo 'no dataset provided' && return 1
-  snap=$(zfs list -H -t snapshot -o name -s creation $1 | head -n1)
+  ! zfs-dataset-exists "$1" && echo 'invalid dataset provided' && return 1
+  local snap=$(zfs list -H -t snapshot -o name -s creation $1 | head -n1)
   echo "[$1] ${snap:-none}"
 }
 
 echo '... zfs-snaps-last($dataset)'
 function zfs-snaps-last() {
-  [ -z "$1" ] && echo 'no dataset provided' && return 1
-  snap=$(zfs list -H -t snapshot -o name -s creation $1 | tail -n1)
+  ! zfs-dataset-exists "$1" && echo 'invalid dataset provided' && return 1
+  local snap=$(zfs list -H -t snapshot -o name -s creation $1 | tail -n1)
   echo "[$1] ${snap:-none}"
 }
 
@@ -53,13 +63,25 @@ function zfs-snaps-rename() {
   [ -z "$2" ] && echo 'no grep filter provided' && return 1
   [ "$doItNow" == "true" ] || echo >&2 "DRY-RUN, set doItNow=true"
   for oldname in $(zfs list -H -t snapshot -o name | grep "$2"); do
-    newname=$(echo $oldname | sed -E "$1")
+    local newname=$(echo $oldname | sed -E "$1")
     [ -n "$newname" ] && [ "$newname" != "$oldname" ] \
       && echo "$oldname -> $newname" \
       && [ "$doItNow" == "true" ] \
       && zfs rename $oldname $newname
   done
   unset doItNow
+}
+
+echo '... zfs-snaps-compare($dataset1 $dataset2)'
+function zfs-snaps-compare() {
+  ! zfs-dataset-exists "$1" && echo 'invalid dataset provided' && return 1
+  ! zfs-dataset-exists "$2" && echo 'invalid dataset provided' && return 1
+  local snaps1=($(zfs list -H -t snapshot -o name -s creation "$1" | cut -d@ -f2))
+  local snaps2=($(zfs list -H -t snapshot -o name -s creation "$2" | cut -d@ -f2))
+  echo ${snaps1[@]} ${snaps2[@]} ${snaps2[@]} | tr ' ' '\n' | sort | uniq -u \
+    | awk -v dataset="$1" '{print dataset"@"$1}'
+  echo ${snaps1[@]} ${snaps1[@]} ${snaps2[@]} | tr ' ' '\n' | sort | uniq -u \
+    | awk -v dataset="$2" '{print dataset"@"$1}'
 }
 
 echo '... zfs-snaps-destroy($grepFilter)'
@@ -71,7 +93,16 @@ function zfs-snaps-destroy() {
     [ -n "$snap" ] \
       && echo "deleting: $snap" \
       && [ "$doItNow" == "true" ] \
-      && zfs destroy $snap
+      && zfs destroy "$snap"
   done
   unset doItNow
+}
+
+echo '... zfs-load-keys()'
+function zfs-load-keys() {
+  for dataset in $(zfs get encryptionroot -H -o value -t filesystem | uniq); do
+    zfs-dataset-exists "${dataset}" \
+      && echo "${dataset}" \
+      && zfs load-key -r "${dataset}"
+  done
 }
