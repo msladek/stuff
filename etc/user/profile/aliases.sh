@@ -62,18 +62,20 @@ command -v tmux >/dev/null \
   && alias ssh='TERM=xterm-256color ssh'
 
 # systemctl aliases / completion
-alias sc='sudo SYSTEMD_EDITOR=vim systemctl'
-alias scu='SYSTEMD_EDITOR=vim systemctl --user'
-alias scs='systemctl status'
-alias scus='scu status'
-alias scf='systemctl --state=failed'
-alias scl='systemctl list-unit-files'
-alias sclu='systemctl list-units'
-alias sclt='systemctl list-timers --all'
-source /usr/share/bash-completion/completions/systemctl \
-  && complete -F _systemctl sc
-source /usr/share/bash-completion/completions/systemctl \
-  && complete -F _systemctl scu
+if command -v systemctl >/dev/null && systemctl status &>/dev/null; then
+  alias sc='sudo SYSTEMD_EDITOR=vim systemctl'
+  alias scu='SYSTEMD_EDITOR=vim systemctl --user'
+  alias scs='systemctl status'
+  alias scus='scu status'
+  alias scf='systemctl --state=failed'
+  alias scl='systemctl list-unit-files'
+  alias sclu='systemctl list-units'
+  alias sclt='systemctl list-timers --all'
+  source /usr/share/bash-completion/completions/systemctl \
+    && complete -F _systemctl sc
+  source /usr/share/bash-completion/completions/systemctl \
+    && complete -F _systemctl scu
+fi
 
 # journalctl aliases / completion
 alias jc='sudo journalctl'

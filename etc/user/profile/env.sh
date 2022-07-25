@@ -21,6 +21,7 @@ for p in $paths; do
 done
 unset p paths
 
-## set correct ssh auth socket if agent service is running 
-systemctl --user status ssh-agent >/dev/null \
+## set correct ssh auth socket if agent service is running
+command -v systemctl >/dev/null \
+  && systemctl --user status ssh-agent &>/dev/null \
   && export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket

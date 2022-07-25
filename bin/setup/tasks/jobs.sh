@@ -4,6 +4,10 @@ echo -e "\nSetup Jobs ..."
 [ $EUID -ne 0 ] \
   && echo 'skipped, requires root' \
   && exit 1
+! command -v systemctl >/dev/null \
+  && ! systemctl status &>/dev/null \
+  && echo 'skipped, systemd unavailable' \
+  && exit 1
 
 unitDir=/opt/msladek/stuff/etc/systemd
 etcHostDir=/opt/msladek/stuffp/etc/$(hostname)

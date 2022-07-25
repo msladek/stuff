@@ -6,15 +6,17 @@ echo -e "\nSetup desktop user stuff ..."
   && exit 1
 
 echo
-read -p "Setup SSH agent service (Y/n) ?" choice
-case "$choice" in
-  n|N ) ;;
-  * ) mkdir -p ~/.config/systemd/user \
-    && ln -sf /opt/msladek/stuff/etc/systemd/ssh-agent.service ~/.config/systemd/user/ssh-agent.service \
-    && systemctl --user daemon-reload \
-    && systemctl --user enable --now ssh-agent \
-    || echo "... skip, already setup";;
-esac
+if command -v systemctl >/dev/null && systemctl status &>/dev/null; then
+  read -p "Setup SSH agent service (Y/n) ?" choice
+  case "$choice" in
+    n|N ) ;;
+    * ) mkdir -p ~/.config/systemd/user \
+      && ln -sf /opt/msladek/stuff/etc/systemd/ssh-agent.service ~/.config/systemd/user/ssh-agent.service \
+      && systemctl --user daemon-reload \
+      && systemctl --user enable --now ssh-agent \
+      || echo "... skip, already setup";;
+  esac
+fi
 
 echo -e "\nInstall Font Adobe Source Code Pro ..."
 FONT_DIR=~/.fonts/adobe-fonts/source-code-pro
