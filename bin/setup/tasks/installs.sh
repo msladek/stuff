@@ -18,8 +18,7 @@ aptitude -q=2 -y install \
     net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
     ntp git tree pv dstat bat vim rsync htop tmux sshfs ncdu colordiff \
-    zip unzip unrar-free unp software-properties-common build-essential \
-      | grep -v 'is already installed at the requested version'
+    zip unzip unrar-free unp software-properties-common build-essential
 
 if [ $(lsb_release -sc) = 'sid' ]; then
   ! command -v apt-listbugs > /dev/null \
@@ -36,9 +35,8 @@ apt autoremove
 
 function github-install-latest() {
   echo -e "Installing $1 from github ..."
-  local release_url="https://github.com/$1/releases/latest"
-  local current_version=$(curl -s $release_url | grep -o -P '(?<=releases/tag/).*(?=\">)')
-  local download_url="$release_url/download/$(echo $2 | sed "s|%s|$current_version|g")"
+  local api_url="https://api.github.com/repos/$1/releases/latest"
+  local download_url=$(curl -sL $api_url | grep -F 'download_url' | grep -E "$2" | sed "s/\"//g" | cut -d: -f2-)
   local tmp_deb="$(mktemp)" \
     && wget --no-verbose --output-document "$tmp_deb" "$download_url" \
     && dpkg --skip-same-version -i "$tmp_deb"
@@ -48,4 +46,4 @@ function github-install-latest() {
 }
 
 echo -e "... install lsd"
-github-install-latest 'Peltoche/lsd' 'lsd-musl_%s_amd64.deb'
+github-install-latest 'Peltoche/lsd' 'lsd-musl_.*_amd64.deb'
