@@ -5,6 +5,7 @@ echo -e "\nSetup Git config ..."
   && echo 'skipped, requires non-root' \
   && exit 1
 
+git config --global core.autocrlf true
 git config --global core.editor "vim"
 git config --global pull.rebase false
 git config --global push.default current
