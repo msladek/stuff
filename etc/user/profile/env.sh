@@ -5,6 +5,7 @@ shopt -s dotglob
 paths="
   ${HOME}/.local/bin
   ${HOME}/bin
+  ${HOME}/.npm-global/bin
   /usr/local/bin
   /usr/bin
   /bin
