@@ -12,11 +12,11 @@ if [[ "${1,,}" == *"verification code"* ]]; then
 # $1 - "Enter passphrase for <path/to/keyfile>: "
 elif [[ "${1,,}" == *"passphrase"* ]] && command -v enpasscli >/dev/null; then
   enp_params="-nonInteractive -pin -vault=${enp_vault} -keyfile=${enp_keyfile}"
-  keyfile=$(echo "$1" | lastword | replace ':$' | xargs basename)
+  keyfile=$(echo "$1" | lastword | replace ':$' | xargs realpath | xargs basename)
   pepper=$(cat /tmp/upid)
   [ ! -z "$ENP_PIN" ] && [ ! -z "$keyfile" ] \
     && echo "enpass-askpass - ${keyfile}" 1>&2 \
-    && pass=$(ENP_PIN_PEPPER="${pepper}" enpasscli ${enp_params} pass "ssh ${keyfile}") \
+    && pass=$(ENP_PIN_PEPPER="${pepper}" enpasscli ${enp_params} pass "ssh ${keyfile//_/ }") \
     || echo "enpass-askpass - ${keyfile} FAILED" 1>&2
 fi
 
