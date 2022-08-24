@@ -39,11 +39,16 @@ command -v batcat >/dev/null \
   && alias cat='batp'
 
 # other aliases
+command -v vi >/dev/null \
+  && alias v='vi'
 command -v vim >/dev/null \
   && alias vi='vim'
+command -v nvim >/dev/null \
+  && alias vim='nvim'
 alias less='less --mouse --wheel-lines=5'
 alias cmd='command'
 alias ex='exit'
+alias x='exit'
 alias lsports='netstat -atulpn'
 alias untar='tar -zxvf'
 alias mkdir='mkdir -pv'

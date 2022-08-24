@@ -54,7 +54,7 @@ function ssh-add-has() {
   fi
 }
 
-alias ssh-add='ssh-add-once'
+function ssh-add() { ssh-add-once "$@"; }
 function ssh-add-once() {
   local identityFile="${1/#\~/$HOME}"
   if [ -f "$identityFile" ]; then
