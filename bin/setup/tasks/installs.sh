@@ -4,16 +4,11 @@ echo -e "\nInstalling packages ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-if ! command -v aptitude > /dev/null; then
-  echo -e "... install aptitude"
-  apt -q=2 update && apt install aptitude
-fi
-
 echo -e "... upgrade system"
-aptitude -q=2 update > /dev/null && aptitude -q=2 -y upgrade
+apt -q=2 update > /dev/null && apt -q=2 -y upgrade
 
 echo -e "... install essentials packages"
-aptitude -q=2 -y install \
+apt -q=2 -y install \
     sudo bash-completion apt-listchanges apt-transport-https \
     net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
@@ -23,15 +18,14 @@ aptitude -q=2 -y install \
 if [ $(lsb_release -sc) = 'sid' ]; then
   ! command -v apt-listbugs > /dev/null \
     && echo -e "... install apt-listbugs" \
-    && aptitude -q=2 -y install apt-listbugs
+    && apt -q=2 -y install apt-listbugs
 elif command -v debian-security-support > /dev/null; then
   echo -e "... install security-support" \
-  aptitude -q=2 -y install debian-security-support
+  apt -q=2 -y install debian-security-support
 fi
 
 echo -e "... clean packages"
-aptitude autoclean
-apt autoremove 
+apt autoremove
 
 function github-install-latest() {
   echo -e "Installing $1 from github ..."

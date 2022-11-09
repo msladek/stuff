@@ -113,6 +113,7 @@ if command -v git >/dev/null; then
   alias gir='git reset'
   alias gis='git status'
   alias giss='git status -s'
+  alias gisw='git switch'
   alias giu='git push -u'
   alias gicu='git commit && git push -u'
   source /usr/share/bash-completion/completions/git \
@@ -133,6 +134,7 @@ if command -v git >/dev/null; then
     && __git_complete gir _git_reset \
     && __git_complete gis _git_status \
     && __git_complete giss _git_status \
+    && __git_complete gisw _git_switch \
     && __git_complete giu _git_push \
     && __git_complete gicu _git_push
 fi

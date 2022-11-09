@@ -7,7 +7,7 @@ echo -e "\nSetup S.M.A.R.T. monitoring ..."
 
 ! command -v smartctl >/dev/null \
   && echo "... install smartmontools" \
-  && ! aptitude install smartmontools \
+  && ! apt install smartmontools \
   && echo "failed install" && exit 1
 
 # S/../.././02 = Short test daily at 02:00

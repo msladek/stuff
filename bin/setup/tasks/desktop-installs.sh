@@ -5,7 +5,7 @@ echo -e "\nInstall desktop packages ..."
   && echo 'skipped, requires root' \
   && exit 1
 
-aptitude -q=2 update && aptitude -q=2 install \
+apt -q=2 install \
     openjdk-11-jdk openjdk-11-source openjdk-11-doc visualvm \
     gnome-system-tools gnome-system-monitor gnome-disk-utility \
     grub-customizer glances hfsprogs gvfs-backends gvfs-fuse \

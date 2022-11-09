@@ -8,7 +8,7 @@ echo -e "\nSetup sudo ..."
 if command -v sudo > /dev/null; then
   echo -e "Enable sudo insults ..."
   echo -e 'Defaults insults' | tee /etc/sudoers.d/insults > /dev/null
-  chmod o-rwx /etc/sudoers.d/insults
+  chmod 0440 /etc/sudoers.d/insults
 fi
 
 if command -v doas > /dev/null; then

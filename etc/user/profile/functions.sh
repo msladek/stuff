@@ -19,13 +19,13 @@ function lessf() {
   $sudo less -n +F "$@"
 }
 
-if command -v aptitude >/dev/null; then
+if command -v apt >/dev/null; then
 function update() {
   local hold=$(sudo apt-mark showhold)
   [ $hold ] && echo -e "\e[0;91mpackages held back:\e[0m ${hold}" && echo
-  aptitude "$@" update \
-    && aptitude upgrade \
-    && aptitude autoclean && echo \
+  apt "$@" update \
+    && apt upgrade \
+    && apt autoclean && echo \
     && apt autoremove && echo
   ret=$?
   [ $ret -eq 0 ] && command -v checkrestart >/dev/null \
@@ -83,8 +83,8 @@ function git-pull-force() {
   for file in $(git diff --name-only @ @{u}); do
     [ -f "$file" ] || continue
     [ -w "$file" ] && continue
-    echo "force checkout $file"
-    sudo git checkout $branch $file \
+    echo "force restore $file"
+    sudo git restore --source "$branch" -- "$file" \
       || return 1
   done
   git pull

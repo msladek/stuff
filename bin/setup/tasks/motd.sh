@@ -7,7 +7,7 @@ echo -e "\nSetup motd ..."
 
 ## 50-neofetch
 ! command -v neofetch &> /dev/null \
-  && ! aptitude install neofetch \
+  && ! apt install neofetch \
   && echo "failed install" && exit 1
 neofetchConf=/opt/msladek/stuff/etc/neofetch.conf
 [ -f $neofetchConf ] \

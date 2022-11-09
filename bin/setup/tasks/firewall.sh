@@ -7,7 +7,7 @@ echo -e "\nSetup UFW ..."
 
 ! command -v ufw >/dev/null \
   && echo "... install ufw" \
-  && ! aptitude install ufw \
+  && ! apt install ufw \
   && echo "failed install" && exit 1
 
 if ! ufw status | grep -qF active; then

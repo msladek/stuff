@@ -7,7 +7,7 @@ echo -e "\nSetup msmtp for root ..."
 
 ! command -v msmtp &> /dev/null \
   && echo "... install msmtp" \
-  && ! aptitude install msmtp msmtp-mta \
+  && ! apt install msmtp msmtp-mta \
   && echo "failed install" && exit 1
 
 ## TODO password is exposed to ps in sed command
