@@ -84,7 +84,7 @@ function git-pull-force() {
     [ -f "$file" ] || continue
     [ -w "$file" ] && continue
     echo "force restore $file"
-    sudo git restore --source "$branch" -- "$file" \
+    sudo git checkout "$branch" "$file" \
       || return 1
   done
   git pull
