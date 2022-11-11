@@ -14,10 +14,12 @@ etcHostDir=/opt/msladek/stuffp/etc/$(hostname)
 
 # make the file immutable by other users, sets sticky bit on parent dir
 function claim() {
-  [ -n "$1" ] && [ -f "$1" ] \
-    && chown "$USER" "$(dirname "$1")" && chmod 1775 "$(dirname "$1")" \
-    && chown "$USER" "$1" && chmod 644 "$1" \
-    && { [[ $1 != *.sh ]] || chmod +x "$1"; }
+  for file in $1; do
+    [ -n "$file" ] && [ -f "$file" ] \
+      && chown "$USER" "$(dirname "$file")" && chmod 1775 "$(dirname "$file")" \
+      && chown "$USER" "$file" && chmod 644 "$file" \
+      && { [[ $file != *.sh ]] || chmod +x "$file"; }
+  done
 }
 
 function installFile() {
@@ -25,11 +27,9 @@ function installFile() {
 }
 
 function installUnit() {
-  for i in $1; do
-    [[ $i =~ \.service$ ]] \
-      && local script=$(grep "^ExecStart=.*\.sh" "$i" | cut -c11-) \
-      && claim "$script"
-    installFile "$i" /etc/systemd/system/
+  for unit in $1; do
+    claim "$(grep "^ExecStart=.*\.sh" "$unit" | cut -c11- | cut -d' ' -f1 | uniq)"
+    installFile "$unit" /etc/systemd/system/
   done
 }
 
