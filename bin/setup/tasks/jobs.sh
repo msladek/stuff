@@ -101,7 +101,7 @@ else
     mkdir -p /etc/sanoid
     [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
       && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
-    installFile "$etcHostDir/sanoid.conf /etc/sanoid/sanoid.conf" \
+    installFile "$etcHostDir/sanoid.conf" /etc/sanoid/sanoid.conf \
       && systemctl enable sanoid.timer \
       && rm -f /etc/cron.d/sanoid
   else
