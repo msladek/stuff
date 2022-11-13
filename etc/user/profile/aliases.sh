@@ -144,8 +144,10 @@ if command -v zfs >/dev/null; then
   alias zl='zfs list'
   alias zla='zfs list -t all'
   alias zls='zfs list -t snapshot'
+  alias zlb='zfs list -t bookmark'
   source /usr/share/bash-completion/completions/zfs \
     && complete -F __zfs_complete zl \
     && complete -F __zfs_complete zla \
-    && complete -F __zfs_complete zls
+    && complete -F __zfs_complete zls \
+    && complete -F __zfs_complete zlb
 fi

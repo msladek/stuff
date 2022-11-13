@@ -4,6 +4,7 @@ args=( "$@" )
 [ "$1" == "-b" ] && args=( "--create-bookmark" "${@:2}" )
 /usr/sbin/syncoid \
   --no-privilege-elevation \
+  --no-forced-receive \
   --no-sync-snap \
   --skip-parent \
   "${args[@]}"
