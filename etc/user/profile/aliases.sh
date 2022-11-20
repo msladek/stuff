@@ -54,6 +54,8 @@ alias untar='tar -zxvf'
 alias mkdir='mkdir -pv'
 alias rmdir='rmdir -pv'
 alias ducks='du -cks * | sort -rn | head -11'
+command -v fdfind >/dev/null \
+  && alias fd='fdfind'
 
 # tmux/screen aliases
 command -v screen >/dev/null \
