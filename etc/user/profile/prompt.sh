@@ -28,4 +28,9 @@ purple='\[\e[0;35m\]'
 nc='\[\e[0m\]'
 
 # bash prompt
-PS1="${YELLOW}\u${nc}@${BLUE}\H${nc}:${CYAN}[\D{%Y.%m.%d %H:%M}]${nc}:${GREEN}\w${nc}${GREEN}\$${nc} "
+PS1=""
+[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] \
+  && PS1="${GREEN}\D{%y.%m.%d %H:%M}${nc} " \
+[ "$USER" != 'msladek' ] && [ "$USER" != 'morrow' ] \
+  && PS1="${PS1}${CYAN}\u${nc} "
+PS1="${PS1}${BLUE}\w${nc}\$${nc} "

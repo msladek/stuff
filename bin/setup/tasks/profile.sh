@@ -5,6 +5,9 @@ echo -e "\nSetup shell profile ..."
   && echo 'skipped, requires non-root' \
   && exit 1
 
+# remove public read permissions
+chmod -R o-rwx ~
+
 echo -e "... link stuff directory"
 stuffDir=/opt/msladek/stuff
 [ ! -d $stuffDir ] && echo "stuff not found" && exit 1
@@ -21,7 +24,6 @@ echo -e "... link profile"
 # https://superuser.com/a/789499/1099716
 rm -f ~/.bash_profile ~/.bash_login
 # let's setup our own ~/.profile.d
-rm -rf ~/.bash.d # remove legacy dir
 grep -qF -- ".profile.d" ~/.profile
 if [ ! $? -eq 0 ]; then
 cat <<"EOT" >> ~/.profile
@@ -39,8 +41,7 @@ mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
   && ln -sf $stuffDir/etc/user/profile/prompt.sh    ~/.profile.d/20-prompt.sh \
   && ln -sf $stuffDir/etc/user/profile/tmux.sh      ~/.profile.d/30-tmux.sh \
   && ln -sf $stuffDir/etc/user/profile/aliases.sh   ~/.profile.d/50-aliases.sh \
-  && ln -sf $stuffDir/etc/user/profile/functions.sh ~/.profile.d/60-functions.sh \
-  && rm -f                                          ~/.profile.d/95-tmux.sh
+  && ln -sf $stuffDir/etc/user/profile/functions.sh ~/.profile.d/60-functions.sh
 
 ln -sf $stuffDir/etc/user/vimrc ~/.vimrc
 ln -sf $stuffDir/etc/user/tmux.conf ~/.tmux.conf

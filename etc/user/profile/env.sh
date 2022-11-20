@@ -26,3 +26,6 @@ unset p paths
 command -v systemctl >/dev/null \
   && systemctl --user status ssh-agent &>/dev/null \
   && export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+
+command -v fzf >/dev/null \
+  && source /usr/share/doc/fzf/examples/key-bindings.bash
