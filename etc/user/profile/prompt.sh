@@ -25,12 +25,10 @@ yellow='\[\e[0;33m\]'
 YELLOW='\[\e[1;33m\]'
 PURPLE='\[\e[1;35m\]'
 purple='\[\e[0;35m\]'
-nc='\[\e[0m\]'
+nocol='\[\e[0m\]'
 
 # bash prompt
 PS1=""
 [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] \
-  && PS1="${GREEN}\D{%y.%m.%d %H:%M}${nc} " \
-[ "$USER" != 'msladek' ] && [ "$USER" != 'morrow' ] \
-  && PS1="${PS1}${CYAN}\u${nc} "
-PS1="${PS1}${BLUE}\w${nc}\$${nc} "
+  && PS1="${cyan}\D{%Y.%m.%d}${nocol}·${CYAN}\D{%H:%M}${nocol}·${YELLOW}\u${nocol}@${BLUE}\H${nocol}·"
+PS1="${PS1}${GREEN}\w${nocol}\$${nocol} "
