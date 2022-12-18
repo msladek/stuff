@@ -1,4 +1,7 @@
 #!/bin/bash
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+
 echo -e "\nInstalling packages ..."
 [ $EUID -ne 0 ] \
   && echo 'skipped, requires root' \
@@ -9,7 +12,7 @@ apt -q=2 update > /dev/null && apt -q=2 -y upgrade
 
 echo -e "... install essentials packages"
 apt -q=2 -y install \
-    sudo bash-completion apt-listchanges apt-transport-https \
+    sudo bash-completion apt-listchanges apt-transport-https unattended-upgrades \
     net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
     ntp git tree pv dstat bat vim rsync htop tmux sshfs ncdu colordiff \

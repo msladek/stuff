@@ -1,6 +1,5 @@
 [Unit]
 Description=check-remote [%i]
-After=network-online.target
 
 [Timer]
 Unit=check-remote@%i.service

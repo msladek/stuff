@@ -1,6 +1,5 @@
 [Unit]
 Description=hosts-update timer
-After=network-online.target
  
 [Timer]
 Unit=hosts-update.service

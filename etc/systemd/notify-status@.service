@@ -7,7 +7,7 @@ StartLimitIntervalSec=80000
 Type=oneshot
 Restart=on-failure
 RestartSec=900
-ExecStart=/opt/msladek/stuff/bin/jobs/notify-status.sh %i
+ExecStart=/usr/local/sbin/notify-status %i
 
 [Install]
 WantedBy=multi-user.target

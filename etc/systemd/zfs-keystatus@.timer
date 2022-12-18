@@ -1,6 +1,5 @@
 [Unit]
 Description=zfs-keystatus [%i]
-After=zfs-import.target
 
 [Timer]
 Unit=zfs-keystatus@%i.service

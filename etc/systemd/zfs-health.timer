@@ -1,6 +1,5 @@
 [Unit]
 Description=zfs-health timer
-After=zfs.target
  
 [Timer]
 Unit=zfs-health.service

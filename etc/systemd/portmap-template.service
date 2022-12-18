@@ -7,13 +7,16 @@
 
 [Unit]
 Description=Portmap for <My Application>
+Requires=network-online.target
+After=network-online.target
 OnFailure=notify-status@%n
 
 [Service]
-User=portmap
-ExecStart=/usr/bin/ssh -N -L <map_port_local>:127.0.0.1:<map_port_remote> -o ServerAliveInterval=60 -p <ssh_port> -i ~/.ssh/<keyfile> <host>
+Type=simple
 Restart=always
 RestartSec=60
+User=portmap
+ExecStart=/usr/bin/ssh -N -L <map_port_local>:127.0.0.1:<map_port_remote> -o ServerAliveInterval=60 -p <ssh_port> -i ~/.ssh/<keyfile> <host>
 
 [Install]
 WantedBy=multi-user.target

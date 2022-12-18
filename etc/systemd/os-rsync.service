@@ -1,5 +1,7 @@
 [Unit]
 Description=os-rsync
+Requires=local-fs.target
+After=local-fs.target
 OnFailure=notify-status@%n
 StartLimitBurst=2
 StartLimitIntervalSec=10000
@@ -8,4 +10,4 @@ StartLimitIntervalSec=10000
 Type=oneshot
 Restart=on-failure
 RestartSec=3600
-ExecStart=/opt/msladek/stuff/bin/jobs/os-rsync.sh
+ExecStart=/usr/local/sbin/os-rsync

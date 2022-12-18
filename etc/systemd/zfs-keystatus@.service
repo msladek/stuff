@@ -1,5 +1,7 @@
 [Unit]
 Description=zfs-keystatus [%i]
+Requires=zfs-import.target
+After=zfs-import.target
 OnFailure=notify-status@%n
 StartLimitBurst=3
 StartLimitIntervalSec=1000
@@ -8,4 +10,4 @@ StartLimitIntervalSec=1000
 Type=oneshot
 Restart=on-failure
 RestartSec=300
-ExecStart=/opt/msladek/stuff/bin/jobs/zfs-keystatus.sh %i
+ExecStart=/usr/local/sbin/zfs-keystatus %i

@@ -1,7 +1,9 @@
 [Unit]
 Description=check-remote [%i]
+Requires=network-online.target
+After=network-online.target
 OnFailure=notify-status@%n
 
 [Service]
 Type=oneshot
-ExecStart=/opt/msladek/stuff/bin/jobs/check-remote.sh %i
+ExecStart=/usr/local/sbin/check-remote %i

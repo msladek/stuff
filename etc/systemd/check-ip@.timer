@@ -1,6 +1,5 @@
 [Unit]
 Description=check-ip [%i]
-After=network-online.target
 
 [Timer]
 Unit=check-ip@%i.service

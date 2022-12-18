@@ -6,4 +6,4 @@ OnFailure=notify-status@%n
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/sbin/zfs-health
+ExecStart=/usr/lib/zfs-linux/scrub
