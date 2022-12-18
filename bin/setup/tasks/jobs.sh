@@ -88,7 +88,8 @@ else
   installEnableTimedService $unitDir/zfs-health
 
   echo "... zfs scrub"
-  installEnableTimedService $unitDir/zfs-scrub
+  installEnableTimedService $unitDir/zfs-scrub \
+    && rm -f /etc/cron.d/zfsutils-linux
 
   echo "... zfs keystatus"
   encryptedDatasets=$(zfs get encryptionroot -H -ovalue -tfilesystem | uniq | grep -v '-')
@@ -97,7 +98,7 @@ else
       && for dataset in $encryptedDatasets; do \
         zfs list -H -o name | grep -qF -- "${dataset}" \
           && echo "${dataset}" \
-          && systemctl enable --now "zfs-keystatus@${dataset/\//_}.timer"; \
+          && systemctl enable "zfs-keystatus@${dataset/\//_}.timer"; \
       done \
       && echo "done" || echo "FAILED"
   else

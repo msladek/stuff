@@ -13,7 +13,7 @@ apt -q=2 update > /dev/null && apt -q=2 -y upgrade
 echo -e "... install essentials packages"
 apt -q=2 -y install \
     sudo bash-completion apt-listchanges apt-transport-https unattended-upgrades \
-    net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
+    systemd-cron net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
     debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
     ntp git tree pv dstat bat vim rsync htop tmux sshfs ncdu colordiff \
     fzf fd-find zip unzip unrar-free unp software-properties-common build-essential
