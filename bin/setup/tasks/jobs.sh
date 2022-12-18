@@ -41,13 +41,18 @@ function installEnableTimedService() {
     && for timer in ${1}*.timer; do \
         systemctl enable --now "$(basename "$timer")"; \
        done \
-    && echo "done" || ! echo "failed"
+    && echo "done" || ! echo "FAILED"
 }
 
-echo "... notify status"
-installJobScript notify-status \
+echo "... notify status" \
+  && installJobScript notify-status \
   && installUnit $unitDir/notify-status@.service \
-  && echo "done" || ! echo "failed"
+  && echo "done" || echo "FAILED"
+
+echo "... check services" \
+  && installTimedService $unitDir/check-ip \
+  && installTimedService $unitDir/check-remote \
+  && echo "done" || echo "FAILED"
 
 echo "... hosts file update"
 installEnableTimedService $unitDir/hosts-update
@@ -88,32 +93,38 @@ else
   echo "... zfs keystatus"
   encryptedDatasets=$(zfs get encryptionroot -H -ovalue -tfilesystem | uniq)
   if [ -n "$encryptedDatasets" ]; then
-    installTimedService $unitDir/zfs-keystatus
-    for dataset in $encryptedDatasets; do
-      zfs list -H -o name | grep -qF -- "${dataset}" \
-        && echo "${dataset}" \
-        && systemctl enable --now "zfs-keystatus@${dataset/\//_}.timer"
-    done
+    installTimedService $unitDir/zfs-keystatus \
+      && for dataset in $encryptedDatasets; do \
+        zfs list -H -o name | grep -qF -- "${dataset}" \
+          && echo "${dataset}" \
+          && systemctl enable --now "zfs-keystatus@${dataset/\//_}.timer"; \
+      done \
+      && echo "done" || echo "FAILED"
   else
     echo "skipped, no encrypted datasets"
   fi
 
-  echo "... sanoid"
-  if command -v sanoid > /dev/null; then
-    mkdir -p /etc/sanoid
-    [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
-      && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
-    installFile "$etcHostDir/sanoid.conf" /etc/sanoid/sanoid.conf \
-      && systemctl enable --now sanoid.timer \
-      && rm -f /etc/cron.d/sanoid
+  if [ ! -d "$etcHostDir" ]; then
+    echo "skipped host dependent config, missing $etcHostDir"
   else
-    echo "skipped, sanoid not available"
-  fi
+    echo "... sanoid"
+    if command -v sanoid > /dev/null; then
+      mkdir -p /etc/sanoid
+      [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
+        && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
+      installFile "$etcHostDir/sanoid.conf" /etc/sanoid/sanoid.conf \
+        && systemctl enable --now sanoid.timer \
+        && rm -f /etc/cron.d/sanoid \
+        && echo "done" || echo "FAILED"
+    else
+      echo "skipped, sanoid not available"
+    fi
 
-  echo "... syncoid"
-  if command -v syncoid > /dev/null; then
-    installEnableTimedService "$etcHostDir/systemd/syncoid"
-  else
-    echo "skipped, syncoid not available"
+    echo "... syncoid"
+    if command -v syncoid > /dev/null; then
+      installEnableTimedService "$etcHostDir/systemd/syncoid"
+    else
+      echo "skipped, syncoid not available"
+    fi
   fi
 fi
