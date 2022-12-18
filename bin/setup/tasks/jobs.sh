@@ -39,7 +39,7 @@ function installTimedService() {
 function installEnableTimedService() {
   installTimedService "$1" \
     && for timer in ${1}*.timer; do \
-        systemctl enable "$(basename "$timer")"; \
+        systemctl enable --now "$(basename "$timer")"; \
        done \
     && echo "done" || ! echo "failed"
 }
@@ -92,7 +92,7 @@ else
     for dataset in $encryptedDatasets; do
       zfs list -H -o name | grep -qF -- "${dataset}" \
         && echo "${dataset}" \
-        && systemctl enable "zfs-keystatus@${dataset/\//_}.timer"
+        && systemctl enable --now "zfs-keystatus@${dataset/\//_}.timer"
     done
   else
     echo "skipped, no encrypted datasets"
@@ -104,7 +104,7 @@ else
     [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
       && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
     installFile "$etcHostDir/sanoid.conf" /etc/sanoid/sanoid.conf \
-      && systemctl enable sanoid.timer \
+      && systemctl enable --now sanoid.timer \
       && rm -f /etc/cron.d/sanoid
   else
     echo "skipped, sanoid not available"
