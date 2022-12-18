@@ -91,7 +91,7 @@ else
   installEnableTimedService $unitDir/zfs-scrub
 
   echo "... zfs keystatus"
-  encryptedDatasets=$(zfs get encryptionroot -H -ovalue -tfilesystem | uniq)
+  encryptedDatasets=$(zfs get encryptionroot -H -ovalue -tfilesystem | uniq | grep -v '-')
   if [ -n "$encryptedDatasets" ]; then
     installTimedService $unitDir/zfs-keystatus \
       && for dataset in $encryptedDatasets; do \
@@ -112,7 +112,7 @@ else
       mkdir -p /etc/sanoid
       [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
         && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
-      installFile "$etcHostDir/sanoid.conf" /etc/sanoid/sanoid.conf \
+      installFile "$etcHostDir/sanoid.conf" /etc/sanoid/ \
         && systemctl enable --now sanoid.timer \
         && rm -f /etc/cron.d/sanoid \
         && echo "done" || echo "FAILED"
