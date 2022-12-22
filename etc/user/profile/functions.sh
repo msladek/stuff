@@ -74,19 +74,4 @@ function git-pull-stuff() {
   [ -d /opt/msladek/stuff/.git ] && git -C /opt/msladek/stuff pull
   [ -d /opt/msladek/stuffp/.git ] && git -C /opt/msladek/stuffp pull
 }
-# pull repo with mixed permissions
-function git-pull-force() {
-  git fetch || return 1
-  git clean --interactive
-  git reset --hard
-  local branch=$(git remote | head -n1)/$(git branch --show-current)  
-  for file in $(git diff --name-only @ @{u}); do
-    [ -f "$file" ] || continue
-    [ -w "$file" ] && continue
-    echo "force restore $file"
-    sudo git checkout "$branch" "$file" \
-      || return 1
-  done
-  git pull
-}
 fi #git

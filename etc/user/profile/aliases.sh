@@ -111,13 +111,15 @@ if command -v git >/dev/null; then
   alias gio='git checkout'
   alias gip='git pull'
   alias gipl='git pull'
-  alias gipu='git push -u'
+  alias gipu='git push'
   alias gir='git reset'
   alias gis='git status'
   alias giss='git status -s'
-  alias gisw='git switch'
-  alias giu='git push -u'
-  alias gicu='git commit && git push -u'
+  alias giu='git push'
+  alias gicu='git commit && git push'
+  function gisw() {
+    git switch $1 2>/dev/null || git switch -c $1
+  }
   source /usr/share/bash-completion/completions/git \
     && __git_complete gia _git_add \
     && __git_complete gib _git_branch \

@@ -5,7 +5,7 @@ echo -e "\nSetup shell profile ..."
   && echo 'skipped, requires non-root' \
   && exit 1
 
-# remove public read permissions
+echo -e "... remove public rwx permissions on home"
 chmod -R o-rwx ~
 
 echo -e "... link stuff directory"

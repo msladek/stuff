@@ -8,7 +8,8 @@ echo -e "\nSetup Git config ..."
 git config --global core.autocrlf input
 git config --global core.editor vim
 git config --global pull.rebase false
-git config --global push.default current
+git config --global push.default simple
+git config --global --add --bool push.autoSetupRemote true
 [ -d /opt/msladek/stuff ] \
   && ! git config --get safe.directory | grep -qF "/opt/msladek/stuff" \
   && git config --global --add safe.directory "/opt/msladek/stuff"
