@@ -1,19 +1,31 @@
 #!/bin/bash
 
+ERR=""
 # status - check zpool display status for any anomalies.
-COND1=$(/sbin/zpool status -x | grep -vFx 'all pools are healthy')
+COND=$(/sbin/zpool status -x | grep -vFx 'all pools are healthy')
+if [ "${COND}" ]; then
+  ERR="${ERR:+$ERR - }pool failures: ${COND}"
+fi
 # online - check that all zpools are in ONLINE health state.
-COND2=$(/sbin/zpool list -pH -o health | grep -vFx 'ONLINE')
+COND=$(/sbin/zpool list -pH -o health | grep -vFx 'ONLINE')
+if [ "${COND}" ]; then
+  ERR="${ERR:+$ERR - }vdevs offline: ${COND}"
+fi
 # errors - check for READ, WRITE and CKSUM drive errors.
-COND3=$(/sbin/zpool status | grep ONLINE | grep -vF 'state:' | awk '{print $3 $4 $5}' | grep -vFx '000')
+COND=$(/sbin/zpool status | grep ONLINE | grep -vF 'state:' | awk '{print $3 $4 $5}' | grep -vFx '000')
+if [ "${COND}" ]; then
+  ERR="${ERR:+$ERR - }drive errors: ${COND}"
+fi
 # capacity - check if any zpools' capacity exeeds threshold 90%.
-COND4=$(/sbin/zpool list -pH -o capacity | awk '$1 >= 90 {print}')
+COND=$(/sbin/zpool list -pH -o capacity | awk '$1 >= 90 {print}')
+if [ "${COND}" ]; then
+  ERR="${ERR:+$ERR - }high capacity utilisation: ${COND}%"
+fi
 
-CONDITION="${COND1}${COND2}${COND3}${COND4}"
-if [ "${CONDITION}" ]; then
-  echo >&2 "ZFS health check FAILED: ${CONDITION} - $(/sbin/zpool status -x)"
+if [ "${ERR}" ]; then
+  echo >&2 "ZFS health check FAILED - ${ERR}"
   exit 1
 else
-  echo "ZFS health check passed: $(/sbin/zpool status -x)"
+  echo "ZFS health check passed - $(/sbin/zpool status -x)"
   exit 0
 fi
