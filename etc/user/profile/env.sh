@@ -6,14 +6,14 @@ paths="
   ${HOME}/.local/bin
   ${HOME}/bin
   ${HOME}/.npm-global/bin
-  /usr/local/bin
-  /usr/bin
-  /bin
-  /opt/bin
   /usr/local/sbin
+  /usr/local/bin
   /usr/sbin
-  /sbin
+  /usr/bin
   /opt/sbin
+  /opt/bin
+  /sbin
+  /bin
 "
 for p in $paths; do
   [ -d "$p" ] \

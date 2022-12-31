@@ -52,6 +52,7 @@ echo "... notify status" \
 echo "... check services" \
   && installTimedService $unitDir/check-ip \
   && installTimedService $unitDir/check-remote \
+  && installEnableTimedService $unitDir/check-reboot \
   && echo "done" || echo "FAILED"
 
 echo "... hosts file update"
@@ -106,7 +107,7 @@ else
   fi
 
   if [ ! -d "$etcHostDir" ]; then
-    echo "skipped host dependent config, missing $etcHostDir"
+    echo "skipped, host dependent config, missing $etcHostDir"
   else
     echo "... sanoid"
     if command -v sanoid > /dev/null; then
