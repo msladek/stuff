@@ -1,0 +1,10 @@
+[Unit]
+Description=check-reboot timer
+ 
+[Timer]
+Unit=check-reboot.service
+OnCalendar=21:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

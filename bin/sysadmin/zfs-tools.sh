@@ -16,9 +16,9 @@ function zfs-mountpoint-swap() {
   local mountpoint1=$(zfs get -H -o value mountpoint "$1")
   local mountpoint2=$(zfs get -H -o value mountpoint "$2")
   [ -n "$mountpoint1" ] \
-    && zfs set mountpoint="${mountpoint2:-none}" "$1" \
+    && sudo zfs set mountpoint="${mountpoint2:-none}" "$1" \
     && zfs list -H -o name,mountpoint "$1" \
-    && zfs set mountpoint="${mountpoint1:-none}" "$2" \
+    && sudo zfs set mountpoint="${mountpoint1:-none}" "$2" \
     && zfs list -H -o name,mountpoint "$2" \
     || { echo 'failed' && false; }
 }
@@ -67,7 +67,7 @@ function zfs-snaps-rename() {
     [ -n "$newname" ] && [ "$newname" != "$oldname" ] \
       && echo "$oldname -> $newname" \
       && [ "$doItNow" == "true" ] \
-      && zfs rename $oldname $newname
+      && sudo zfs rename $oldname $newname
   done
   unset doItNow
 }
@@ -93,7 +93,7 @@ function zfs-snaps-destroy() {
     [ -n "$snap" ] \
       && echo "deleting: $snap" \
       && [ "$doItNow" == "true" ] \
-      && zfs destroy "$snap"
+      && sudo zfs destroy "$snap"
   done
   unset doItNow
 }
@@ -103,6 +103,6 @@ function zfs-load-keys() {
   for dataset in $(zfs get encryptionroot -H -o value -t filesystem | uniq); do
     zfs-dataset-exists "${dataset}" \
       && echo "${dataset}" \
-      && zfs load-key -r "${dataset}"
+      && sudo zfs load-key -r "${dataset}"
   done
 }
