@@ -103,6 +103,7 @@ function zfs-load-keys() {
   for dataset in $(zfs get encryptionroot -H -o value -t filesystem | uniq); do
     zfs-dataset-exists "${dataset}" \
       && echo "${dataset}" \
-      && sudo zfs load-key -r "${dataset}"
+      && sudo zfs load-key -r "${dataset}" \
+      && sudo zfs mount "${dataset}"
   done
 }
