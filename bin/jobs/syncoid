@@ -1,14 +1,14 @@
 #!/bin/bash
-[ $$ -eq $PPID ] && { echo 'recursion detected'; exit 1; }
+PATH=/opt/sbin:/opt/bin:/usr/sbin:/usr/bin:/sbin:/bin
 echo "${@:(-2):1} -> ${@:(-1):1}"
-args=("--no-privilege-elevation" "--no-forced-receive" "--no-sync-snap")
-while getopts "bfirw" opt; do
+args=('--no-privilege-elevation' '--no-forced-receive' '--no-sync-snap')
+while getopts 'bfirw' opt; do
   case "$opt" in
     b) args+=('--create-bookmark') ;;
     f) args=("${args[@]/--no-forced-receive/}") ;;
     i) args=("${args[@]/--no-sync-snap/}") ;;
-    r) args+=('--recursive --skip-parent') ;;
-    w) args+=('--sendoptions="w"') ;;
+    r) args+=('--recursive' '--skip-parent') ;;
+    w) args+=('--sendoptions=w') ;;
     *) exit 1 ;;
   esac
 done
