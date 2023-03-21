@@ -13,9 +13,9 @@ apt -q=2 update > /dev/null && apt -q=2 -y upgrade
 echo -e "... install essentials packages"
 apt -q=2 -y install \
     sudo bash-completion apt-listchanges apt-transport-https unattended-upgrades \
-    systemd-cron net-tools netcat ethtool curl wget dnsutils iotop iftop openssh-client \
-    debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates \
-    ntp git tree pv dstat bat vim rsync htop tmux sshfs ncdu colordiff \
+    net-tools netcat-openbsd ethtool curl wget dnsutils iotop iftop openssh-client \
+    debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates systemd-cron \
+    ntp git tree pv dstat bat vim rsync htop tmux sshfs ncdu colordiff lsd usbutils \
     fzf fd-find zip unzip unrar-free unp software-properties-common build-essential
 
 if [ $(lsb_release -sc) = 'sid' ]; then
@@ -41,6 +41,3 @@ function github-install-latest() {
   rm -f "$tmp_deb"
   return $exit_code
 }
-
-echo -e "... install lsd"
-github-install-latest 'Peltoche/lsd' 'lsd-musl_.*_amd64.deb'
