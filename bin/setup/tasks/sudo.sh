@@ -17,4 +17,9 @@ if command -v doas > /dev/null; then
   chmod o-rwx /etc/doas.conf
 fi
 
+apt-cache policy | grep -qF 'o=Docker' \
+  && ! grep -qF 'o=Docker' /etc/apt/apt.conf.d/52unattended-upgrades-custom \
+  && echo 'Unattended-Upgrade::Origins-Pattern { "o=Docker,a=${distro_codename}"; };' \
+  | sudo tee -a /etc/apt/apt.conf.d/52unattended-upgrades-custom
+
 exit 0
