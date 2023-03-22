@@ -10,7 +10,7 @@ echo -e "\nSetup UFW ..."
   && ! apt install ufw \
   && echo "failed install" && exit 1
 
-if ! ufw status | grep -qF active; then
+if ! ufw status | grep -qF "Status: active"; then
   ufw default deny incoming
   command -v sshd >/dev/null \
     && sshPort=$(sshd -T | grep port | head -n1 | cut -d' ' -f2) \
