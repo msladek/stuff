@@ -22,6 +22,8 @@ for p in $paths; do
 done
 unset p paths
 
+export GPG_TTY=$(tty)
+
 ## set correct ssh auth socket if agent service is running
 command -v systemctl >/dev/null \
   && systemctl --user status ssh-agent &>/dev/null \
