@@ -75,13 +75,6 @@ else
   echo "skipped, /mnt/backup/smart not linked"
 fi
 
-echo "... database dump"
-if [ -w /mnt/backup/mysql ] && [ -f /etc/mysql/debian.cnf ]; then
-  installEnableTimedService $unitDir/mysql-dump
-else
-  echo "skipped, /mnt/backup/mysql not linked"
-fi
-
 if ! command -v zpool > /dev/null || [ "$(zpool list -H | wc -l)" -eq 0 ]; then
   echo "skipped zfs setup, no pools available"
 else
