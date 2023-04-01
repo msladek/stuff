@@ -1,15 +1,19 @@
 #!/bin/bash
 PATH=/opt/sbin:/opt/bin:/usr/sbin:/usr/bin:/sbin:/bin
 echo "${@:(-2):1} -> ${@:(-1):1}"
-args=('--no-privilege-elevation' '--no-forced-receive' '--no-sync-snap')
+args=('--no-privilege-elevation')
+flag_f=false
+flag_i=false
 while getopts 'bfirw' opt; do
   case "$opt" in
     b) args+=('--create-bookmark') ;;
-    f) args=("${args[@]/--no-forced-receive/}") ;;
-    i) args=("${args[@]/--no-sync-snap/}") ;;
+    f) flag_f=true ;;
+    i) flag_i=true ;;
     r) args+=('--recursive' '--skip-parent') ;;
     w) args+=('--sendoptions=w') ;;
     *) exit 1 ;;
   esac
 done
+$flag_f || args+=('--no-forced-receive')
+$flag_i || args+=('--no-sync-snap')
 syncoid "${args[@]}" "${@:$OPTIND}"
