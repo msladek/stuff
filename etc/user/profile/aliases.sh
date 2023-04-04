@@ -118,7 +118,7 @@ if command -v git >/dev/null; then
   alias giu='git push'
   alias gicu='git commit && git push'
   function gisw() {
-    git switch $1 2>/dev/null || git switch -c $1
+    git switch ${1:+$(git rev-parse --verify "$1" &>/dev/null || echo "-c")} "$1"
   }
   source /usr/share/bash-completion/completions/git \
     && __git_complete gia _git_add \
