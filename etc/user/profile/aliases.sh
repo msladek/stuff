@@ -100,6 +100,7 @@ command -v ufw >/dev/null \
 if command -v git >/dev/null; then
   alias gia='git add'
   alias gib='git branch'
+  alias gibl='git branch -lavv'
   alias gic='git commit'
   alias gicp='git cherry-pick'
   alias gico='git checkout'
@@ -118,7 +119,7 @@ if command -v git >/dev/null; then
   alias giu='git push'
   alias gicu='git commit && git push'
   function gisw() {
-    git switch ${1:+$(git rev-parse --verify "$1" &>/dev/null || echo "-c")} "$1"
+    git switch ${1:+$(git rev-parse --verify "$1" &>/dev/null || ( git fetch && git rev-parse --verify "origin/$1" &>/dev/null ) || echo "-c")} "$1"
   }
   source /usr/share/bash-completion/completions/git \
     && __git_complete gia _git_add \
