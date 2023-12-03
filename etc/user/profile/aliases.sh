@@ -105,6 +105,7 @@ if command -v git >/dev/null; then
   alias gicp='git cherry-pick'
   alias gico='git checkout'
   alias gid='git diff'
+  alias gids='git diff --staged'
   alias gif='git fetch'
   alias gii='git init'
   alias gil='git log'
@@ -128,6 +129,7 @@ if command -v git >/dev/null; then
     && __git_complete gicp _git_cherry_pick \
     && __git_complete gico _git_checkout \
     && __git_complete gid _git_diff \
+    && __git_complete gids _git_diff \
     && __git_complete gif _git_fetch \
     && __git_complete gii _git_init \
     && __git_complete gil _git_log \
