@@ -30,4 +30,5 @@ command -v systemctl >/dev/null \
   && export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
 
 command -v fzf >/dev/null \
+  && [ -f /usr/share/doc/fzf/examples/key-bindings.bash ] \
   && source /usr/share/doc/fzf/examples/key-bindings.bash
