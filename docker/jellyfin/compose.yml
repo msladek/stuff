@@ -1,9 +1,12 @@
-version: "3"
 services:
+
   jellyfin:
     image: linuxserver/jellyfin
     container_name: jellyfin
-    env_file: .env
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: Europe/Zurich
     ports:
       - 8092:8096 # HTTP
       - 8910:8920 # HTTPS
@@ -11,7 +14,9 @@ services:
       - /mnt/jellyfin/config:/config
       - /mnt/jellyfin/cache:/config/cache
       - /mnt/jellyfin/cache/transcodes:/transcodes
-      - /mnt/data/videos:/data:ro
+      - /mnt/jellyfin/videos:/data:ro
     devices:
       - /dev/dri:/dev/dri
     restart: unless-stopped
+    logging:
+      driver: journald

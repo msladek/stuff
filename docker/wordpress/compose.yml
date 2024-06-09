@@ -1,0 +1,22 @@
+services:
+
+  www-wp:
+    image: wordpress:apache
+    container_name: www-wp
+    ports:
+      - "7080:80"
+    env_file: .env
+    environment:
+      WORDPRESS_DB_HOST: ${DB_HOST}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_TABLE_PREFIX: ${DB_TABLE_PREFIX}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME','https://${DOMAIN}');
+        define('WP_SITEURL','https://${DOMAIN}');
+    volumes:
+      - /mnt/www/${DOMAIN}/wp-content:/var/www/html/wp-content
+    restart: unless-stopped
+    logging:
+      driver: journald

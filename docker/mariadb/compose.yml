@@ -1,0 +1,13 @@
+services:
+
+  db:
+    image: mariadb:10.11
+    container_name: db
+    command: --max_allowed_packet=64M --innodb_flush_log_at_trx_commit=1
+    ports:
+      - "3306:3306"
+    volumes:
+      - /mnt/mysql:/var/lib/mysql
+    restart: unless-stopped
+    logging:
+      driver: journald

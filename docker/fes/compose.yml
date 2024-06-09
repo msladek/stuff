@@ -1,0 +1,21 @@
+services:
+
+  fes:
+    image: caddy:2
+    container_name: fes
+    env_file: .env
+    environment:
+      EMAIL: ${EMAIL}
+      TZ: Europe/Zurich
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /mnt/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /mnt/caddy/data:/data
+      - /mnt/caddy/config:/config
+    extra_hosts:
+      - lanhost:${LAN_IP}
+    restart: unless-stopped
+    logging:
+      driver: journald
