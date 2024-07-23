@@ -8,10 +8,11 @@ echo -e "\nInstall desktop packages ..."
 echo -e "... tools ..."
 apt -q=2 install \
     gnome-system-tools gnome-system-monitor gnome-disk-utility hardinfo \
-    xsel grub-customizer glances hfsprogs gvfs-backends gvfs-fuse solaar \
+    xsel wl-clipboard grub-customizer glances hfsprogs gvfs-backends gvfs-fuse solaar \
     gufw gparted baobab chromium enpass geany vlc gimp clipit gpick peek \
     openjdk-17-jdk openjdk-17-source openjdk-17-doc visualvm \
-    steam stress sysbench x2goclient screenruler
+    steam stress sysbench x2goclient screenruler \
+    pipewire pipewire-pulse pipewire-jack pipewire-alsa pipewire-audio
 
 echo -e "... theming ..."
 apt -q=2 install \
@@ -24,7 +25,7 @@ papirus-folders -C orange
 [[ "${XDG_CURRENT_DESKTOP,,}" == *"kde"* ]] \
   && echo -e "... kde ..." \
   && apt -q=2 install \
-    plasma-workspace-wallpapers sddm-theme-breeze 
+    plasma-workspace-wallpapers breeze breeze-cursor-theme breeze-icon-theme sddm-theme-breeze
 
 [[ "${XDG_CURRENT_DESKTOP,,}" == *"xfce"* ]] \
   && echo -e "... xfce ..." \

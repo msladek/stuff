@@ -28,10 +28,10 @@ function update() {
     && apt autoclean && echo \
     && apt autoremove && echo
   ret=$?
-  [ $ret -eq 0 ] && command -v checkrestart >/dev/null \
-    && echo "check restarts:" && sudo checkrestart
   [ $ret -eq 0 ] && command -v check-support-status >/dev/null \
     && echo "check support:" && sudo check-support-status
+  [ $ret -eq 0 ] && command -v needrestart >/dev/null \
+    && echo "check restarts:" && sudo needrestart
   return $ret
 }
 fi
