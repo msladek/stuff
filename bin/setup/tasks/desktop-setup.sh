@@ -25,12 +25,14 @@ git clone --depth 1 --branch release $FONT_URL_ADOBE $FONT_DIR \
 	&& fc-cache -f -v $FONT_DIR \
   || echo "... skip, already setup"
 
-echo -e "\nSetup enpasscli ..."
+echo -e "\nSetup bitwarden ..."
 mkdir -p ~/bin
-ln -sf /opt/msladek/stuff/bin/enpasscli ~/bin/enpasscli
-ln -sf /opt/msladek/stuff/bin/enpass-askpass.sh ~/bin/enpass-askpass
+# TODO bw setup
+wget -qO ~/bin/bwx https://raw.githubusercontent.com/msladek/bwx/refs/heads/main/bwx.py  \
+  && chmod 740 ~/bin/bwx
+ln -sf /opt/msladek/stuff/bin/bwx-askpass.sh ~/bin/bwx-askpass
 mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
-  && ln -sf /opt/msladek/stuff/etc/user/profile/enpass.sh ~/.profile.d/80-enpass.sh
+  && ln -sf /opt/msladek/stuff/etc/user/profile/bwx.sh ~/.profile.d/80-bwx.sh
 
 echo -e "\nSetup Tiling..."
 if command -v quicktile > /dev/null; then
