@@ -26,13 +26,22 @@ git clone --depth 1 --branch release $FONT_URL_ADOBE $FONT_DIR \
   || echo "... skip, already setup"
 
 echo -e "\nSetup bitwarden ..."
+# cli bw
 mkdir -p ~/bin
-# TODO bw setup
-wget -qO ~/bin/bwx https://raw.githubusercontent.com/msladek/bwx/refs/heads/main/bwx.py  \
-  && chmod 740 ~/bin/bwx
+wget -O- $(github-download-url "bitwarden/clients" "cli-" "zip" "bw-linux-") \
+  | busybox unzip -d ~/bin - \
+  && chmod +x ~/bin/bw
+wget -O ~/bin/bwx https://raw.githubusercontent.com/msladek/bwx/refs/heads/main/bwx.py  \
+  && chmod +x ~/bin/bwx
+ln -sf /opt/msladek/stuff/etc/user/bwx.yml ~/.config/bwx.yml
 ln -sf /opt/msladek/stuff/bin/bwx-askpass.sh ~/bin/bwx-askpass
 mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
   && ln -sf /opt/msladek/stuff/etc/user/profile/bwx.sh ~/.profile.d/80-bwx.sh
+# desktop
+tmpdeb=/tmp/bw-desktop.deb
+wget -O "$tmpdeb" $(github-download-url "bitwarden/clients" "desktop-" "deb") \
+  && sudo dpkg --skip-same-version -i "$tmpdeb"
+rm -f "$tmpdeb"
 
 echo -e "\nSetup Tiling..."
 if command -v quicktile > /dev/null; then
@@ -44,5 +53,17 @@ if command -v quicktile > /dev/null; then
 else
   echo "... skip, QuickTile not installed"
 fi
+
+function github-download-url() {
+  local REPO="$1"
+  local TAG_PREFIX="$2"
+  local ASSET_TYPE="$3"
+  local ASSET_PREFIX="$4"
+  local api_url="https://api.github.com/repos/${REPO}/releases"
+  local query_tags=".[] | select(.tag_name | startswith(\"${TAG_PREFIX}\"))"
+  local query_assets="${query_tags} | .assets[] | select(.name | startswith(\"${ASSET_PREFIX}\") and endswith(\".${ASSET_TYPE}\"))"
+  local query_download="${query_assets} | .browser_download_url"
+  curl -sL "${api_url}" | jq -r "${query_download}" | head -n1
+}
 
 exit 0

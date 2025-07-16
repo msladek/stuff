@@ -11,7 +11,7 @@ apt -q=2 install \
     xsel wl-clipboard grub-customizer glances hfsprogs gvfs-backends gvfs-fuse solaar \
     gufw gparted baobab chromium geany vlc gimp clipit gpick peek \
     openjdk-17-jdk openjdk-17-source openjdk-17-doc visualvm \
-    steam stress sysbench x2goclient screenruler \
+    stress sysbench x2goclient screenruler \
     pipewire pipewire-pulse pipewire-jack pipewire-alsa pipewire-audio
 
 echo -e "... theming ..."

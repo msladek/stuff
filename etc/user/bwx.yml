@@ -1,0 +1,8 @@
+clipboard_copy_cmd:
+  - "xsel"
+  - "--input"
+  - "--primary"
+clipboard_clear_cmd:
+  - "xsel"
+  - "--clear"
+  - "--primary"

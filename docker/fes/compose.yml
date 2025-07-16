@@ -1,5 +1,4 @@
 services:
-
   fes:
     image: caddy:2
     container_name: fes
@@ -8,12 +7,13 @@ services:
       EMAIL: ${EMAIL}
       TZ: Europe/Zurich
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
+      # - 127.0.0.1:2019:2019
     volumes:
-      - /mnt/caddy/Caddyfile:/etc/caddy/Caddyfile
-      - /mnt/caddy/data:/data
-      - /mnt/caddy/config:/config
+      - /mnt/www/fes/Caddyfile:/etc/caddy/Caddyfile
+      - /mnt/www/fes/data:/data
+      - /mnt/www/fes/config:/config
     extra_hosts:
       - lanhost:${LAN_IP}
     restart: unless-stopped
