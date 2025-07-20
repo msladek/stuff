@@ -34,4 +34,27 @@ papirus-folders -C orange
     xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-taskmanager xfce4-screenshooter \
     thunar-archive-plugin lightdm-gtk-greeter-settings numix-gtk-theme greybird-gtk-theme
 
+function github-download-url() {
+  local REPO="$1"
+  local TAG_PREFIX="$2"
+  local ASSET_TYPE="$3"
+  local ASSET_PREFIX="$4"
+  local api_url="https://api.github.com/repos/${REPO}/releases"
+  local query_tags=".[] | select(.tag_name | startswith(\"${TAG_PREFIX}\"))"
+  local query_assets="${query_tags} | .assets[] | select(.name | startswith(\"${ASSET_PREFIX}\") and endswith(\".${ASSET_TYPE}\"))"
+  local query_download="${query_assets} | .browser_download_url"
+  curl -sL "${api_url}" | jq -r "${query_download}" | head -n1
+}
+
+echo -e "\nInstall bitwarden ..."
+# cli
+wget -O- $(github-download-url "bitwarden/clients" "cli-" "zip" "bw-linux-") \
+  | busybox unzip -d /usr/local/sbin - \
+  && chmod +x /usr/local/sbin/bw
+# desktop
+tmpdeb=/tmp/bw-desktop.deb
+wget -O "$tmpdeb" $(github-download-url "bitwarden/clients" "desktop-" "deb") \
+  && dpkg --skip-same-version -i "$tmpdeb"
+rm -f "$tmpdeb"
+
 exit 0
