@@ -1,6 +1,6 @@
 #!/bin/bash
 smartDir=/mnt/backup/smart
-if [ -w $smartDir ]; then
+if [[ -w $smartDir ]]; then
   dateStr=$(date +'%Y-%m-%d-%H%M')
   for device in /dev/disk/by-id/*; do
     [[ -n $device ]] \
@@ -12,6 +12,8 @@ if [ -w $smartDir ]; then
       && smartctl -A $device > $smartDir/$dateStr/$(basename $device) \
       && echo "written $smartDir/$dateStr/$(basename $device)"
   done
+  [[ -d $smartDir/$dateStr ]] \
+    && ln -sfT $smartDir/$dateStr $smartDir/latest
   exit 0
 else
   echo "${smartDir} not writable"

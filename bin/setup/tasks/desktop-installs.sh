@@ -9,9 +9,8 @@ echo -e "... tools ..."
 apt -q=2 install \
     gnome-system-tools gnome-system-monitor gnome-disk-utility hardinfo \
     xsel wl-clipboard grub-customizer glances hfsprogs gvfs-backends gvfs-fuse solaar \
-    gufw gparted baobab chromium geany vlc gimp clipit gpick peek \
-    openjdk-17-jdk openjdk-17-source openjdk-17-doc visualvm \
-    stress sysbench x2goclient screenruler \
+    gparted baobab chromium geany vlc gimp gpick peek screenruler stress sysbench x2goclient \
+    openjdk-21-jdk openjdk-21-source openjdk-21-doc visualvm \
     pipewire pipewire-pulse pipewire-jack pipewire-alsa pipewire-audio
 
 echo -e "... theming ..."

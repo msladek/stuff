@@ -46,11 +46,6 @@ mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
 ln -sf $stuffDir/etc/user/vimrc ~/.vimrc
 ln -sf $stuffDir/etc/user/tmux.conf ~/.tmux.conf
 
-if [ -e ~/.bash_aliases ] || [ -L ~/.bash_aliases ]; then
-  echo && read -p "Remove legacy bash_aliases? (y/N) " && [[ $REPLY =~ ^[Yy]$ ]] \
-    && rm -f ~/.bash_aliases
-fi
-
 echo -e "... setup eternal bash history"
 # https://stackoverflow.com/a/19533853/1238689
 sed -i '/HISTSIZE=/s/^[#[:space:]]*/#/g' ~/.bashrc
