@@ -30,8 +30,6 @@ function update() {
   ret=$?
   [ $ret -eq 0 ] && command -v check-support-status >/dev/null \
     && echo "check support:" && sudo check-support-status
-  [ $ret -eq 0 ] && command -v needrestart >/dev/null \
-    && echo "check restarts:" && sudo needrestart
   return $ret
 }
 fi
