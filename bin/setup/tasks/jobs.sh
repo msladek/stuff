@@ -40,8 +40,7 @@ function installEnableTimedService() {
   installTimedService "$1" \
     && for timer in ${1}*.timer; do \
         systemctl enable --now "$(basename "$timer")"; \
-       done \
-    && echo "done" || ! echo "FAILED"
+       done
 }
 
 echo "... notify status" \
@@ -56,21 +55,25 @@ echo "... check services" \
   && echo "done" || echo "FAILED"
 
 echo "... hosts file update"
-installEnableTimedService $unitDir/hosts-update
+installEnableTimedService $unitDir/hosts-update \
+  && echo "done" || echo "FAILED"
 
 echo "... filesytem trim"
-installEnableTimedService $unitDir/fstrim
+installEnableTimedService $unitDir/fstrim \
+  && echo "done" || echo "FAILED"
 
 echo "... OS sync"
 if [ -w /mnt/backup/os ]; then
-  installEnableTimedService $unitDir/os-rsync
+  installEnableTimedService $unitDir/os-rsync \
+    && echo "done" || echo "FAILED"
 else
   echo "skipped, /mnt/backup/os not linked"
 fi
 
 echo "... smart attribute dump"
 if [ -w /mnt/backup/smart ]; then
-  installEnableTimedService $unitDir/smart-dump
+  installEnableTimedService $unitDir/smart-dump \
+    && echo "done" || echo "FAILED"
 else
   echo "skipped, /mnt/backup/smart not linked"
 fi
@@ -78,12 +81,21 @@ fi
 if ! command -v zpool > /dev/null || [ "$(zpool list -H | wc -l)" -eq 0 ]; then
   echo "skipped zfs setup, no pools available"
 else
+
+  echo "... zfs multi-unlock"
+  sudo wget -O /usr/local/sbin/zfs-multi-unlock \
+      https://raw.githubusercontent.com/msladek/zfs-multi-unlock/master/zfs-multi-unlock.sh \
+    && sudo chmod +x /usr/local/sbin/zfs-multi-unlock \
+    && echo "done" || echo "FAILED"
+
   echo "... zfs health check"
-  installEnableTimedService $unitDir/zfs-health
+  installEnableTimedService $unitDir/zfs-health \
+    && echo "done" || echo "FAILED"
 
   echo "... zfs scrub"
   installEnableTimedService $unitDir/zfs-scrub \
-    && rm -f /etc/cron.d/zfsutils-linux
+    && rm -f /etc/cron.d/zfsutils-linux \
+    && echo "done" || echo "FAILED"
 
   echo "... zfs keystatus"
   encryptedDatasets=$(zfs get encryptionroot -H -ovalue -tfilesystem | uniq | grep -v '-')
@@ -103,7 +115,7 @@ else
     echo "skipped, host dependent config, missing $etcHostDir"
   else
     echo "... sanoid"
-    if command -v sanoid > /dev/null; then
+    if [ -f "$etcHostDir/sanoid.conf" ]; then
       mkdir -p /etc/sanoid
       [ ! -f /etc/sanoid/sanoid.defaults.conf ] \
         && ln -s /usr/share/sanoid/sanoid.defaults.conf /etc/sanoid/sanoid.defaults.conf
@@ -112,14 +124,16 @@ else
         && rm -f /etc/cron.d/sanoid \
         && echo "done" || echo "FAILED"
     else
-      echo "skipped, sanoid not available"
+      echo "skipped, no sanoid.config"
     fi
 
     echo "... syncoidd"
     if [ -f "$etcHostDir/syncoidd.conf" ]; then
-      installFile "$etcHostDir/syncoidd.conf" /etc/sanoid/syncoidd.conf \
+      installFile "$etcHostDir/syncoidd.conf" /etc/sanoid/ \
         && installEnableTimedService $unitDir/syncoidd \
         && echo "done" || echo "FAILED"
+    else
+      echo "skipped, no syncoidd.config"
     fi
   fi
 fi
