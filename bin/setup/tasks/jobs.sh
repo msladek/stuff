@@ -115,11 +115,11 @@ else
       echo "skipped, sanoid not available"
     fi
 
-    echo "... syncoid"
-    if command -v syncoid > /dev/null; then
-      installEnableTimedService "$etcHostDir/systemd/syncoid"
-    else
-      echo "skipped, syncoid not available"
+    echo "... syncoidd"
+    if [ -f "$etcHostDir/syncoidd.conf" ]; then
+      installFile "$etcHostDir/syncoidd.conf" /etc/sanoid/syncoidd.conf \
+        && installEnableTimedService $unitDir/syncoidd \
+        && echo "done" || echo "FAILED"
     fi
   fi
 fi

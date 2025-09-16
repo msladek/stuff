@@ -14,7 +14,7 @@ echo -e "... install essentials packages"
 apt -q=2 -y install \
     sudo bash-completion apt-listchanges apt-transport-https unattended-upgrades needrestart \
     net-tools netcat-openbsd ethtool curl wget dnsutils iotop iftop openssh-client \
-    debian-goodies debian-keyring gnupg dirmngr lsb-release ca-certificates systemd-cron \
+    debian-goodies debian-keyring extrepo gnupg dirmngr lsb-release ca-certificates systemd-cron \
     systemd-timesyncd git tree pv bat vim rsync htop tmux sshfs bindfs ncdu colordiff lsd usbutils \
     fzf fd-find zip unzip unrar-free unp software-properties-common build-essential \
     gh hcloud-cli

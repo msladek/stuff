@@ -1,0 +1,11 @@
+[Unit]
+Description=syncoid timer
+After=network-online.target
+
+[Timer]
+Unit=syncoidd.service
+OnCalendar=01:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

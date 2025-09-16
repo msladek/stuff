@@ -27,7 +27,7 @@ echo '... zfs-dataset-forEach($command [$postCommand])'
 function zfs-dataset-forEach() {
   [ -z "$1" ] && echo 'no command provided' && return 1
   for dataset in $(zfs list -H -o name); do
-    $1 $dataset $2
+    $1 $dataset "$2"
   done
 }
 
@@ -36,7 +36,7 @@ function zfs-snaps-forEach() {
   ! zfs-dataset-exists "$1" && echo 'invalid dataset provided' && return 1
   [ -z "$2" ] && echo 'no command provided' && return 1
   for snap in $(zfs list -H -t snapshot -o name -s creation "$1"); do
-    $2 $snap $3
+    $2 $snap "$3"
   done
 }
 
