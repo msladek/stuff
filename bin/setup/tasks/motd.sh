@@ -41,10 +41,10 @@ echo "zfs status: $(zpool status -x)\n"
 endmsg
 
 ## 80-last
-command -v last > /dev/null \
+command -v wtmpdb > /dev/null \
   && cat > /etc/update-motd.d/80-last <<'endmsg'
 #!/bin/sh
-last --time-format=iso $USER \
+wtmpdb last --time-format=iso $USER \
   | grep 'pts' | egrep -v "tmux|:S" \
   | head -n2 | tail -n1 \
   | awk {'print "Last login: " $4 " from " $3'}
