@@ -1,8 +1,8 @@
+debug: false
 clipboard_copy_cmd:
-  - "xsel"
-  - "--input"
+  - "wl-copy"
   - "--primary"
 clipboard_clear_cmd:
-  - "xsel"
+  - "wl-copy"
   - "--clear"
   - "--primary"

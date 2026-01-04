@@ -32,3 +32,6 @@ command -v systemctl >/dev/null \
 command -v fzf >/dev/null \
   && [ -f /usr/share/doc/fzf/examples/key-bindings.bash ] \
   && source /usr/share/doc/fzf/examples/key-bindings.bash
+
+## set keyboard layout to Swiss (X11 still needed for x2go)
+setxkbmap ch 2> /dev/null

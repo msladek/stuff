@@ -15,7 +15,6 @@ git config --global --add --bool push.autoSetupRemote true
   && git config --global --add safe.directory "/opt/msladek/stuff"
 
 if [ -f ~/.ssh/github ]; then
-  git config --global core.sshCommand "ssh -i ~/.ssh/github -F /dev/null"
   git -C /opt/msladek/stuff remote set-url origin git@github.com:msladek/stuff.git > /dev/null 2>&1
   git -C /opt/msladek/stuffp remote set-url origin git@github.com:msladek/stuffp.git > /dev/null 2>&1
 else
