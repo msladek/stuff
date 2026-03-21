@@ -146,15 +146,22 @@ if command -v git >/dev/null; then
     && __git_complete gicu _git_push
 fi
 
+# firewall-cmd aliases / completion
+if command -v firewall-cmd >/dev/null; then
+  alias fw='sudo firewall-cmd'
+  alias fws='fw --state'
+  alias fwl='fw --list-all'
+  alias fwr='fw --reload'
+  source /usr/share/bash-completion/completions/firewall-cmd
+  for cmd in fw fws fwl fwr; do complete -F _firewall_cmd $cmd; done
+fi
+
 # zfs aliases / completion
 if command -v zfs >/dev/null; then
   alias zl='zfs list'
   alias zla='zfs list -t all'
   alias zls='zfs list -t snapshot'
   alias zlb='zfs list -t bookmark'
-  source /usr/share/bash-completion/completions/zfs \
-    && complete -F __zfs_complete zl \
-    && complete -F __zfs_complete zla \
-    && complete -F __zfs_complete zls \
-    && complete -F __zfs_complete zlb
+  source /usr/share/bash-completion/completions/zfs
+  for cmd in zl zla zls zlb; do complete -F __zfs_complete $cmd; done
 fi
