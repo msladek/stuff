@@ -7,9 +7,10 @@ echo -e "\nInstall desktop packages ..."
 
 echo -e "... tools ..."
 apt -q=2 install \
-    gnome-system-tools gnome-system-monitor gnome-disk-utility hardinfo \
+    gnome-system-tools gnome-system-monitor gnome-disk-utility hardinfo gparted baobab \
     xsel wl-clipboard grub-customizer glances hfsprogs gvfs-backends gvfs-fuse solaar \
-    gparted baobab chromium geany vlc gimp gpick peek screenruler stress sysbench x2goclient \
+    kcolorchooser kooha screenruler stress sysbench x2goclient \
+    chromium geany vlc gimp \
     openjdk-21-jdk openjdk-21-source openjdk-21-doc visualvm \
     pipewire pipewire-pulse pipewire-jack pipewire-alsa pipewire-audio
 
@@ -47,13 +48,10 @@ function github-download-url() {
 
 echo -e "\nInstall bitwarden ..."
 # cli
-wget -O- $(github-download-url "bitwarden/clients" "cli-" "zip" "bw-linux-") \
-  | busybox unzip -d /usr/local/sbin - \
+tmpbw=/tmp/bw-cli.zip
+wget -O "$tmpbw" $(github-download-url "bitwarden/clients" "cli-" "zip" "bw-linux-") \
+  && unzip -d /usr/local/sbin "$tmpbw" \
   && chmod +x /usr/local/sbin/bw
-# desktop
-tmpdeb=/tmp/bw-desktop.deb
-wget -O "$tmpdeb" $(github-download-url "bitwarden/clients" "desktop-" "deb") \
-  && dpkg --skip-same-version -i "$tmpdeb"
-rm -f "$tmpdeb"
+rm -f "$tmpbw"
 
 exit 0
