@@ -37,7 +37,7 @@ command -v zpool > /dev/null \
   && [ $(zpool list -H | wc -l) -gt 0 ] \
   && cat > /etc/update-motd.d/60-zpool <<'endmsg'
 #!/bin/sh
-echo "zfs status: $(zpool status -x)\n"
+command -v zpool > /dev/null && echo "zfs status: $(zpool status -x)\n"
 endmsg
 
 ## 80-last

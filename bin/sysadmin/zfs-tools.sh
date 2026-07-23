@@ -105,6 +105,12 @@ function zfs-load-keys() {
     zfs-dataset-exists "${dataset}" \
       && echo "${dataset}" \
       && sudo zfs load-key -r "${dataset}" \
+      && zfs get mountpoint -H -o value "${dataset}" | grep -v none &> /dev/null \
       && sudo zfs mount "${dataset}"
   done
+}
+
+echo '... zfs-list-allow()'
+function zfs-list-allow() {
+  zfs list -H -o name | xargs --replace={} sh -c 'zfs allow "{}" | tr "\n" " " && echo' | sort -u
 }
