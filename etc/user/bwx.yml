@@ -1,8 +1,13 @@
 debug: false
 clipboard_copy_cmd:
   - "wl-copy"
-  - "--primary"
+  - "--sensitive"
 clipboard_clear_cmd:
   - "wl-copy"
   - "--clear"
-  - "--primary"
+post_copy_cmd:
+  - "paplay"
+  - "/usr/share/sounds/freedesktop/stereo/device-added.oga"
+post_clear_cmd:
+  - "paplay"
+  - "/usr/share/sounds/freedesktop/stereo/device-removed.oga"
