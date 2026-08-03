@@ -1,0 +1,4 @@
+interface:
+  display_name: "msladek PR Review"
+  short_description: "Review GitHub PRs in isolated worktrees"
+  default_prompt: "Use $msladek-pr-review to review the specified GitHub pull requests."
