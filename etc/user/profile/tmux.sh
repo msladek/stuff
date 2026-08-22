@@ -9,6 +9,7 @@ if command -v tmux >/dev/null; then
   elif [[ -n "$PS1" ]] && [[ $- == *i* ]] \
     && [[ ! "$TERM" == dumb ]] \
     && [[ ! "$TERM" =~ screen ]] \
+    && [[ -z "$HERDR_ENV" ]] \
     && [[ ! "$TERM_PROGRAM" == vscode ]]; then
     # open/attach tmux session 'main' if
     # 1. tmux is installed
