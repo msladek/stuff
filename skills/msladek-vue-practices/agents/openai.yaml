@@ -1,4 +1,0 @@
-interface:
-  display_name: "msladek Vue Practices"
-  short_description: "Reactive Vue and Pinia programming practices"
-  default_prompt: "Use $msladek-vue-practices to implement this Vue change with reactive, declarative state management."
