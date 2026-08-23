@@ -66,10 +66,3 @@ function ssh-add-once() {
     command ssh-add "$@"
   fi
 }
-
-if command -v git >/dev/null; then
-function git-pull-stuff() {
-  [ -d /opt/msladek/stuff/.git ] && git -C /opt/msladek/stuff pull
-  [ -d /opt/msladek/stuffp/.git ] && git -C /opt/msladek/stuffp pull
-}
-fi #git

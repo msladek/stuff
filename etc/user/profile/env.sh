@@ -33,5 +33,10 @@ command -v fzf >/dev/null \
   && [ -f /usr/share/doc/fzf/examples/key-bindings.bash ] \
   && source /usr/share/doc/fzf/examples/key-bindings.bash
 
+command -v mvn >/dev/null \
+  && [[ "$("${JAVA_HOME:+$JAVA_HOME/bin/}java" -version 2>&1)" =~ version\ \"([0-9]+) ]] \
+  && (( BASH_REMATCH[1] >= 24 )) \
+  && export MAVEN_OPTS="${MAVEN_OPTS:-} --sun-misc-unsafe-memory-access=allow"
+
 ## set keyboard layout to Swiss (X11 still needed for x2go)
 setxkbmap ch 2> /dev/null

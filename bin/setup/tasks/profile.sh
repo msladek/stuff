@@ -11,12 +11,6 @@ chmod -R o-rwx ~
 echo -e "... link stuff directory"
 stuffDir=/opt/msladek/stuff
 [ ! -d $stuffDir ] && echo "stuff not found" && exit 1
-# fix symlinked main dir
-[ -L $stuffDir ] \
-  && echo '... fixing stuff dir' \
-  && oldStuffDir=$(readlink $stuffDir) \
-  && rm -v $stuffDir \
-  && mv "$oldStuffDir" $stuffDir
 ln -sT $stuffDir ~/stuff
 
 echo -e "... link profile"
@@ -24,19 +18,16 @@ echo -e "... link profile"
 # https://superuser.com/a/789499/1099716
 rm -f ~/.bash_profile ~/.bash_login
 # let's setup our own ~/.profile.d
-grep -qF -- ".profile.d" ~/.profile
-if [ ! $? -eq 0 ]; then
-cat <<"EOT" >> ~/.profile
+grep -qF -- '.profile.d' ~/.profile || cat >> ~/.profile <<'EOT'
 # include profile.d if it exists
 if [ -d ~/.profile.d ]; then
   for f in ~/.profile.d/*.sh; do
-    [ -r $f ] && source $f
+    [ -r "$f" ] && . "$f"
   done
   unset f
 fi
 EOT
-fi
-mkdir -p ~/.profile.d && chmod 740 ~/.profile.d \
+mkdir -p ~/.profile.d && chmod 750 ~/.profile.d \
   && ln -sf $stuffDir/etc/user/profile/env.sh       ~/.profile.d/10-env.sh \
   && ln -sf $stuffDir/etc/user/profile/prompt.sh    ~/.profile.d/20-prompt.sh \
   && ln -sf $stuffDir/etc/user/profile/tmux.sh      ~/.profile.d/30-tmux.sh \

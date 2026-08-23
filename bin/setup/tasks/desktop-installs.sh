@@ -11,7 +11,6 @@ apt -q=2 install \
     xsel wl-clipboard grub-customizer glances hfsprogs gvfs-backends gvfs-fuse solaar \
     kcolorchooser kooha screenruler stress sysbench x2goclient \
     chromium geany vlc gimp \
-    openjdk-21-jdk openjdk-21-source openjdk-21-doc visualvm \
     pipewire pipewire-pulse pipewire-jack pipewire-alsa pipewire-audio
 
 echo -e "... theming ..."
