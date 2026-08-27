@@ -13,7 +13,7 @@ Before reviewing, read applicable repository instructions and documented convent
 
 Use `gh` to resolve current matching PRs and their exact base and head commit IDs; do not rely on local branch names or stale remote-tracking refs. For related PRs, establish dependency and rollout order.
 
-Reuse a local repository only when its canonical remote matches; otherwise use a temporary clone. Fetch the exact commits into dedicated review refs, create a detached temporary worktree at each head commit, and verify its `HEAD` and comparison base before reviewing.
+Reuse a local repository only when its canonical remote matches or is a mere rename; otherwise use a temporary clone. Fetch the exact commits into dedicated review refs, create a detached temporary worktree at each head commit, and verify its `HEAD` and comparison base before reviewing.
 
 ## Review the actual change
 
